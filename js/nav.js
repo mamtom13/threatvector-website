@@ -92,3 +92,15 @@ function showLoading(boxId, msg = '// Connecting to VirusTotal...') {
 
 // Sleep helper
 const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+/* ── Tool tab switching ─────────────────────────────────────── */
+function switchTab(tabId, btn) {
+  // Hide all panels
+  document.querySelectorAll('.tool-panel').forEach(p => p.classList.remove('active'));
+  // Deactivate all tab buttons
+  document.querySelectorAll('.tool-tab').forEach(b => b.classList.remove('active'));
+  // Show target panel + activate button
+  const panel = document.getElementById('tab-' + tabId);
+  if (panel) panel.classList.add('active');
+  if (btn) btn.classList.add('active');
+}
