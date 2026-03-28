@@ -87,3 +87,50 @@
 @media(max-width:640px) {
   .svc-grid, .cases-grid { grid-template-columns: 1fr; }
 }
+
+/* ── ABUSE TYPE DETAIL PAGE ── */
+.abuse-section {
+  margin-bottom: 44px;
+  padding-bottom: 44px;
+  border-bottom: 1px solid var(--border);
+}
+.abuse-section:last-child { border-bottom: none; }
+.abuse-section-title {
+  font-family: var(--disp);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--bright);
+  letter-spacing: 0.08em;
+  margin-bottom: 18px;
+  text-transform: uppercase;
+}
+.abuse-body {
+  font-size: 15px;
+  color: var(--dim);
+  line-height: 1.9;
+  max-width: 780px;
+}
+.abuse-indicators {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 780px;
+}
+.abuse-indicator {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--dim);
+  line-height: 1.65;
+  padding: 12px 16px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  transition: border-color 0.2s;
+}
+.abuse-indicator:hover { border-color: var(--border2); }
+.ai-bullet {
+  font-size: 12px;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
