@@ -553,6 +553,68 @@ footer { border-top: 1px solid var(--border); background: var(--panel); }
   .footer-bot { flex-direction: column; gap: 10px; padding: 18px 20px; }
   .stat { padding: 18px 20px; }
 }
+
+/* ================================================================
+   VT RESULT — rich layout giống web tham khảo
+================================================================ */
+.vt-result { margin-top: 4px; }
+
+/* Verdict header */
+.vt-verdict {
+  display: flex; align-items: center; gap: 16px;
+  padding: 16px 20px; margin-bottom: 14px; border-radius: 2px;
+}
+.vt-verdict.clean   { background: rgba(0,255,136,.07);  border: 1px solid rgba(0,255,136,.25); }
+.vt-verdict.danger  { background: rgba(255,61,61,.08);  border: 1px solid rgba(255,61,61,.3);  }
+.vt-verdict.warn    { background: rgba(255,170,0,.07);  border: 1px solid rgba(255,170,0,.3);  }
+.vt-verdict-icon    { font-size: 28px; flex-shrink: 0; line-height: 1; }
+.vt-verdict-text    { flex: 1; }
+.vt-verdict-text h3 { font-family: var(--disp); font-size: 14px; font-weight: 700; margin-bottom: 4px; letter-spacing: .05em; }
+.vt-verdict-text p  { font-family: var(--mono); font-size: 10px; color: var(--dim); letter-spacing: .08em; word-break: break-all; }
+.vt-score           { text-align: right; flex-shrink: 0; }
+.vt-score .sc-num   { font-family: var(--disp); font-size: 28px; font-weight: 900; line-height: 1; }
+.vt-score .sc-lbl   { font-family: var(--mono); font-size: 9px; color: var(--dim); letter-spacing: .15em; margin-top: 3px; text-transform: uppercase; }
+
+/* Two-column layout: engines + screenshot */
+.vt-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+.vt-box  { background: rgba(0,0,0,.3); border: 1px solid var(--border); padding: 14px 16px; }
+.vt-box h4 {
+  font-family: var(--mono); font-size: 9px; font-weight: 700;
+  color: var(--dim); text-transform: uppercase; letter-spacing: .2em; margin-bottom: 10px;
+}
+
+/* Engine list */
+.engine-list { display: flex; flex-direction: column; gap: 5px; max-height: 200px; overflow-y: auto; }
+.engine-list::-webkit-scrollbar { width: 3px; }
+.engine-list::-webkit-scrollbar-thumb { background: var(--border2); }
+.engine-row  { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-family: var(--mono); font-size: 11px; }
+.engine-name { color: var(--dim); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.engine-badge { padding: 2px 8px; font-size: 9.5px; font-weight: 700; white-space: nowrap; flex-shrink: 0; }
+.eb-mal  { background: rgba(255,61,61,.15);  color: var(--red);  border: 1px solid rgba(255,61,61,.3);  }
+.eb-sus  { background: rgba(255,170,0,.12);  color: var(--warn); border: 1px solid rgba(255,170,0,.3);  }
+
+/* Screenshot */
+.vt-ss-wrap  { position: relative; }
+.vt-ss-wrap .ss-overlay {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: rgba(255,61,61,.85); color: #fff;
+  font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
+  padding: 6px 10px; text-align: center;
+}
+.vt-screenshot { width: 100%; display: block; border: 1px solid var(--border2); }
+
+/* Footer row */
+.vt-footer { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+.vt-link {
+  font-family: var(--mono); font-size: 10.5px; color: var(--accent);
+  text-decoration: none; letter-spacing: .08em; transition: opacity .2s;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.vt-link:hover { opacity: .75; }
+.vt-counts {
+  font-family: var(--mono); font-size: 10px; color: var(--dim);
+  margin-left: auto; letter-spacing: .08em;
+}
 </style>
 </head>
 <body>
@@ -766,9 +828,9 @@ footer { border-top: 1px solid var(--border); background: var(--panel); }
         <p>All work is conducted under responsible disclosure principles. Where intelligence permits and operational security allows, we coordinate disclosures with affected registrars, registries, CERTs, and law enforcement before any public release.</p>
         <p style="margin-bottom:0">
           <strong style="color:var(--bright)">General inquiries:</strong>&nbsp;
-          <a href="mailto:info@threatvectorintelligence.com">info@threatvectorintelligence.com</a><br>
+          <a href="/cdn-cgi/l/email-protection#137a7d757c53677b61767267657670677c617a7d67767f7f7a74767d70763d707c7e"><span class="__cf_email__" data-cfemail="a9c0c7cfc6e9ddc1dbccc8dddfcccaddc6dbc0c7ddccc5c5c0ceccc7cacc87cac6c4">[email&#160;protected]</span></a><br>
           <strong style="color:var(--bright)">Abuse reports:</strong>&nbsp;
-          <a class="a2" href="mailto:abuse@threatvectorintelligence.com">abuse@threatvectorintelligence.com</a>
+          <a class="a2" href="/cdn-cgi/l/email-protection#bbdad9cec8defbcfd3c9dedacfcdded8cfd4c9d2d5cfded7d7d2dcded5d8de95d8d4d6"><span class="__cf_email__" data-cfemail="a6c7c4d3d5c3e6d2ced4c3c7d2d0c3c5d2c9d4cfc8d2c3cacacfc1c3c8c5c388c5c9cb">[email&#160;protected]</span></a>
         </p>
       </div>
       <div class="info-cards">
@@ -818,7 +880,7 @@ footer { border-top: 1px solid var(--border); background: var(--panel); }
     </div>
     <div class="report-footer">
       <button class="btn btn-d" onclick="submitReport()">&#9656;&nbsp; SUBMIT ABUSE REPORT</button>
-      <small>Reports are sent to abuse@threatvectorintelligence.com</small>
+      <small>Reports are sent to <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c7a6a5b2b4a287b3afb5a2a6b3b1a2a4b3a8b5aea9b3a2ababaea0a2a9a4a2e9a4a8aa">[email&#160;protected]</a></small>
     </div>
   </div>
 </div>
@@ -860,8 +922,8 @@ footer { border-top: 1px solid var(--border); background: var(--panel); }
     <div>
       <div class="f-col-ttl">CONTACT</div>
       <div class="f-contact">
-        <a href="mailto:info@threatvectorintelligence.com">info@threatvectorintelligence.com</a>
-        <a class="ab" href="mailto:abuse@threatvectorintelligence.com">abuse@threatvectorintelligence.com</a>
+        <a href="/cdn-cgi/l/email-protection#2a43444c456a5e42584f4b5e5c4f495e455843445e4f4646434d4f44494f04494547"><span class="__cf_email__" data-cfemail="026b6c646d42766a70676376746761766d706b6c76676e6e6b65676c61672c616d6f">[email&#160;protected]</span></a>
+        <a class="ab" href="/cdn-cgi/l/email-protection#36575443455376425e445357424053554259445f5842535a5a5f51535855531855595b"><span class="__cf_email__" data-cfemail="48292a3d3b2d083c203a2d293c3e2d2b3c273a21263c2d2424212f2d262b2d662b2725">[email&#160;protected]</span></a>
         <div style="margin-top:14px;font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:.15em;opacity:.6">threatvectorintelligence.com</div>
       </div>
     </div>
@@ -877,7 +939,7 @@ footer { border-top: 1px solid var(--border); background: var(--panel); }
 <!-- ================================================================
      JAVASCRIPT — single clean block, no duplicates
 ================================================================ -->
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 'use strict';
 
 /* ─── CONFIG ──────────────────────────────────────────────────────
@@ -979,72 +1041,58 @@ function showLoading(boxId, msg = '// Connecting to VirusTotal...') {
      <span id="${boxId}_step" class="vt-progress">${msg}</span>`;
 }
 
-/* ─── URL CHECK — 4-STEP FULL FLOW ─────────────────────────────────
-   Step 1: Check VT cache
-   Step 2: Submit URL if not found
-   Step 3: Poll analyses until completed
-   Step 4: Render results + screenshot
-──────────────────────────────────────────────────────────────────── */
+/* ─── URL CHECK — 4-step flow + rich result render ─────────────── */
 async function checkURL() {
   const raw = document.getElementById('urlInput').value.trim();
   const btn = document.getElementById('urlBtn');
   const box = document.getElementById('urlResult');
-
   if (!raw) { showToast('// Please enter a URL or domain', 'warn'); return; }
 
-  // Normalize: ensure https:// prefix
   let clean = raw.replace(/\/$/, '');
   if (!/^https?:\/\//i.test(clean)) clean = 'https://' + clean;
   const urlId = urlToId(clean);
 
-  btn.disabled = true;
-  btn.textContent = '...';
+  btn.disabled = true; btn.textContent = '...';
   showLoading('urlResult', '// STEP 1/4 — Checking VirusTotal cache...');
 
   try {
     let reportData = null;
 
-    /* ── Step 1: Check cache ── */
+    // Step 1: Check cache
     setStep('urlResult', '// STEP 1/4 — Checking VirusTotal cache...');
     const cached = await fetch(`${VT}/urls/${urlId}`);
     if (cached.ok) {
       const cj = await cached.json();
-      if (cj.data?.attributes?.last_analysis_stats) {
-        reportData = cj.data;
-      }
+      if (cj.data?.attributes?.last_analysis_stats) reportData = cj.data;
     }
 
-    /* ── Step 2: Submit if not cached ── */
+    // Step 2: Submit if not cached
     if (!reportData) {
       setStep('urlResult', '// STEP 2/4 — Submitting URL to VirusTotal...');
       const submit = await fetch(`${VT}/urls`, {
-        method:  'POST',
+        method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body:    `url=${encodeURIComponent(clean)}`,
+        body: `url=${encodeURIComponent(clean)}`,
       });
       if (!submit.ok) throw new Error(`Submit failed — HTTP ${submit.status}`);
       const sj = await submit.json();
       const analysisId = sj.data?.id;
       if (!analysisId) throw new Error('No analysis ID returned from VirusTotal');
 
-      /* ── Step 3: Poll until complete ── */
+      // Step 3: Poll until complete
       setStep('urlResult', '// STEP 3/4 — Waiting for analysis...');
       let tries = 0;
       while (tries < 20) {
         await sleep(3000);
         const poll = await fetch(`${VT}/analyses/${analysisId}`);
         if (poll.ok) {
-          const pj     = await poll.json();
-          const pStat  = pj.data?.attributes?.status;
-          const pMal   = pj.data?.attributes?.stats?.malicious ?? 0;
+          const pj    = await poll.json();
+          const pStat = pj.data?.attributes?.status;
+          const pMal  = pj.data?.attributes?.stats?.malicious ?? 0;
           setStep('urlResult', `// STEP 3/4 — Scanning... (${pMal} detections so far)`);
           if (pStat === 'completed') {
             const full = await fetch(`${VT}/urls/${urlId}`);
-            if (full.ok) {
-              const fj = await full.json();
-              reportData = fj.data;
-              break;
-            }
+            if (full.ok) { reportData = (await full.json()).data; break; }
           }
         }
         tries++;
@@ -1052,42 +1100,10 @@ async function checkURL() {
       if (!reportData) throw new Error('Analysis timed out. Wait a few seconds and try again.');
     }
 
-    /* ── Step 4: Render ── */
+    // Step 4: Render rich result
     setStep('urlResult', '// STEP 4/4 — Rendering results...');
-    const a     = reportData.attributes || {};
-    const stats = a.last_analysis_stats || {};
-    const total = Object.values(stats).reduce((x, y) => x + y, 0);
-    const mal   = stats.malicious  || 0;
-    const sus   = stats.suspicious || 0;
-    const harm  = stats.harmless   || 0;
-
-    let status = 'safe', label = 'CLEAN';
-    if      (mal > 5)            { status = 'danger'; label = 'MALICIOUS';  }
-    else if (mal > 0 || sus > 0) { status = 'warn';   label = 'SUSPICIOUS'; }
-
-    const pct  = total > 0 ? Math.round((mal / total) * 100) : 0;
-    const cats = Object.values(a.categories || {}).join(', ') || 'N/A';
-    const date = a.last_analysis_date
-      ? new Date(a.last_analysis_date * 1000).toUTCString() : 'N/A';
-
-    box.innerHTML = renderResult({ status, label, rows: [
-      ['URL',           clean],
-      ['TITLE',         a.title || 'N/A'],
-      ['REPUTATION',    String(a.reputation ?? 'N/A')],
-      ['DETECTIONS',    `${mal} malicious / ${sus} suspicious / ${harm} harmless / ${total} total`,
-                        mal > 0 ? 'danger' : sus > 0 ? 'warn' : 'safe'],
-      ['CATEGORIES',    cats],
-      ['LAST ANALYSIS', date],
-      ['FINAL URL',     a.last_final_url || clean],
-      ['VT REPORT',     `https://www.virustotal.com/gui/url/${urlId}`],
-    ]}) +
-    `<div class="vt-gauge">
-       <div class="vt-gauge-fill ${status}" style="width:${pct}%"></div>
-     </div>
-     <div id="vtScreenWrap"></div>`;
-
-    /* ── Step 5: Screenshot (async, non-blocking) ── */
-    fetchScreenshot(urlId);
+    renderVTResult(box, reportData, clean, urlId);
+    fetchScreenshot(urlId); // async, non-blocking
 
   } catch (err) {
     box.innerHTML = renderResult({
@@ -1095,30 +1111,117 @@ async function checkURL() {
       rows: [
         ['URL',   clean],
         ['ERROR', err.message, 'warn'],
-        ['TIP',   'If this is a new URL, wait a few seconds and try again. Check the Worker is deployed.'],
+        ['TIP',   'If this is a new URL, wait a few seconds and try again.'],
       ]
     });
   } finally {
-    btn.disabled = false;
-    btn.textContent = 'SCAN';
+    btn.disabled = false; btn.textContent = 'SCAN';
   }
 }
 
-// Screenshot fetched separately so it doesn't block results display
+/* ─── Rich VT result renderer ───────────────────────────────────── */
+function renderVTResult(box, data, url, urlId) {
+  const a       = data.attributes || {};
+  const stats   = a.last_analysis_stats || {};
+  const engines = a.last_analysis_results || {};
+
+  const mal   = stats.malicious  || 0;
+  const sus   = stats.suspicious || 0;
+  const undet = stats.undetected || 0;
+  const harm  = stats.harmless   || 0;
+  const total = mal + sus + undet + harm;
+
+  // Verdict
+  let vCls, vIcon, vTitle, vColor;
+  if      (mal >= 3)          { vCls='danger'; vIcon='🚨'; vColor='var(--red)';   vTitle=`Dangerous — flagged by ${mal} engines`; }
+  else if (mal > 0 || sus > 0){ vCls='warn';   vIcon='⚠️'; vColor='var(--warn)';  vTitle=`Suspicious — ${mal+sus} engine(s) flagged`; }
+  else                        { vCls='clean';  vIcon='✅'; vColor='var(--green)'; vTitle='No threats detected'; }
+
+  // Engine rows — malicious & suspicious first
+  const allEng = Object.entries(engines);
+  allEng.sort(([,a],[,b]) => {
+    const s = r => r.category==='malicious'?3:r.category==='suspicious'?2:0;
+    return s(b) - s(a);
+  });
+  const bad = allEng.filter(([,r]) => r.category==='malicious'||r.category==='suspicious');
+  const engineHTML = bad.length
+    ? bad.map(([name, r]) => {
+        const lbl  = r.result || r.category;
+        const disp = lbl.length > 28 ? lbl.slice(0,28)+'…' : lbl;
+        const cls  = r.category==='malicious' ? 'eb-mal' : 'eb-sus';
+        return `<div class="engine-row">
+          <span class="engine-name">${name}</span>
+          <span class="engine-badge ${cls}">${disp}</span>
+        </div>`;
+      }).join('')
+    : `<div style="color:var(--green);font-family:var(--mono);font-size:11px;padding:4px 0">✓ No engines flagged this URL</div>`;
+
+  const cats = Object.values(a.categories||{}).join(', ') || 'N/A';
+  const date = a.last_analysis_date
+    ? new Date(a.last_analysis_date*1000).toLocaleString() : 'Just now';
+  const vtLink = `https://www.virustotal.com/gui/url/${urlId}`;
+
+  box.innerHTML = `
+<div class="vt-result">
+  <div class="vt-verdict ${vCls}">
+    <div class="vt-verdict-icon">${vIcon}</div>
+    <div class="vt-verdict-text">
+      <h3 style="color:${vColor}">${vTitle}</h3>
+      <p>${url} &nbsp;·&nbsp; Scanned: ${date}</p>
+    </div>
+    <div class="vt-score">
+      <div class="sc-num" style="color:${vColor}">${mal}/${total}</div>
+      <div class="sc-lbl">engines flagged</div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:12px">
+    ${mRow('TITLE',      a.title||'—')}
+    ${mRow('CATEGORIES', cats)}
+    ${mRow('REPUTATION', a.reputation!=null?String(a.reputation):'N/A')}
+    ${mRow('FINAL URL',  a.last_final_url||url)}
+  </div>
+
+  <div class="vt-cols">
+    <div class="vt-box">
+      <h4>🔍 Engine Results &nbsp;<span style="color:var(--red);font-weight:700">${bad.length} flagged</span></h4>
+      <div class="engine-list">${engineHTML}</div>
+    </div>
+    <div class="vt-box">
+      <h4>📸 Website Screenshot</h4>
+      <div id="vtScreenWrap" style="min-height:80px;display:flex;align-items:center">
+        <span style="color:var(--dim);font-family:var(--mono);font-size:10px">Loading…</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="vt-footer">
+    <a href="${vtLink}" target="_blank" rel="noopener" class="vt-link">🔗 View full report on VirusTotal →</a>
+    <span class="vt-counts">🟢 ${harm} clean &nbsp;·&nbsp; 🔴 ${mal} malicious &nbsp;·&nbsp; 🟡 ${sus} suspicious &nbsp;·&nbsp; ⬜ ${undet} undetected</span>
+  </div>
+</div>`;
+}
+
+function mRow(k, v) {
+  return `<div class="r-row"><span class="r-key">${k}</span><span class="r-val">${v}</span></div>`;
+}
+
+/* Screenshot injected async into existing slot */
 async function fetchScreenshot(urlId) {
+  const wrap = document.getElementById('vtScreenWrap');
+  if (!wrap) return;
   try {
     const res = await fetch(`${VT}/urls/${urlId}/screenshot`);
-    if (!res.ok) return;
+    if (!res.ok) throw new Error('not available');
     const blob   = await res.blob();
     const imgUrl = URL.createObjectURL(blob);
-    const wrap   = document.getElementById('vtScreenWrap');
-    if (wrap) {
-      wrap.innerHTML =
-        `<div class="vt-ss-label">WEBSITE SCREENSHOT</div>
-         <img src="${imgUrl}" class="vt-screenshot" alt="Website screenshot">`;
-    }
-  } catch (_) { /* screenshot is optional, fail silently */ }
+    wrap.innerHTML = `<img src="${imgUrl}" class="vt-screenshot" alt="Screenshot"
+      onerror="this.parentElement.innerHTML='<span style=\\'color:var(--dim);font-family:var(--mono);font-size:10px\\'>Screenshot not available</span>'">`;
+  } catch (_) {
+    wrap.innerHTML = `<span style="color:var(--dim);font-family:var(--mono);font-size:10px">Screenshot not available</span>`;
+  }
 }
+
 
 /* ─── HASH LOOKUP ───────────────────────────────────────────────── */
 async function checkHash() {
@@ -1231,30 +1334,4 @@ function submitReport() {
     'OBSERVED BEHAVIOR:',
     behavior,
     '',
-    'EVIDENCE:',
-    document.getElementById('rEvidence').value || 'None provided',
-    '',
-    'INDICATORS OF COMPROMISE:',
-    document.getElementById('rIOCs').value || 'None provided',
-    '',
-    'ADDITIONAL NOTES:',
-    document.getElementById('rNotes').value || 'None',
-    '',
-    '--',
-    'Submitted via ThreatVector Intelligence portal',
-    'threatvectorintelligence.com',
-  ].join('\n');
-
-  window.location.href =
-    'mailto:abuse@threatvectorintelligence.com' +
-    '?subject=' + encodeURIComponent(subject) +
-    '&body='    + encodeURIComponent(body);
-
-  showToast('// Report prepared — opening email client', 'safe');
-}
-
-/* ─── UTILITY ───────────────────────────────────────────────────── */
-const sleep = ms => new Promise(r => setTimeout(r, ms));
-</script>
-</body>
-</html>
+    'E
