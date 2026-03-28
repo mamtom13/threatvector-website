@@ -202,7 +202,7 @@ function renderWhoisResult(box, d, domain, source) {
     ['EXPIRES',      d.expires],
     ['NAMESERVERS',  d.nameservers],
     ['DNSSEC',       d.dnssec],
-    ['DATA SOURCE',  source],
+
   ];
 
   if (ageWarn) rows.push(['⚠ AGE WARNING', ageWarn, 'warn']);
