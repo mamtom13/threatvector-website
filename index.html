@@ -1602,37 +1602,7 @@ window.addEventListener('load', () => {
   setTimeout(() => {
     animateCount(document.getElementById('cnt1'), 14820);
     animateCount(document.getElementById('cnt2'), 3241);
-    animateCount(document.getElementById('cnt3'), 8906);
-    animateCount(document.getElementById('cnt4'), 5, '+');
-  }, 900);
-});
-
-// === CARD INTERACTION ===
-function cardClick(el) {
-  el.style.transform = 'scale(0.98)';
-  setTimeout(() => el.style.transform = '', 150);
-}
-function stdClick(el) {
-  el.style.background = 'rgba(0,212,255,0.05)';
-  setTimeout(() => el.style.background = '', 300);
-}
-function caseClick(el) {
-  el.style.background = 'rgba(255,68,68,0.06)';
-  setTimeout(() => el.style.background = '', 300);
-}
-
-// === TOAST ===
-function showToast(msg, type='safe') {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.style.borderColor = type === 'safe' ? 'var(--accent3)' : type === 'danger' ? 'var(--accent2)' : 'var(--accent)';
-  t.style.color = type === 'safe' ? 'var(--accent3)' : type === 'danger' ? 'var(--accent2)' : 'var(--accent)';
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
-}
-
-// === CLOUDFLARE WORKER PROXY ===
-const PROXY = 'https://vt-proxy.websentine1990.workers.dev';
+    animateCount(document.getElewebsentinel1990.workers.dev';
 
 // === URL CHECK ===
 async function checkURL() {
