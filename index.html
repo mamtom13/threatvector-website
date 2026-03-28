@@ -6,11 +6,11 @@
 <title>ThreatVector Intelligence — DNS Abuse & Malicious Infrastructure</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/base.css?v=2">
-<link rel="stylesheet" href="css/nav.css?v=2">
-<link rel="stylesheet" href="css/home.css?v=2">
-<link rel="stylesheet" href="css/tools.css?v=2">
-<link rel="stylesheet" href="css/pages.css?v=2">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/nav.css">
+<link rel="stylesheet" href="css/home.css">
+<link rel="stylesheet" href="css/tools.css">
+<link rel="stylesheet" href="css/pages.css">
 </head>
 <body>
 
@@ -220,7 +220,7 @@
         <p>We work within the five DNS abuse categories as defined by ICANN: malware distribution, botnet C2 infrastructure, phishing, pharming, and spam used to propagate the above.</p>
         <p>All work is conducted under responsible disclosure principles. We coordinate disclosures with affected registrars, registries, CERTs, and law enforcement before any public release.</p>
         <p style="margin-bottom:0">
-          <strong style="color:var(--bright)">General:</strong>&nbsp;<a href="/cdn-cgi/l/email-protection#6c05020a032c18041e090d181a090f18031e050218090000050b09020f09420f0301"><span class="__cf_email__" data-cfemail="f1989f979eb1859983949085879492859e83989f85949d9d9896949f9294df929e9c">[email&#160;protected]</span></a><br>
+          <strong style="color:var(--bright)">General:</strong>&nbsp;<br>
           <strong style="color:var(--bright)">Abuse reports:</strong>&nbsp;<a class="a2" href="/cdn-cgi/l/email-protection#fc9d9e898f99bc88948e999d888a999f88938e959288999090959b99929f99d29f9391"><span class="__cf_email__" data-cfemail="e28380979187a2968a90878396948781968d908b8c96878e8e8b85878c8187cc818d8f">[email&#160;protected]</span></a>
         </p>
       </div>
@@ -271,10 +271,6 @@
 </div>
 
 <!-- FOOTER -->
-
-<!-- ABUSE TYPE DETAIL -->
-<div class="page" id="abuse-detail"></div>
-
 <footer>
   <div class="footer-top">
     <div class="f-brand">
@@ -316,8 +312,7 @@
       </div>
     </div>
   </div>
-</div>
-<div class="footer-bot">
+  <div class="footer-bot">
     <div class="footer-copy">© 2024 ThreatVector Intelligence. All rights reserved.</div>
     <div class="footer-legal"><a>Privacy Policy</a><a>Responsible Use</a><a>Disclaimer</a></div>
   </div>
@@ -325,11 +320,18 @@
 
 <div class="toast" id="toast"></div>
 
-<script src="js/nav.js?v=2"></script>
-<script src="js/vt-url.js?v=2"></script>
-<script src="js/vt-hash.js?v=2"></script>
-<script src="js/report.js?v=2"></script>
-<script src="js/whois.js?v=2"></script>
+<!-- LEGAL PAGES -->
+<div class="page" id="legal-detail"></div>
+
+<!-- ABUSE TYPE DETAIL -->
+<div class="page" id="abuse-detail"></div>
+
+<script src="js/nav.js"></script>
+<script src="js/vt-url.js"></script>
+<script src="js/vt-hash.js"></script>
+<script src="js/report.js"></script>
+<script src="js/whois.js"></script>
 <script src="js/abuse-types.js"></script>
+<script src="js/legal-pages.js"></script>
 </body>
 </html>
