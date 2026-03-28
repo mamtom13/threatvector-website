@@ -1,52 +1,45 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DNS Abuse Intelligence — ThreatVector Intelligence</title>
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@300;400;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<title>ThreatVector Intelligence — DNS Abuse & Malicious Infrastructure</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg-deep: #020609;
-    --bg-panel: #040d14;
-    --bg-card: #071522;
-    --accent-cyan: #00e5ff;
-    --accent-green: #00ff88;
-    --accent-red: #ff2d55;
-    --accent-orange: #ff6b1a;
-    --accent-blue: #1a6fff;
-    --text-primary: #c8e8f0;
-    --text-dim: #5a8a9f;
-    --text-bright: #e8f8ff;
-    --border-glow: rgba(0,229,255,0.3);
-    --grid-line: rgba(0,229,255,0.05);
+    --bg: #040a0f;
+    --bg2: #060d14;
+    --panel: #071219;
+    --border: #0d2233;
+    --accent: #00d4ff;
+    --accent2: #ff4444;
+    --accent3: #00ff88;
+    --text: #c8dde8;
+    --text-dim: #4a6a7a;
+    --text-bright: #e8f4ff;
+    --glow: 0 0 20px rgba(0,212,255,0.3);
+    --glow2: 0 0 20px rgba(255,68,68,0.3);
+    --font-mono: 'Share Tech Mono', monospace;
+    --font-ui: 'Rajdhani', sans-serif;
+    --font-display: 'Orbitron', monospace;
   }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
 
   body {
-    background: var(--bg-deep);
-    color: var(--text-primary);
-    font-family: 'Rajdhani', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-ui);
+    font-size: 16px;
+    line-height: 1.6;
     overflow-x: hidden;
-    cursor: crosshair;
   }
 
-  /* ─── GRID BACKGROUND ─── */
+  /* === SCANLINE OVERLAY === */
   body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(var(--grid-line) 1px, transparent 1px),
-      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-    background-size: 40px 40px;
-    z-index: 0;
-    pointer-events: none;
-  }
-
-  /* Scanline overlay */
-  body::after {
     content: '';
     position: fixed;
     inset: 0;
@@ -54,794 +47,925 @@
       0deg,
       transparent,
       transparent 2px,
-      rgba(0,0,0,0.08) 2px,
-      rgba(0,0,0,0.08) 4px
+      rgba(0,212,255,0.015) 2px,
+      rgba(0,212,255,0.015) 4px
     );
-    z-index: 1;
     pointer-events: none;
-    animation: scanMove 8s linear infinite;
+    z-index: 9999;
   }
 
-  @keyframes scanMove {
-    0% { transform: translateY(0); }
-    100% { transform: translateY(4px); }
+  /* === NOISE GRAIN === */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: -50%;
+    width: 200%;
+    height: 200%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: 0.04;
+    pointer-events: none;
+    z-index: 9998;
+    animation: grainMove 0.5s steps(1) infinite;
+  }
+  @keyframes grainMove {
+    0%,100%{ transform: translate(0,0); }
+    10%{ transform: translate(-2px,1px); }
+    20%{ transform: translate(2px,-1px); }
+    30%{ transform: translate(-1px,2px); }
+    40%{ transform: translate(1px,-2px); }
+    50%{ transform: translate(-2px,-1px); }
+    60%{ transform: translate(2px,2px); }
+    70%{ transform: translate(-1px,-1px); }
+    80%{ transform: translate(1px,1px); }
+    90%{ transform: translate(0,2px); }
   }
 
-  /* ─── NAV ─── */
+  /* === NAV === */
   nav {
     position: fixed;
     top: 0; left: 0; right: 0;
-    z-index: 100;
+    z-index: 1000;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 40px;
     height: 64px;
-    background: rgba(2,6,9,0.95);
-    border-bottom: 1px solid var(--border-glow);
+    background: rgba(4,10,15,0.92);
+    border-bottom: 1px solid var(--border);
     backdrop-filter: blur(12px);
   }
 
   .nav-logo {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
     text-decoration: none;
   }
 
-  /* ─── SVG LOGO ─── */
+  /* === LOGO SVG === */
   .logo-mark {
-    width: 42px;
-    height: 42px;
+    width: 40px;
+    height: 40px;
     flex-shrink: 0;
-    filter: drop-shadow(0 0 8px var(--accent-cyan));
-    animation: logoPulse 3s ease-in-out infinite;
   }
 
-  @keyframes logoPulse {
-    0%, 100% { filter: drop-shadow(0 0 8px var(--accent-cyan)); }
-    50% { filter: drop-shadow(0 0 18px var(--accent-cyan)) drop-shadow(0 0 30px rgba(0,229,255,0.4)); }
-  }
-
-  .logo-text-wrap {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .logo-name {
-    font-family: 'Orbitron', monospace;
+  .nav-brand {
+    font-family: var(--font-display);
     font-size: 13px;
-    font-weight: 900;
-    color: var(--accent-cyan);
-    letter-spacing: 0.12em;
-    line-height: 1;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--text-bright);
+    line-height: 1.2;
   }
-
-  .logo-sub {
-    font-family: 'Share Tech Mono', monospace;
+  .nav-brand span {
+    display: block;
     font-size: 9px;
-    color: var(--text-dim);
+    font-weight: 400;
+    color: var(--accent);
     letter-spacing: 0.2em;
-    margin-top: 3px;
+    font-family: var(--font-mono);
   }
 
   .nav-links {
     display: flex;
-    gap: 32px;
+    align-items: center;
+    gap: 4px;
     list-style: none;
   }
-
   .nav-links a {
-    font-family: 'Share Tech Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 11px;
     color: var(--text-dim);
     text-decoration: none;
-    letter-spacing: 0.15em;
-    transition: color 0.3s;
-  }
-
-  .nav-links a:hover { color: var(--accent-cyan); }
-  .nav-links a.active { color: var(--accent-cyan); }
-
-  .nav-status {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 10px;
-    color: var(--accent-green);
-  }
-
-  .status-dot {
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    background: var(--accent-green);
-    animation: blink 1.4s ease infinite;
-  }
-
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.2; }
-  }
-
-  /* ─── HERO ─── */
-  .hero {
+    padding: 6px 14px;
+    border: 1px solid transparent;
+    letter-spacing: 0.1em;
+    transition: all 0.2s;
     position: relative;
-    z-index: 2;
-    padding: 140px 80px 80px;
+  }
+  .nav-links a:hover {
+    color: var(--accent);
+    border-color: rgba(0,212,255,0.3);
+    background: rgba(0,212,255,0.05);
+    text-shadow: var(--glow);
+  }
+  .nav-links .cta-btn {
+    background: rgba(0,212,255,0.1);
+    border-color: var(--accent);
+    color: var(--accent);
+    margin-left: 8px;
+  }
+  .nav-links .cta-btn:hover {
+    background: var(--accent);
+    color: var(--bg);
+  }
+
+  /* === SECTIONS === */
+  section { display: none; }
+  section.active { display: block; }
+
+  /* === HERO === */
+  #hero {
     min-height: 100vh;
+    padding-top: 64px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    position: relative;
+    overflow: hidden;
   }
 
-  .hero-badge {
-    display: inline-flex;
+  .hero-grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridPulse 4s ease-in-out infinite;
+  }
+  @keyframes gridPulse {
+    0%,100%{ opacity:0.6; }
+    50%{ opacity:1; }
+  }
+
+  .hero-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    animation: orbFloat 8s ease-in-out infinite;
+  }
+  .hero-orb-1 {
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,212,255,0.12) 0%, transparent 70%);
+    top: -100px; right: -100px;
+  }
+  .hero-orb-2 {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(255,68,68,0.08) 0%, transparent 70%);
+    bottom: 100px; left: -50px;
+    animation-delay: -4s;
+  }
+  @keyframes orbFloat {
+    0%,100%{ transform: translateY(0px) scale(1); }
+    50%{ transform: translateY(-30px) scale(1.05); }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 100px 40px 60px;
+  }
+
+  .hero-tag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 6px 16px;
-    border: 1px solid var(--accent-red);
-    border-radius: 2px;
-    margin-bottom: 28px;
-    width: fit-content;
-    background: rgba(255,45,85,0.07);
+    gap: 12px;
+    animation: fadeInUp 0.8s ease forwards;
+    opacity: 0;
+  }
+  .hero-tag::before {
+    content: '';
+    width: 32px;
+    height: 1px;
+    background: var(--accent);
+    box-shadow: var(--glow);
   }
 
-  .hero-badge span {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 10px;
-    color: var(--accent-red);
-    letter-spacing: 0.2em;
-    animation: textFlicker 4s linear infinite;
-  }
-
-  @keyframes textFlicker {
-    0%,95%,100% { opacity: 1; }
-    96% { opacity: 0.4; }
-    98% { opacity: 0.8; }
-  }
-
-  .hero h1 {
-    font-family: 'Orbitron', monospace;
-    font-size: clamp(36px, 5vw, 72px);
+  .hero-h1 {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 5vw, 64px);
     font-weight: 900;
-    line-height: 1.05;
     color: var(--text-bright);
-    max-width: 860px;
-    margin-bottom: 10px;
+    line-height: 1.1;
+    margin-bottom: 8px;
+    animation: fadeInUp 0.8s 0.15s ease forwards;
+    opacity: 0;
   }
+  .hero-h1 .accent { color: var(--accent); }
+  .hero-h1 .accent2 { color: var(--accent2); }
 
-  .hero h1 .highlight {
-    color: var(--accent-cyan);
-    text-shadow: 0 0 30px rgba(0,229,255,0.5);
-  }
-
-  .hero h1 .highlight-red {
-    color: var(--accent-red);
-    text-shadow: 0 0 30px rgba(255,45,85,0.4);
+  .hero-sub {
+    font-family: var(--font-ui);
+    font-size: 20px;
+    font-weight: 300;
+    color: var(--text-dim);
+    margin-bottom: 32px;
+    max-width: 680px;
+    letter-spacing: 0.02em;
+    animation: fadeInUp 0.8s 0.3s ease forwards;
+    opacity: 0;
   }
 
   .hero-desc {
-    font-size: 17px;
+    font-size: 15px;
     color: var(--text-dim);
-    max-width: 680px;
-    line-height: 1.7;
-    margin: 24px 0 44px;
-    font-weight: 400;
+    max-width: 620px;
+    margin-bottom: 48px;
+    line-height: 1.8;
+    animation: fadeInUp 0.8s 0.45s ease forwards;
+    opacity: 0;
   }
 
-  .hero-stats {
+  .hero-actions {
     display: flex;
-    gap: 48px;
+    gap: 16px;
     flex-wrap: wrap;
+    animation: fadeInUp 0.8s 0.6s ease forwards;
+    opacity: 0;
   }
 
-  .hero-stat {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+  .btn {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 14px 28px;
+    border: 1px solid;
+    cursor: pointer;
+    transition: all 0.25s;
+    background: transparent;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-primary {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(0,212,255,0.05);
+    box-shadow: inset 0 0 20px rgba(0,212,255,0.05);
+  }
+  .btn-primary:hover {
+    background: var(--accent);
+    color: var(--bg);
+    box-shadow: var(--glow), 0 0 40px rgba(0,212,255,0.2);
+    transform: translateY(-2px);
+  }
+  .btn-danger {
+    border-color: var(--accent2);
+    color: var(--accent2);
+    background: rgba(255,68,68,0.05);
+  }
+  .btn-danger:hover {
+    background: var(--accent2);
+    color: white;
+    box-shadow: var(--glow2);
+    transform: translateY(-2px);
+  }
+  .btn-ghost {
+    border-color: var(--border);
+    color: var(--text-dim);
+  }
+  .btn-ghost:hover {
+    border-color: var(--text-dim);
+    color: var(--text);
   }
 
-  .hero-stat-val {
-    font-family: 'Orbitron', monospace;
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* === STATS BAR === */
+  .stats-bar {
+    position: relative;
+    z-index: 2;
+    border-top: 1px solid var(--border);
+    background: rgba(7,18,25,0.8);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    animation: fadeInUp 0.8s 0.8s ease forwards;
+    opacity: 0;
+  }
+  .stat-item {
+    padding: 28px 40px;
+    border-right: 1px solid var(--border);
+    transition: background 0.3s;
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-item:hover { background: rgba(0,212,255,0.03); }
+  .stat-num {
+    font-family: var(--font-display);
     font-size: 28px;
-    font-weight: 700;
-    color: var(--accent-cyan);
-    text-shadow: 0 0 20px rgba(0,229,255,0.5);
+    color: var(--accent);
+    display: block;
+    text-shadow: var(--glow);
   }
-
-  .hero-stat-val.red { color: var(--accent-red); text-shadow: 0 0 20px rgba(255,45,85,0.5); }
-  .hero-stat-val.green { color: var(--accent-green); text-shadow: 0 0 20px rgba(0,255,136,0.5); }
-
-  .hero-stat-label {
-    font-family: 'Share Tech Mono', monospace;
+  .stat-label {
+    font-family: var(--font-mono);
     font-size: 10px;
     color: var(--text-dim);
-    letter-spacing: 0.15em;
-  }
-
-  /* ─── ANIMATED PULSE RING ─── */
-  .hero-visual {
-    position: absolute;
-    right: 80px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 380px;
-    height: 380px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .pulse-ring {
-    position: absolute;
-    border-radius: 50%;
-    border: 1px solid var(--accent-cyan);
-    animation: pulseExpand 3s ease-out infinite;
-    opacity: 0;
-  }
-
-  .pulse-ring:nth-child(1) { width: 120px; height: 120px; animation-delay: 0s; }
-  .pulse-ring:nth-child(2) { width: 200px; height: 200px; animation-delay: 0.8s; }
-  .pulse-ring:nth-child(3) { width: 300px; height: 300px; animation-delay: 1.6s; }
-  .pulse-ring:nth-child(4) { width: 380px; height: 380px; animation-delay: 2.4s; }
-
-  @keyframes pulseExpand {
-    0% { opacity: 0.8; transform: scale(0.7); }
-    100% { opacity: 0; transform: scale(1); }
-  }
-
-  .hero-icon-center {
-    position: relative;
-    z-index: 2;
-    width: 80px;
-    height: 80px;
-  }
-
-  /* ─── SECTION ─── */
-  section {
-    position: relative;
-    z-index: 2;
-    padding: 80px 80px;
-  }
-
-  .section-header {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 48px;
-  }
-
-  .section-num {
-    font-family: 'Orbitron', monospace;
-    font-size: 11px;
-    color: var(--text-dim);
     letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-top: 4px;
   }
 
-  .section-line {
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(90deg, var(--border-glow), transparent);
+  /* === TICKER === */
+  .ticker-wrap {
+    background: rgba(0,212,255,0.05);
+    border-top: 1px solid rgba(0,212,255,0.15);
+    border-bottom: 1px solid rgba(0,212,255,0.15);
+    overflow: hidden;
+    padding: 10px 0;
+  }
+  .ticker {
+    display: flex;
+    gap: 0;
+    animation: tickerScroll 40s linear infinite;
+    white-space: nowrap;
+  }
+  .ticker-item {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent);
+    padding: 0 40px;
+    opacity: 0.7;
+  }
+  .ticker-item .sep { color: var(--accent2); margin: 0 12px; }
+  @keyframes tickerScroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
   }
 
-  .section-title {
-    font-family: 'Orbitron', monospace;
-    font-size: clamp(20px, 2.5vw, 32px);
+  /* === MAIN CONTENT WRAPPER === */
+  .page-content {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 80px 40px;
+  }
+
+  /* === SECTION HEADERS === */
+  .sec-head {
+    margin-bottom: 60px;
+  }
+  .sec-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .sec-title {
+    font-family: var(--font-display);
+    font-size: clamp(24px, 3vw, 40px);
     font-weight: 700;
     color: var(--text-bright);
-    letter-spacing: 0.05em;
+    letter-spacing: 0.02em;
+  }
+  .sec-line {
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    margin-top: 16px;
+    box-shadow: var(--glow);
   }
 
-  .section-title span { color: var(--accent-cyan); }
-
-  /* ─── ABUSE GRID ─── */
-  .abuse-grid {
+  /* === SERVICES GRID === */
+  .services-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 2px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
   }
-
-  .abuse-card {
-    background: var(--bg-card);
-    border: 1px solid rgba(0,229,255,0.08);
-    padding: 32px;
+  .service-card {
+    background: var(--panel);
+    padding: 36px 32px;
+    cursor: pointer;
+    transition: all 0.3s;
     position: relative;
     overflow: hidden;
-    cursor: pointer;
-    transition: all 0.4s ease;
   }
-
-  .abuse-card::before {
+  .service-card::before {
     content: '';
     position: absolute;
-    top: 0; left: 0;
-    width: 3px;
-    height: 100%;
-    background: var(--card-accent, var(--accent-cyan));
-    transition: width 0.4s ease;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
   }
+  .service-card:hover::before { transform: scaleX(1); }
+  .service-card:hover { background: rgba(0,212,255,0.04); }
 
-  .abuse-card::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse at top left, var(--card-glow, rgba(0,229,255,0.06)), transparent 70%);
-    opacity: 0;
-    transition: opacity 0.4s ease;
-  }
-
-  .abuse-card:hover {
-    border-color: var(--card-accent, var(--accent-cyan));
-    transform: translateY(-4px);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px var(--card-shadow, rgba(0,229,255,0.1));
-  }
-
-  .abuse-card:hover::before { width: 6px; }
-  .abuse-card:hover::after { opacity: 1; }
-
-  .card-icon {
+  .service-icon {
     width: 48px;
     height: 48px;
     margin-bottom: 20px;
-    position: relative;
-    z-index: 1;
   }
-
-  .card-category {
-    font-family: 'Share Tech Mono', monospace;
+  .service-num {
+    font-family: var(--font-mono);
     font-size: 10px;
-    color: var(--card-accent, var(--accent-cyan));
-    letter-spacing: 0.25em;
-    margin-bottom: 10px;
-    position: relative;
-    z-index: 1;
-  }
-
-  .card-title {
-    font-family: 'Orbitron', monospace;
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--text-bright);
-    margin-bottom: 14px;
-    position: relative;
-    z-index: 1;
-  }
-
-  .card-desc {
-    font-size: 14px;
     color: var(--text-dim);
-    line-height: 1.7;
-    margin-bottom: 20px;
-    position: relative;
-    z-index: 1;
-  }
-
-  .card-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    position: relative;
-    z-index: 1;
-  }
-
-  .tag {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 9px;
-    padding: 3px 10px;
-    border: 1px solid rgba(0,229,255,0.2);
-    border-radius: 2px;
-    color: var(--text-dim);
-    letter-spacing: 0.1em;
-  }
-
-  /* Card variants */
-  .card-red { --card-accent: var(--accent-red); --card-glow: rgba(255,45,85,0.06); --card-shadow: rgba(255,45,85,0.12); }
-  .card-orange { --card-accent: var(--accent-orange); --card-glow: rgba(255,107,26,0.06); --card-shadow: rgba(255,107,26,0.12); }
-  .card-green { --card-accent: var(--accent-green); --card-glow: rgba(0,255,136,0.06); --card-shadow: rgba(0,255,136,0.12); }
-  .card-blue { --card-accent: var(--accent-blue); --card-glow: rgba(26,111,255,0.06); --card-shadow: rgba(26,111,255,0.12); }
-  .card-cyan { --card-accent: var(--accent-cyan); --card-glow: rgba(0,229,255,0.06); --card-shadow: rgba(0,229,255,0.12); }
-
-  /* ─── THREAT FEED ─── */
-  .feed-container {
-    background: var(--bg-card);
-    border: 1px solid var(--border-glow);
-    overflow: hidden;
-  }
-
-  .feed-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 24px;
-    border-bottom: 1px solid rgba(0,229,255,0.1);
-    background: rgba(0,229,255,0.03);
-  }
-
-  .feed-title {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 11px;
-    color: var(--accent-cyan);
     letter-spacing: 0.2em;
-  }
-
-  .feed-live {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 10px;
-    color: var(--accent-red);
-  }
-
-  .feed-scroll {
-    padding: 0;
-    max-height: 320px;
-    overflow: hidden;
-    position: relative;
-  }
-
-  .feed-track {
-    animation: feedScroll 18s linear infinite;
-  }
-
-  @keyframes feedScroll {
-    0% { transform: translateY(0); }
-    100% { transform: translateY(-50%); }
-  }
-
-  .feed-item {
-    display: grid;
-    grid-template-columns: 140px 200px 1fr 120px 100px;
-    gap: 16px;
-    align-items: center;
-    padding: 12px 24px;
-    border-bottom: 1px solid rgba(0,229,255,0.04);
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 11px;
-    transition: background 0.2s;
-  }
-
-  .feed-item:hover { background: rgba(0,229,255,0.03); }
-
-  .feed-time { color: var(--text-dim); }
-  .feed-domain { color: var(--text-bright); }
-  .feed-type { color: var(--text-primary); }
-
-  .severity {
-    padding: 3px 10px;
-    border-radius: 2px;
-    font-size: 9px;
-    text-align: center;
-    letter-spacing: 0.1em;
-  }
-
-  .sev-critical { background: rgba(255,45,85,0.15); color: var(--accent-red); border: 1px solid rgba(255,45,85,0.3); }
-  .sev-high { background: rgba(255,107,26,0.15); color: var(--accent-orange); border: 1px solid rgba(255,107,26,0.3); }
-  .sev-medium { background: rgba(255,200,0,0.12); color: #ffc800; border: 1px solid rgba(255,200,0,0.3); }
-
-  .feed-status-active { color: var(--accent-red); }
-  .feed-status-blocked { color: var(--accent-green); }
-  .feed-status-monitor { color: var(--accent-cyan); }
-
-  /* ─── STATS ROW ─── */
-  .stats-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2px;
-    margin: 80px 80px;
-  }
-
-  .stat-block {
-    background: var(--bg-card);
-    border: 1px solid rgba(0,229,255,0.08);
-    padding: 36px 32px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .stat-block::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--accent-cyan), transparent);
-    opacity: 0.4;
-  }
-
-  .stat-block-num {
-    font-family: 'Orbitron', monospace;
-    font-size: 42px;
-    font-weight: 900;
-    color: var(--text-bright);
-    line-height: 1;
-    margin-bottom: 8px;
-  }
-
-  .stat-block-num .unit {
-    font-size: 22px;
-    color: var(--accent-cyan);
-  }
-
-  .stat-block-label {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 11px;
-    color: var(--text-dim);
-    letter-spacing: 0.15em;
     margin-bottom: 12px;
   }
-
-  .stat-bar {
-    height: 3px;
-    background: rgba(0,229,255,0.1);
-    border-radius: 2px;
-    overflow: hidden;
+  .service-title {
+    font-family: var(--font-display);
+    font-size: 14px;
+    color: var(--text-bright);
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+  }
+  .service-desc {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.7;
   }
 
-  .stat-bar-fill {
-    height: 100%;
-    background: var(--bar-color, var(--accent-cyan));
-    border-radius: 2px;
-    animation: barGrow 2s ease forwards;
-    width: 0;
-  }
-
-  @keyframes barGrow {
-    to { width: var(--bar-width, 75%); }
-  }
-
-  /* ─── ANALYSIS PANEL ─── */
-  .analysis-row {
+  /* === TOOLS SECTION === */
+  .tools-wrap {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 2px;
+    background: var(--border);
+    border: 1px solid var(--border);
   }
-
-  .analysis-panel {
-    background: var(--bg-card);
-    border: 1px solid rgba(0,229,255,0.08);
-    padding: 36px;
+  .tool-panel {
+    background: var(--panel);
+    padding: 40px;
   }
-
-  .panel-title {
-    font-family: 'Orbitron', monospace;
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--text-bright);
-    margin-bottom: 24px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .panel-title::before {
-    content: '';
-    display: block;
-    width: 10px; height: 10px;
-    border: 2px solid var(--accent-cyan);
-    transform: rotate(45deg);
-    flex-shrink: 0;
-  }
-
-  /* Attack vector chart (CSS only) */
-  .chart-bars {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
-
-  .chart-row {
+  .tool-header {
     display: flex;
     align-items: center;
     gap: 12px;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
   }
-
-  .chart-label {
-    font-family: 'Share Tech Mono', monospace;
+  .tool-icon-wrap {
+    width: 36px;
+    height: 36px;
+    border: 1px solid rgba(0,212,255,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,212,255,0.05);
+  }
+  .tool-title {
+    font-family: var(--font-display);
+    font-size: 13px;
+    color: var(--text-bright);
+    letter-spacing: 0.1em;
+  }
+  .tool-sub {
+    font-family: var(--font-mono);
     font-size: 10px;
     color: var(--text-dim);
-    width: 140px;
-    flex-shrink: 0;
-    letter-spacing: 0.08em;
-  }
-
-  .chart-track {
-    flex: 1;
-    height: 8px;
-    background: rgba(0,229,255,0.06);
-    border-radius: 2px;
-    overflow: hidden;
-  }
-
-  .chart-fill {
-    height: 100%;
-    border-radius: 2px;
-    animation: barGrow 2.5s ease forwards;
-    animation-delay: var(--delay, 0s);
-  }
-
-  .chart-val {
-    font-family: 'Orbitron', monospace;
-    font-size: 11px;
-    color: var(--text-primary);
-    width: 40px;
-    text-align: right;
-  }
-
-  /* Timeline */
-  .timeline {
-    position: relative;
-    padding-left: 24px;
-  }
-
-  .timeline::before {
-    content: '';
-    position: absolute;
-    left: 7px; top: 0; bottom: 0;
-    width: 1px;
-    background: linear-gradient(180deg, var(--accent-cyan), transparent);
-  }
-
-  .timeline-item {
-    position: relative;
-    margin-bottom: 24px;
-  }
-
-  .timeline-item::before {
-    content: '';
-    position: absolute;
-    left: -21px;
-    top: 6px;
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--accent-cyan);
-    box-shadow: 0 0 10px var(--accent-cyan);
-  }
-
-  .timeline-item.red::before {
-    background: var(--accent-red);
-    box-shadow: 0 0 10px var(--accent-red);
-  }
-
-  .timeline-time {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 9px;
-    color: var(--text-dim);
-    margin-bottom: 4px;
     letter-spacing: 0.15em;
   }
 
-  .timeline-event {
-    font-size: 13px;
-    color: var(--text-primary);
+  .input-row {
+    display: flex;
+    gap: 0;
+    margin-bottom: 16px;
+  }
+  .tool-input {
+    flex: 1;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid var(--border);
+    border-right: none;
+    color: var(--text-bright);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    padding: 12px 16px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .tool-input:focus { border-color: var(--accent); }
+  .tool-input::placeholder { color: var(--text-dim); }
+
+  .tool-btn {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    padding: 12px 20px;
+    border: 1px solid var(--accent);
+    background: rgba(0,212,255,0.1);
+    color: var(--accent);
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .tool-btn:hover {
+    background: var(--accent);
+    color: var(--bg);
+  }
+  .tool-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .result-box {
+    background: rgba(0,0,0,0.5);
+    border: 1px solid var(--border);
+    min-height: 200px;
+    padding: 20px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    position: relative;
+    overflow-y: auto;
+    max-height: 340px;
+  }
+
+  .result-empty {
+    color: var(--text-dim);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    opacity: 0.5;
+  }
+
+  .result-line {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 6px;
+    line-height: 1.5;
+  }
+  .result-key { color: var(--accent); min-width: 140px; }
+  .result-val { color: var(--text-bright); word-break: break-all; }
+  .result-val.safe { color: var(--accent3); }
+  .result-val.danger { color: var(--accent2); }
+  .result-val.warn { color: #ffaa00; }
+
+  .result-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+  .status-dot.safe { background: var(--accent3); box-shadow: 0 0 8px var(--accent3); }
+  .status-dot.danger { background: var(--accent2); box-shadow: 0 0 8px var(--accent2); }
+  .status-dot.warn { background: #ffaa00; box-shadow: 0 0 8px #ffaa00; }
+  .status-dot.neutral { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+  @keyframes pulse {
+    0%,100%{ opacity:1; transform:scale(1); }
+    50%{ opacity:0.6; transform:scale(0.8); }
+  }
+  .status-label { font-size: 12px; letter-spacing: 0.1em; }
+
+  .loading-bar {
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    animation: loadSweep 1.5s ease-in-out infinite;
+    margin-bottom: 12px;
+  }
+  @keyframes loadSweep {
+    0%{ transform: scaleX(0); transform-origin: left; }
+    50%{ transform: scaleX(1); transform-origin: left; }
+    51%{ transform: scaleX(1); transform-origin: right; }
+    100%{ transform: scaleX(0); transform-origin: right; }
+  }
+
+  .vt-disclaimer {
+    font-size: 10px;
+    color: var(--text-dim);
+    opacity: 0.6;
+    margin-top: 12px;
     line-height: 1.5;
   }
 
-  .timeline-event strong {
-    color: var(--text-bright);
-    font-weight: 600;
+  /* === REPORT FORM === */
+  .report-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
   }
-
-  /* ─── FOOTER ─── */
-  footer {
-    position: relative;
-    z-index: 2;
-    border-top: 1px solid rgba(0,229,255,0.1);
-    padding: 40px 80px;
+  .form-group {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    flex-direction: column;
+    gap: 6px;
   }
-
-  .footer-brand {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .footer-copy {
-    font-family: 'Share Tech Mono', monospace;
+  .form-group.full { grid-column: 1 / -1; }
+  .form-label {
+    font-family: var(--font-mono);
     font-size: 10px;
     color: var(--text-dim);
-    letter-spacing: 0.1em;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .form-input, .form-select, .form-textarea {
+    background: rgba(0,0,0,0.4);
+    border: 1px solid var(--border);
+    color: var(--text-bright);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    padding: 12px 16px;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px rgba(0,212,255,0.15);
+  }
+  .form-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%234a6a7a' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    cursor: pointer;
+  }
+  .form-select option { background: #040a0f; }
+  .form-textarea { min-height: 120px; resize: vertical; }
+
+  .form-submit {
+    margin-top: 24px;
   }
 
+  .toast {
+    position: fixed;
+    bottom: 30px; right: 30px;
+    background: var(--panel);
+    border: 1px solid var(--accent3);
+    color: var(--accent3);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    padding: 14px 24px;
+    letter-spacing: 0.1em;
+    z-index: 9000;
+    transform: translateY(20px);
+    opacity: 0;
+    transition: all 0.4s;
+    box-shadow: 0 0 30px rgba(0,255,136,0.2);
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* === ABOUT SECTION === */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 60px;
+    align-items: start;
+  }
+  .about-body p {
+    margin-bottom: 20px;
+    font-size: 15px;
+    color: var(--text-dim);
+    line-height: 1.8;
+  }
+  .about-highlight {
+    font-size: 20px;
+    color: var(--text-bright);
+    font-weight: 500;
+    font-family: var(--font-ui);
+    border-left: 2px solid var(--accent);
+    padding-left: 20px;
+    margin-bottom: 28px;
+    line-height: 1.5;
+  }
+
+  .about-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .side-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+    transition: border-color 0.2s;
+    cursor: default;
+  }
+  .side-card:hover { border-color: rgba(0,212,255,0.3); }
+  .side-card-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--text-dim);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .side-card-val {
+    font-family: var(--font-display);
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+  }
+
+  /* === FOOTER === */
+  footer {
+    border-top: 1px solid var(--border);
+    background: var(--panel);
+  }
+  .footer-top {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 60px 40px 40px;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 40px;
+  }
+  .footer-brand p {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-top: 16px;
+    line-height: 1.7;
+    max-width: 260px;
+  }
+  .footer-col-title {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
   .footer-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .footer-links a {
+    font-size: 13px;
+    color: var(--text-dim);
+    text-decoration: none;
+    transition: color 0.2s;
+    cursor: pointer;
+  }
+  .footer-links a:hover { color: var(--accent); }
+
+  .footer-contact a {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    text-decoration: none;
+    margin-bottom: 8px;
+    transition: color 0.2s;
+  }
+  .footer-contact a:hover { color: var(--accent); }
+
+  .footer-bottom {
+    border-top: 1px solid var(--border);
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-copy {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    opacity: 0.6;
+  }
+  .footer-legal {
     display: flex;
     gap: 24px;
   }
-
-  .footer-links a {
-    font-family: 'Share Tech Mono', monospace;
+  .footer-legal a {
+    font-family: var(--font-mono);
     font-size: 10px;
     color: var(--text-dim);
     text-decoration: none;
-    letter-spacing: 0.12em;
-    transition: color 0.3s;
+    opacity: 0.6;
+  }
+  .footer-legal a:hover { opacity: 1; color: var(--accent); }
+
+  /* === SCROLLBAR === */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+  /* === ACTIVE NAV === */
+  .nav-links a.active {
+    color: var(--accent);
+    border-color: rgba(0,212,255,0.3);
+    background: rgba(0,212,255,0.05);
   }
 
-  .footer-links a:hover { color: var(--accent-cyan); }
-
-  /* ─── SCROLL ANIMATION ─── */
-  .fade-in {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.7s ease;
+  /* Case studies */
+  .cases-grid {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 2px;
+    background: var(--border);
+    border: 1px solid var(--border);
   }
-
-  .fade-in.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  /* ─── GLITCH ─── */
-  .glitch {
+  .case-card {
+    background: var(--panel);
+    padding: 32px;
+    cursor: pointer;
+    transition: background 0.3s;
     position: relative;
   }
-
-  .glitch::before, .glitch::after {
-    content: attr(data-text);
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
+  .case-card:hover { background: rgba(255,68,68,0.03); }
+  .case-type {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--accent2);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
   }
-
-  .glitch::before {
-    color: var(--accent-red);
-    animation: glitch1 4s steps(1) infinite;
-    clip-path: polygon(0 20%, 100% 20%, 100% 30%, 0 30%);
+  .case-title {
+    font-family: var(--font-display);
+    font-size: 13px;
+    color: var(--text-bright);
+    margin-bottom: 12px;
+    letter-spacing: 0.05em;
+    line-height: 1.4;
   }
-
-  .glitch::after {
-    color: var(--accent-cyan);
-    animation: glitch2 4s steps(1) infinite;
-    clip-path: polygon(0 60%, 100% 60%, 100% 70%, 0 70%);
+  .case-desc {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.7;
   }
-
-  @keyframes glitch1 {
-    0%,90%,100% { transform: none; opacity: 0; }
-    92% { transform: translate(-3px, 0); opacity: 0.8; }
-    94% { transform: translate(3px, 0); opacity: 0.6; }
-    96% { transform: translate(-1px, 0); opacity: 0.4; }
+  .case-meta {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    display: flex;
+    gap: 16px;
   }
+  .case-meta span { color: var(--accent3); }
 
-  @keyframes glitch2 {
-    0%,88%,100% { transform: none; opacity: 0; }
-    90% { transform: translate(3px, 0); opacity: 0.8; }
-    93% { transform: translate(-2px, 0); opacity: 0.5; }
-    95% { transform: none; opacity: 0.3; }
+  /* Standards */
+  .standards-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    background: var(--border);
+    border: 1px solid var(--border);
   }
-
-  /* Type animation */
-  .typewriter {
-    overflow: hidden;
+  .standard-item {
+    background: var(--panel);
+    padding: 28px 36px;
+    display: grid;
+    grid-template-columns: 180px 1fr auto;
+    gap: 32px;
+    align-items: center;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .standard-item:hover { background: rgba(0,212,255,0.03); }
+  .std-num {
+    font-family: var(--font-display);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+  }
+  .std-content {}
+  .std-title {
+    font-family: var(--font-display);
+    font-size: 13px;
+    color: var(--text-bright);
+    margin-bottom: 6px;
+    letter-spacing: 0.05em;
+  }
+  .std-desc { font-size: 13px; color: var(--text-dim); }
+  .std-badge {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    padding: 4px 10px;
+    border: 1px solid;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
     white-space: nowrap;
-    animation: typing 3s steps(40) 0.5s both;
-    border-right: 2px solid var(--accent-cyan);
-    animation: typing 2.5s steps(30) 0.5s forwards, blink-cursor 0.8s step-end infinite;
   }
+  .std-badge.req { border-color: rgba(0,212,255,0.4); color: var(--accent); }
+  .std-badge.opt { border-color: rgba(0,255,136,0.3); color: var(--accent3); }
 
-  @keyframes typing {
-    from { width: 0; }
-    to { width: 100%; }
+  /* Responsive basics */
+  @media(max-width:900px){
+    .services-grid{ grid-template-columns: 1fr; }
+    .tools-wrap{ grid-template-columns: 1fr; }
+    .about-grid{ grid-template-columns: 1fr; }
+    .footer-top{ grid-template-columns: 1fr 1fr; }
+    .cases-grid{ grid-template-columns: 1fr; }
+    .standard-item{ grid-template-columns: 1fr; }
+    .stats-bar{ grid-template-columns: 1fr 1fr; }
+    .report-grid{ grid-template-columns: 1fr; }
   }
-
-  @keyframes blink-cursor {
-    50% { border-color: transparent; }
-  }
-
-  /* ─── COUNTER ANIM ─── */
-  .counter { display: inline-block; }
-
-  @media (max-width: 1024px) {
-    nav { padding: 0 24px; }
-    .hero, section { padding-left: 32px; padding-right: 32px; }
-    .stats-row { margin: 40px 32px; grid-template-columns: repeat(2,1fr); }
-    .analysis-row { grid-template-columns: 1fr; }
-    .hero-visual { display: none; }
-    footer { flex-direction: column; gap: 20px; text-align: center; }
-    .feed-item { grid-template-columns: 120px 1fr 80px; }
-    .feed-item .feed-type, .feed-item .feed-status-active, .feed-item .feed-status-blocked, .feed-item .feed-status-monitor { display: none; }
+  @media(max-width:600px){
+    nav{ padding: 0 20px; }
+    .nav-links{ display:none; }
+    .hero-content{ padding: 80px 20px 40px; }
+    .page-content{ padding: 60px 20px; }
   }
 </style>
 </head>
@@ -849,691 +973,884 @@
 
 <!-- NAV -->
 <nav>
-  <a href="#" class="nav-logo">
-    <!-- SVG LOGO -->
-    <svg class="logo-mark" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- Outer hexagon -->
-      <polygon points="21,2 38,11.5 38,30.5 21,40 4,30.5 4,11.5" stroke="#00e5ff" stroke-width="1" fill="none" opacity="0.5"/>
-      <!-- Inner hexagon -->
-      <polygon points="21,8 33,15 33,27 21,34 9,27 9,15" stroke="#00e5ff" stroke-width="1.5" fill="none" opacity="0.8"/>
-      <!-- Center diamond -->
-      <polygon points="21,13 27,21 21,29 15,21" fill="none" stroke="#00e5ff" stroke-width="1.5"/>
-      <!-- Threat vector arrow -->
-      <line x1="21" y1="13" x2="28" y2="7" stroke="#ff2d55" stroke-width="1.5"/>
-      <polygon points="28,7 24,9 26,13" fill="#ff2d55"/>
-      <!-- Center dot -->
-      <circle cx="21" cy="21" r="2.5" fill="#00e5ff"/>
-      <!-- Corner indicators -->
-      <circle cx="21" cy="2" r="1.5" fill="#00e5ff" opacity="0.7"/>
-      <circle cx="38" cy="11.5" r="1.5" fill="#00e5ff" opacity="0.5"/>
-      <circle cx="38" cy="30.5" r="1.5" fill="#00e5ff" opacity="0.5"/>
+  <a class="nav-logo" href="#" onclick="showSection('home')">
+    <svg class="logo-mark" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+      <!-- Hexagon base -->
+      <polygon points="20,2 36,11 36,29 20,38 4,29 4,11" fill="none" stroke="#00d4ff" stroke-width="1.2" stroke-linejoin="round"/>
+      <!-- Inner hex -->
+      <polygon points="20,8 30,13.5 30,24.5 20,30 10,24.5 10,13.5" fill="none" stroke="#00d4ff" stroke-width="0.6" opacity="0.4"/>
+      <!-- Arrow/vector pointing up-right -->
+      <polyline points="13,27 20,13 27,20" fill="none" stroke="#00d4ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- Dot at tip -->
+      <circle cx="27" cy="20" r="2" fill="#ff4444"/>
+      <!-- Cross-hair lines -->
+      <line x1="20" y1="2" x2="20" y2="6" stroke="#00d4ff" stroke-width="0.8" opacity="0.5"/>
+      <line x1="20" y1="34" x2="20" y2="38" stroke="#00d4ff" stroke-width="0.8" opacity="0.5"/>
     </svg>
-    <div class="logo-text-wrap">
-      <span class="logo-name">THREATVECTOR</span>
-      <span class="logo-sub">INTELLIGENCE · threatvectorintelligence.com</span>
+    <div class="nav-brand">
+      THREATVECTOR
+      <span>INTELLIGENCE</span>
     </div>
   </a>
-
-  <ul class="nav-links">
-    <li><a href="#">OVERVIEW</a></li>
-    <li><a href="#" class="active">DNS ABUSE</a></li>
-    <li><a href="#">THREAT FEED</a></li>
-    <li><a href="#">REPORTS</a></li>
-    <li><a href="#">API</a></li>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#" onclick="showSection('home')" class="active" data-page="home">HOME</a></li>
+    <li><a href="#" onclick="showSection('services')" data-page="services">SERVICES</a></li>
+    <li><a href="#" onclick="showSection('standards')" data-page="standards">STANDARDS</a></li>
+    <li><a href="#" onclick="showSection('tools')" data-page="tools">TOOLS</a></li>
+    <li><a href="#" onclick="showSection('cases')" data-page="cases">CASE STUDIES</a></li>
+    <li><a href="#" onclick="showSection('about')" data-page="about">ABOUT</a></li>
+    <li><a href="#" onclick="showSection('report')" class="cta-btn" data-page="report">SUBMIT REPORT</a></li>
   </ul>
-
-  <div class="nav-status">
-    <div class="status-dot"></div>
-    LIVE MONITORING
-  </div>
 </nav>
 
-<!-- HERO -->
-<div class="hero">
-  <div class="hero-badge">
-    <div class="status-dot" style="background:var(--accent-red)"></div>
-    <span>ACTIVE THREAT INTELLIGENCE MODULE</span>
-  </div>
-
-  <h1 class="glitch" data-text="DNS ABUSE">
-    <span class="highlight-red">DNS ABUSE</span><br>
-    <span class="highlight">INTELLIGENCE</span>
-  </h1>
-
-  <p class="hero-desc">
-    Phân tích và giám sát toàn diện các hành vi lạm dụng hệ thống DNS — từ tunneling, fast-flux, typosquatting đến DNS hijacking và phishing. Dữ liệu thời gian thực, phân loại tự động, phản ứng nhanh.
-  </p>
-
-  <div class="hero-stats">
-    <div class="hero-stat">
-      <span class="hero-stat-val counter" data-target="2847193">0</span>
-      <span class="hero-stat-label">DOMAINS ANALYZED / DAY</span>
-    </div>
-    <div class="hero-stat">
-      <span class="hero-stat-val red counter" data-target="14829">0</span>
-      <span class="hero-stat-label">ACTIVE THREATS</span>
-    </div>
-    <div class="hero-stat">
-      <span class="hero-stat-val green counter" data-target="99">0</span>
-      <span class="hero-stat-label">% DETECTION RATE</span>
-    </div>
-    <div class="hero-stat">
-      <span class="hero-stat-val counter" data-target="230">0</span>
-      <span class="hero-stat-label">COUNTRIES MONITORED</span>
-    </div>
-  </div>
-
-  <!-- Pulse Visual -->
-  <div class="hero-visual">
-    <div class="pulse-ring"></div>
-    <div class="pulse-ring"></div>
-    <div class="pulse-ring"></div>
-    <div class="pulse-ring"></div>
-    <svg class="hero-icon-center" viewBox="0 0 80 80" fill="none">
-      <polygon points="40,4 72,22 72,58 40,76 8,58 8,22" stroke="#00e5ff" stroke-width="1.5" fill="rgba(0,229,255,0.05)"/>
-      <polygon points="40,14 62,26 62,54 40,66 18,54 18,26" stroke="#00e5ff" stroke-width="1" fill="none" opacity="0.5"/>
-      <circle cx="40" cy="40" r="10" stroke="#ff2d55" stroke-width="1.5" fill="rgba(255,45,85,0.08)"/>
-      <circle cx="40" cy="40" r="4" fill="#ff2d55"/>
-      <line x1="40" y1="4" x2="40" y2="30" stroke="#00e5ff" stroke-width="0.8" stroke-dasharray="3,3"/>
-      <line x1="40" y1="50" x2="40" y2="76" stroke="#00e5ff" stroke-width="0.8" stroke-dasharray="3,3"/>
-      <line x1="8" y1="40" x2="30" y2="40" stroke="#00e5ff" stroke-width="0.8" stroke-dasharray="3,3"/>
-      <line x1="50" y1="40" x2="72" y2="40" stroke="#00e5ff" stroke-width="0.8" stroke-dasharray="3,3"/>
-    </svg>
-  </div>
-</div>
-
-<!-- STATS ROW -->
-<div class="stats-row fade-in">
-  <div class="stat-block">
-    <div class="stat-block-num"><span class="counter" data-target="12">0</span><span class="unit">+</span></div>
-    <div class="stat-block-label">LOẠI TẤN CÔNG DNS</div>
-    <div class="stat-bar"><div class="stat-bar-fill" style="--bar-width:92%; --bar-color:var(--accent-cyan)"></div></div>
-  </div>
-  <div class="stat-block">
-    <div class="stat-block-num"><span class="counter" data-target="48">0</span><span class="unit">ms</span></div>
-    <div class="stat-block-label">LATENCY PHÁT HIỆN TB</div>
-    <div class="stat-bar"><div class="stat-bar-fill" style="--bar-width:60%; --bar-color:var(--accent-green)"></div></div>
-  </div>
-  <div class="stat-block">
-    <div class="stat-block-num"><span class="counter" data-target="180">0</span><span class="unit">M</span></div>
-    <div class="stat-block-label">PASSIVE DNS RECORDS</div>
-    <div class="stat-bar"><div class="stat-bar-fill" style="--bar-width:88%; --bar-color:var(--accent-orange)"></div></div>
-  </div>
-  <div class="stat-block">
-    <div class="stat-block-num"><span class="counter" data-target="7">0</span><span class="unit">×24</span></div>
-    <div class="stat-block-label">CONTINUOUS MONITORING</div>
-    <div class="stat-bar"><div class="stat-bar-fill" style="--bar-width:100%; --bar-color:var(--accent-red)"></div></div>
-  </div>
-</div>
-
-<!-- DNS ABUSE TYPES -->
-<section class="fade-in">
-  <div class="section-header">
-    <span class="section-num">// 01</span>
-    <div class="section-line"></div>
-    <h2 class="section-title">CÁC DẠNG <span>LẠM DỤNG DNS</span></h2>
-  </div>
-
-  <div class="abuse-grid">
-
-    <div class="abuse-card card-red">
-      <svg class="card-icon" viewBox="0 0 48 48" fill="none">
-        <circle cx="24" cy="24" r="20" stroke="#ff2d55" stroke-width="1.5" fill="rgba(255,45,85,0.06)"/>
-        <path d="M16 32 L24 16 L32 32" stroke="#ff2d55" stroke-width="2"/>
-        <line x1="19" y1="27" x2="29" y2="27" stroke="#ff2d55" stroke-width="1.5"/>
-        <circle cx="24" cy="35" r="1.5" fill="#ff2d55"/>
-      </svg>
-      <div class="card-category">HIGH SEVERITY</div>
-      <div class="card-title">DNS TUNNELING</div>
-      <div class="card-desc">Ẩn dữ liệu trong các truy vấn DNS để vượt qua tường lửa và lọc mạng. Thường được dùng để exfiltrate dữ liệu nhạy cảm hoặc duy trì C2 channel trong các APT campaign.</div>
-      <div class="card-tags">
-        <span class="tag">DATA EXFIL</span>
-        <span class="tag">C2 CHANNEL</span>
-        <span class="tag">APT</span>
-        <span class="tag">COVERT COMM</span>
+<!-- ===== HOME ===== -->
+<section id="home" class="active">
+  <div id="hero">
+    <div class="hero-grid-bg"></div>
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+    <div class="hero-content">
+      <div class="hero-tag">// DNS ABUSE INTELLIGENCE PLATFORM</div>
+      <h1 class="hero-h1">
+        <span class="accent">THREAT</span>VECTOR<br>
+        <span style="color:var(--text-dim);font-size:0.6em;letter-spacing:0.05em">INTELLIGENCE</span>
+      </h1>
+      <p class="hero-sub">Evidence-driven DNS abuse detection, malicious infrastructure tracking, and responsible disclosure.</p>
+      <p class="hero-desc">
+        We investigate malware C2 domains, botnet infrastructure, phishing campaigns, pharming operations, and DNS abuse vectors. Every report is backed by verifiable technical evidence — sandbox artifacts, passive DNS telemetry, network indicators, and correlated threat intelligence.
+      </p>
+      <div class="hero-actions">
+        <button class="btn btn-primary" onclick="showSection('tools')">&#9656; RUN URL CHECK</button>
+        <button class="btn btn-danger" onclick="showSection('report')">&#9656; SUBMIT ABUSE REPORT</button>
+        <button class="btn btn-ghost" onclick="showSection('standards')">&#9656; OUR METHODOLOGY</button>
       </div>
     </div>
-
-    <div class="abuse-card card-orange">
-      <svg class="card-icon" viewBox="0 0 48 48" fill="none">
-        <rect x="8" y="8" width="32" height="32" rx="2" stroke="#ff6b1a" stroke-width="1.5" fill="rgba(255,107,26,0.06)"/>
-        <path d="M8 20 L40 20 M8 28 L40 28 M20 8 L28 40" stroke="#ff6b1a" stroke-width="1" stroke-dasharray="3,3"/>
-        <circle cx="24" cy="24" r="5" stroke="#ff6b1a" stroke-width="2"/>
-      </svg>
-      <div class="card-category">CRITICAL</div>
-      <div class="card-title">FAST-FLUX DNS</div>
-      <div class="card-desc">Thay đổi liên tục địa chỉ IP và TTL cực ngắn để ẩn hosting của phishing, botnet và malware. Cơ sở hạ tầng phân tán trên hàng trăm node bị xâm phạm.</div>
-      <div class="card-tags">
-        <span class="tag">BOTNET</span>
-        <span class="tag">PHISHING</span>
-        <span class="tag">RESILIENCE</span>
-        <span class="tag">TTL ABUSE</span>
+    <div class="stats-bar">
+      <div class="stat-item">
+        <span class="stat-num" id="cnt1">0</span>
+        <div class="stat-label">DOMAINS INVESTIGATED</div>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num" id="cnt2">0</span>
+        <div class="stat-label">C2 NETWORKS TRACKED</div>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num" id="cnt3">0</span>
+        <div class="stat-label">REPORTS SUBMITTED</div>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num" id="cnt4">0</span>
+        <div class="stat-label">ABUSE TYPES COVERED</div>
       </div>
     </div>
-
-    <div class="abuse-card card-cyan">
-      <svg class="card-icon" viewBox="0 0 48 48" fill="none">
-        <polygon points="24,6 42,36 6,36" stroke="#00e5ff" stroke-width="1.5" fill="rgba(0,229,255,0.05)"/>
-        <line x1="24" y1="16" x2="24" y2="26" stroke="#00e5ff" stroke-width="2"/>
-        <circle cx="24" cy="31" r="1.5" fill="#00e5ff"/>
-      </svg>
-      <div class="card-category">HIGH SEVERITY</div>
-      <div class="card-title">TYPOSQUATTING & IDN HOMOGRAPH</div>
-      <div class="card-desc">Đăng ký tên miền gần giống với các thương hiệu lớn (google.com → g00gle.com) hoặc dùng ký tự Unicode trông giống ASCII để lừa người dùng.</div>
-      <div class="card-tags">
-        <span class="tag">BRAND ABUSE</span>
-        <span class="tag">HOMOGRAPH</span>
-        <span class="tag">IDN</span>
-        <span class="tag">SOCIAL ENG</span>
+    <div class="ticker-wrap">
+      <div class="ticker" id="ticker">
+        <span class="ticker-item">MONITORING ACTIVE <span class="sep">|</span></span>
+        <span class="ticker-item">DNS ABUSE CATEGORIES: MALWARE · BOTNET · PHISHING · PHARMING · SPAM <span class="sep">|</span></span>
+        <span class="ticker-item">EVIDENCE-BASED REPORTING ONLY <span class="sep">|</span></span>
+        <span class="ticker-item">RESPONSIBLE DISCLOSURE POLICY ACTIVE <span class="sep">|</span></span>
+        <span class="ticker-item">ICANN COMPLIANT METHODOLOGY <span class="sep">|</span></span>
+        <span class="ticker-item">PASSIVE DNS TELEMETRY ENABLED <span class="sep">|</span></span>
+        <span class="ticker-item">SANDBOX ANALYSIS INTEGRATED <span class="sep">|</span></span>
+        <span class="ticker-item">MONITORING ACTIVE <span class="sep">|</span></span>
+        <span class="ticker-item">DNS ABUSE CATEGORIES: MALWARE · BOTNET · PHISHING · PHARMING · SPAM <span class="sep">|</span></span>
+        <span class="ticker-item">EVIDENCE-BASED REPORTING ONLY <span class="sep">|</span></span>
+        <span class="ticker-item">RESPONSIBLE DISCLOSURE POLICY ACTIVE <span class="sep">|</span></span>
+        <span class="ticker-item">ICANN COMPLIANT METHODOLOGY <span class="sep">|</span></span>
+        <span class="ticker-item">PASSIVE DNS TELEMETRY ENABLED <span class="sep">|</span></span>
+        <span class="ticker-item">SANDBOX ANALYSIS INTEGRATED <span class="sep">|</span></span>
       </div>
     </div>
-
-    <div class="abuse-card card-red">
-      <svg class="card-icon" viewBox="0 0 48 48" fill="none">
-        <circle cx="24" cy="24" r="18" stroke="#ff2d55" stroke-width="1.5" fill="none"/>
-        <path d="M24 6 C14 6 6 14 6 24" stroke="#ff2d55" stroke-width="2" stroke-dasharray="4,4"/>
-        <line x1="24" y1="6" x2="30" y2="14" stroke="#ff2d55" stroke-width="1.5"/>
-        <line x1="24" y1="6" x2="16" y2="14" stroke="#ff2d55" stroke-width="1.5"/>
-        <circle cx="24" cy="24" r="4" fill="rgba(255,45,85,0.2)" stroke="#ff2d55" stroke-width="1.5"/>
-      </svg>
-      <div class="card-category">CRITICAL</div>
-      <div class="card-title">DNS HIJACKING & CACHE POISONING</div>
-      <div class="card-desc">Chèn bản ghi DNS giả mạo vào cache của resolver để chuyển hướng người dùng đến server độc hại. Cache poisoning (Kaminsky attack) ảnh hưởng toàn bộ hạ tầng DNS.</div>
-      <div class="card-tags">
-        <span class="tag">MITM</span>
-        <span class="tag">CACHE</span>
-        <span class="tag">REDIRECT</span>
-        <span class="tag">KAMINSKY</span>
-      </div>
-    </div>
-
-    <div class="abuse-card card-blue">
-      <svg class="card-icon" viewBox="0 0 48 48" fill="none">
-        <rect x="6" y="14" width="36" height="22" rx="2" stroke="#1a6fff" stroke-width="1.5" fill="rgba(26,111,255,0.06)"/>
-        <path d="M12 24 L36 24 M12 20 L36 20 M12 28 L28 28" stroke="#1a6fff" stroke-width="1"/>
-        <path d="M6 14 L24 8 L42 14" stroke="#1a6fff" stroke-width="1.5"/>
-      </svg>
-      <div class="card-category">HIGH SEVERITY</div>
-      <div class="card-title">DNS AMPLIFICATION DDoS</div>
-      <div class="card-desc">Khai thác các open resolver để khuếch đại lưu lượng tấn công DDoS lên đến 70x. Gửi query nhỏ với IP giả mạo của nạn nhân, resolver phản hồi gói tin khổng lồ.</div>
-      <div class="card-tags">
-        <span class="tag">DDoS</span>
-        <span class="tag">AMPLIFY</span>
-        <span class="tag">OPEN RESOLVER</span>
-        <span class="tag">REFLECTION</span>
-      </div>
-    </div>
-
-    <div class="abuse-card card-green">
-      <svg class="card-icon" viewBox="0 0 48 48" fill="none">
-        <path d="M8 40 L24 8 L40 40 Z" stroke="#00ff88" stroke-width="1.5" fill="rgba(0,255,136,0.05)"/>
-        <circle cx="24" cy="26" r="8" stroke="#00ff88" stroke-width="1.5" fill="none"/>
-        <line x1="24" y1="18" x2="24" y2="26" stroke="#00ff88" stroke-width="2"/>
-        <line x1="24" y1="26" x2="30" y2="30" stroke="#00ff88" stroke-width="2"/>
-      </svg>
-      <div class="card-category">MEDIUM — HIGH</div>
-      <div class="card-title">SUBDOMAIN TAKEOVER</div>
-      <div class="card-desc">Chiếm quyền kiểm soát subdomain khi bản ghi DNS trỏ đến dịch vụ cloud đã bị xóa (dangling DNS). Kẻ tấn công đăng ký lại dịch vụ để serve nội dung độc hại dưới domain hợp lệ.</div>
-      <div class="card-tags">
-        <span class="tag">DANGLING DNS</span>
-        <span class="tag">CLOUD ABUSE</span>
-        <span class="tag">CNAME</span>
-        <span class="tag">SESSION HIJACK</span>
-      </div>
-    </div>
-
-    <div class="abuse-card card-orange">
-      <svg class="card-icon" viewBox="0 0 48 48" fill="none">
-        <circle cx="24" cy="16" r="10" stroke="#ff6b1a" stroke-width="1.5" fill="rgba(255,107,26,0.06)"/>
-        <circle cx="24" cy="16" r="5" stroke="#ff6b1a" stroke-width="1" fill="none"/>
-        <line x1="24" y1="26" x2="24" y2="42" stroke="#ff6b1a" stroke-width="1.5"/>
-        <line x1="16" y1="34" x2="32" y2="34" stroke="#ff6b1a" stroke-width="1.5"/>
-        <line x1="16" y1="42" x2="32" y2="42" stroke="#ff6b1a" stroke-width="1.5"/>
-      </svg>
-      <div class="card-category">HIGH SEVERITY</div>
-      <div class="card-title">DOMAIN GENERATION ALGORITHM (DGA)</div>
-      <div class="card-desc">Malware tự động tạo hàng nghìn tên miền ngẫu nhiên mỗi ngày để liên lạc với C2 server. Rất khó block vì không thể dự đoán domain nào sẽ được dùng tiếp theo.</div>
-      <div class="card-tags">
-        <span class="tag">DGA</span>
-        <span class="tag">C2</span>
-        <span class="tag">MALWARE</span>
-        <span class="tag">EVASION</span>
-      </div>
-    </div>
-
-    <div class="abuse-card card-cyan">
-      <svg class="card-icon" viewBox="0 0 48 48" fill="none">
-        <rect x="10" y="10" width="28" height="20" rx="2" stroke="#00e5ff" stroke-width="1.5" fill="rgba(0,229,255,0.05)"/>
-        <rect x="14" y="34" width="20" height="8" rx="1" stroke="#00e5ff" stroke-width="1" fill="none"/>
-        <line x1="24" y1="30" x2="24" y2="34" stroke="#00e5ff" stroke-width="1.5"/>
-        <line x1="10" y1="20" x2="4" y2="24" stroke="#ff2d55" stroke-width="1.5"/>
-        <circle cx="4" cy="24" r="2" fill="#ff2d55"/>
-        <line x1="38" y1="18" x2="44" y2="14" stroke="#ff2d55" stroke-width="1.5" stroke-dasharray="2,2"/>
-      </svg>
-      <div class="card-category">MEDIUM</div>
-      <div class="card-title">NXDOMAIN ATTACK & DNS FLOOD</div>
-      <div class="card-desc">Gửi hàng triệu query cho các domain không tồn tại để làm resolver bị quá tải. Kết hợp với random prefix attack có thể làm sập toàn bộ authoritative nameserver.</div>
-      <div class="card-tags">
-        <span class="tag">NXDOMAIN</span>
-        <span class="tag">FLOOD</span>
-        <span class="tag">RANDOM PREFIX</span>
-        <span class="tag">EXHAUSTION</span>
-      </div>
-    </div>
-
-    <div class="abuse-card card-red">
-      <svg class="card-icon" viewBox="0 0 48 48" fill="none">
-        <path d="M10 38 Q24 10 38 38" stroke="#ff2d55" stroke-width="1.5" fill="none"/>
-        <circle cx="24" cy="22" r="8" stroke="#ff2d55" stroke-width="1.5" fill="rgba(255,45,85,0.06)"/>
-        <path d="M20 20 L24 24 L28 18" stroke="#ff2d55" stroke-width="2"/>
-        <line x1="10" y1="38" x2="4" y2="44" stroke="#ff2d55" stroke-width="1.5"/>
-        <line x1="38" y1="38" x2="44" y2="44" stroke="#ff2d55" stroke-width="1.5"/>
-      </svg>
-      <div class="card-category">CRITICAL</div>
-      <div class="card-title">DNS-BASED PHISHING & PHARMING</div>
-      <div class="card-desc">Sử dụng domain giả mạo kết hợp với chứng chỉ SSL hợp lệ để tạo trang phishing tin cậy. Pharming sửa DNS để chuyển hướng hàng loạt người dùng mà không cần click link.</div>
-      <div class="card-tags">
-        <span class="tag">PHISHING</span>
-        <span class="tag">PHARMING</span>
-        <span class="tag">SSL ABUSE</span>
-        <span class="tag">CREDENTIAL</span>
-      </div>
-    </div>
-
-    <div class="abuse-card card-blue">
-      <svg class="card-icon" viewBox="0 0 48 48" fill="none">
-        <circle cx="24" cy="24" r="16" stroke="#1a6fff" stroke-width="1.5" fill="none"/>
-        <path d="M24 8 L24 16 M24 32 L24 40 M8 24 L16 24 M32 24 L40 24" stroke="#1a6fff" stroke-width="1.5"/>
-        <circle cx="24" cy="16" r="3" fill="#1a6fff" opacity="0.7"/>
-        <circle cx="16" cy="28" r="2" fill="#1a6fff" opacity="0.5"/>
-        <circle cx="32" cy="28" r="2" fill="#1a6fff" opacity="0.5"/>
-        <path d="M24 24 L24 16 M24 24 L16 28 M24 24 L32 28" stroke="#1a6fff" stroke-width="1"/>
-      </svg>
-      <div class="card-category">HIGH</div>
-      <div class="card-title">BGP HIJACKING + DNS ABUSE</div>
-      <div class="card-desc">Kết hợp BGP route hijacking với thao túng DNS để kiểm soát hoàn toàn traffic của một AS. Được ghi nhận trong các cuộc tấn công nhà nước với quy mô quốc gia.</div>
-      <div class="card-tags">
-        <span class="tag">BGP</span>
-        <span class="tag">ROUTING</span>
-        <span class="tag">NATION-STATE</span>
-        <span class="tag">AS HIJACK</span>
-      </div>
-    </div>
-
-    <div class="abuse-card card-green">
-      <svg class="card-icon" viewBox="0 0 48 48" fill="none">
-        <rect x="8" y="16" width="32" height="20" rx="3" stroke="#00ff88" stroke-width="1.5" fill="rgba(0,255,136,0.05)"/>
-        <circle cx="16" cy="26" r="3" stroke="#00ff88" stroke-width="1.5" fill="none"/>
-        <line x1="22" y1="22" x2="36" y2="22" stroke="#00ff88" stroke-width="1"/>
-        <line x1="22" y1="26" x2="36" y2="26" stroke="#00ff88" stroke-width="1"/>
-        <line x1="22" y1="30" x2="30" y2="30" stroke="#00ff88" stroke-width="1"/>
-        <path d="M24 8 L34 16" stroke="#ff2d55" stroke-width="1.5" stroke-dasharray="3,2"/>
-        <circle cx="34" cy="16" r="2" fill="#ff2d55"/>
-      </svg>
-      <div class="card-category">MEDIUM — HIGH</div>
-      <div class="card-title">REGISTRAR ABUSE & DOMAIN SQUATTING</div>
-      <div class="card-desc">Đăng ký hàng loạt tên miền để bán lại (cybersquatting), hoặc lợi dụng giai đoạn redemption/grace period để tạm thời sở hữu domain có traffic cao.</div>
-      <div class="card-tags">
-        <span class="tag">SQUATTING</span>
-        <span class="tag">REGISTRAR</span>
-        <span class="tag">GRACE PERIOD</span>
-        <span class="tag">BULK REG</span>
-      </div>
-    </div>
-
-    <div class="abuse-card card-orange">
-      <svg class="card-icon" viewBox="0 0 48 48" fill="none">
-        <path d="M6 42 L14 20 L24 30 L34 10 L42 26" stroke="#ff6b1a" stroke-width="2" fill="none"/>
-        <circle cx="14" cy="20" r="3" fill="#ff6b1a" opacity="0.7"/>
-        <circle cx="24" cy="30" r="3" fill="#ff6b1a" opacity="0.7"/>
-        <circle cx="34" cy="10" r="3" fill="#ff6b1a" opacity="0.7"/>
-        <line x1="6" y1="6" x2="6" y2="42" stroke="#ff6b1a" stroke-width="1" opacity="0.3"/>
-        <line x1="6" y1="42" x2="42" y2="42" stroke="#ff6b1a" stroke-width="1" opacity="0.3"/>
-      </svg>
-      <div class="card-category">MEDIUM</div>
-      <div class="card-title">MALICIOUS SPF/DKIM/DMARC ABUSE</div>
-      <div class="card-desc">Misconfigure hoặc giả mạo DNS email authentication records (SPF, DKIM, DMARC) để gửi email giả mạo domain hợp lệ, bypass spam filter và email security gateway.</div>
-      <div class="card-tags">
-        <span class="tag">SPF</span>
-        <span class="tag">DKIM</span>
-        <span class="tag">DMARC</span>
-        <span class="tag">EMAIL SPOOF</span>
-      </div>
-    </div>
-
   </div>
 </section>
 
-<!-- LIVE THREAT FEED -->
-<section class="fade-in">
-  <div class="section-header">
-    <span class="section-num">// 02</span>
-    <div class="section-line"></div>
-    <h2 class="section-title">LIVE <span>THREAT FEED</span></h2>
-  </div>
-
-  <div class="feed-container">
-    <div class="feed-header">
-      <span class="feed-title">REALTIME DNS ABUSE EVENTS — threatvectorintelligence.com</span>
-      <div class="feed-live">
-        <div class="status-dot"></div>
-        LIVE
+<!-- ===== SERVICES ===== -->
+<section id="services">
+  <div class="page-content">
+    <div class="sec-head">
+      <div class="sec-tag">// WHAT WE DO</div>
+      <h2 class="sec-title">INTELLIGENCE SERVICES</h2>
+      <div class="sec-line"></div>
+    </div>
+    <div class="services-grid">
+      <div class="service-card" onclick="cardClick(this)">
+        <div class="service-num">01</div>
+        <svg class="service-icon" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="24" cy="24" r="20" fill="none" stroke="#00d4ff" stroke-width="1"/>
+          <circle cx="24" cy="24" r="3" fill="#00d4ff"/>
+          <line x1="24" y1="4" x2="24" y2="14" stroke="#00d4ff" stroke-width="1.5"/>
+          <line x1="24" y1="34" x2="24" y2="44" stroke="#00d4ff" stroke-width="1.5"/>
+          <line x1="4" y1="24" x2="14" y2="24" stroke="#00d4ff" stroke-width="1.5"/>
+          <line x1="34" y1="24" x2="44" y2="24" stroke="#00d4ff" stroke-width="1.5"/>
+          <circle cx="24" cy="24" r="10" fill="none" stroke="#00d4ff" stroke-width="0.5" stroke-dasharray="2,3"/>
+        </svg>
+        <div class="service-title">DNS ABUSE INVESTIGATION</div>
+        <p class="service-desc">In-depth analysis of domain registration patterns, DNS record anomalies, fast-flux behavior, DGA activity, and abusive domain lifecycles across registries and registrars.</p>
+      </div>
+      <div class="service-card" onclick="cardClick(this)">
+        <div class="service-num">02</div>
+        <svg class="service-icon" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+          <rect x="6" y="6" width="36" height="36" fill="none" stroke="#ff4444" stroke-width="1" rx="2"/>
+          <polyline points="14,30 20,20 28,26 34,16" fill="none" stroke="#ff4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="34" cy="16" r="3" fill="#ff4444"/>
+        </svg>
+        <div class="service-title">MALWARE C2 TRACKING</div>
+        <p class="service-desc">Continuous monitoring and correlation of command-and-control infrastructure. We map domain-to-IP relationships, hosting patterns, ASN data, and resolve active C2 beacon endpoints.</p>
+      </div>
+      <div class="service-card" onclick="cardClick(this)">
+        <div class="service-num">03</div>
+        <svg class="service-icon" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="24,6 42,36 6,36" fill="none" stroke="#00ff88" stroke-width="1.2"/>
+          <line x1="24" y1="16" x2="24" y2="28" stroke="#00ff88" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="24" cy="32" r="1.5" fill="#00ff88"/>
+        </svg>
+        <div class="service-title">ABUSE EVIDENCE COLLECTION</div>
+        <p class="service-desc">Structured collection and documentation of abuse indicators including sandbox reports, WHOIS records, passive DNS history, SSL certificates, and network packet artifacts.</p>
+      </div>
+      <div class="service-card" onclick="cardClick(this)">
+        <div class="service-num">04</div>
+        <svg class="service-icon" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="20" width="32" height="20" fill="none" stroke="#00d4ff" stroke-width="1" rx="1"/>
+          <path d="M16 20 L16 14 Q16 8 24 8 Q32 8 32 14 L32 20" fill="none" stroke="#00d4ff" stroke-width="1.5"/>
+          <circle cx="24" cy="30" r="3" fill="none" stroke="#00d4ff" stroke-width="1.5"/>
+          <line x1="24" y1="33" x2="24" y2="37" stroke="#00d4ff" stroke-width="1.5"/>
+        </svg>
+        <div class="service-title">REGISTRAR REPORTING SUPPORT</div>
+        <p class="service-desc">We prepare and submit evidence packages to registrars, registries, and abuse desks in formats aligned with ICANN abuse handling requirements and industry best practices.</p>
+      </div>
+      <div class="service-card" onclick="cardClick(this)">
+        <div class="service-num">05</div>
+        <svg class="service-icon" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="4" fill="none" stroke="#00d4ff" stroke-width="1.2"/>
+          <circle cx="36" cy="12" r="4" fill="none" stroke="#ff4444" stroke-width="1.2"/>
+          <circle cx="12" cy="36" r="4" fill="none" stroke="#00ff88" stroke-width="1.2"/>
+          <circle cx="36" cy="36" r="4" fill="none" stroke="#00d4ff" stroke-width="1.2"/>
+          <circle cx="24" cy="24" r="4" fill="none" stroke="#ffaa00" stroke-width="1.2"/>
+          <line x1="16" y1="12" x2="32" y2="12" stroke="#00d4ff" stroke-width="0.8" stroke-dasharray="2,2"/>
+          <line x1="12" y1="16" x2="12" y2="32" stroke="#00d4ff" stroke-width="0.8" stroke-dasharray="2,2"/>
+          <line x1="16" y1="24" x2="20" y2="24" stroke="#00d4ff" stroke-width="0.8"/>
+          <line x1="28" y1="24" x2="32" y2="24" stroke="#00d4ff" stroke-width="0.8"/>
+          <line x1="24" y1="20" x2="24" y2="28" stroke="#00d4ff" stroke-width="0.8"/>
+        </svg>
+        <div class="service-title">INFRASTRUCTURE CORRELATION</div>
+        <p class="service-desc">Cross-referencing domains, IPs, ASNs, nameservers, and SSL fingerprints to map attacker infrastructure clusters and identify related malicious assets across campaigns.</p>
+      </div>
+      <div class="service-card" onclick="cardClick(this)">
+        <div class="service-num">06</div>
+        <svg class="service-icon" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="8" width="32" height="8" fill="none" stroke="#00ff88" stroke-width="1" rx="1"/>
+          <rect x="8" y="20" width="32" height="8" fill="none" stroke="#00ff88" stroke-width="1" rx="1"/>
+          <rect x="8" y="32" width="32" height="8" fill="none" stroke="#00ff88" stroke-width="0.5" rx="1" opacity="0.4"/>
+          <line x1="14" y1="12" x2="20" y2="12" stroke="#00ff88" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="14" y1="24" x2="26" y2="24" stroke="#00ff88" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="36" cy="12" r="2" fill="#00ff88"/>
+          <circle cx="36" cy="24" r="2" fill="#ff4444"/>
+        </svg>
+        <div class="service-title">TRIAGE & VALIDATION</div>
+        <p class="service-desc">Systematic triage of submitted abuse reports, false-positive filtering, multi-source validation, and evidence quality control before escalation to registrar or registry abuse teams.</p>
       </div>
     </div>
-    <div class="feed-scroll">
-      <div class="feed-track">
-        <!-- First set -->
-        <div class="feed-item">
-          <span class="feed-time">2026-03-28 14:02:11</span>
-          <span class="feed-domain">update-secure-login[.]xyz</span>
-          <span class="feed-type">DNS Phishing / Fast-Flux</span>
-          <span class="severity sev-critical">CRITICAL</span>
-          <span class="feed-status-active">ACTIVE</span>
+  </div>
+</section>
+
+<!-- ===== STANDARDS ===== -->
+<section id="standards">
+  <div class="page-content">
+    <div class="sec-head">
+      <div class="sec-tag">// METHODOLOGY</div>
+      <h2 class="sec-title">REPORTING STANDARDS</h2>
+      <div class="sec-line"></div>
+    </div>
+    <div class="standards-list">
+      <div class="standard-item" onclick="stdClick(this)">
+        <div class="std-num">STD-001</div>
+        <div class="std-content">
+          <div class="std-title">EVIDENCE-FIRST REPORTING</div>
+          <div class="std-desc">All domain abuse reports must be accompanied by verifiable, timestamped technical evidence. Assertions without supporting artifacts are rejected during triage.</div>
         </div>
-        <div class="feed-item">
-          <span class="feed-time">2026-03-28 14:01:47</span>
-          <span class="feed-domain">dns-tunnel-c2[.]biz</span>
-          <span class="feed-type">DNS Tunneling / C2</span>
-          <span class="severity sev-critical">CRITICAL</span>
-          <span class="feed-status-blocked">BLOCKED</span>
+        <div class="std-badge req">REQUIRED</div>
+      </div>
+      <div class="standard-item" onclick="stdClick(this)">
+        <div class="std-num">STD-002</div>
+        <div class="std-content">
+          <div class="std-title">DNS ABUSE SCOPE DEFINITION</div>
+          <div class="std-desc">We operate within ICANN's five DNS abuse categories: malware, botnets, phishing, pharming, and spam facilitating the above. Content disputes outside this scope are not processed.</div>
         </div>
-        <div class="feed-item">
-          <span class="feed-time">2026-03-28 13:59:33</span>
-          <span class="feed-domain">paypa1-secure[.]com</span>
-          <span class="feed-type">Typosquatting</span>
-          <span class="severity sev-high">HIGH</span>
-          <span class="feed-status-active">ACTIVE</span>
+        <div class="std-badge req">REQUIRED</div>
+      </div>
+      <div class="standard-item" onclick="stdClick(this)">
+        <div class="std-num">STD-003</div>
+        <div class="std-content">
+          <div class="std-title">MULTI-SOURCE CORROBORATION</div>
+          <div class="std-desc">High-confidence reports require corroboration from at least two independent sources: sandbox analysis, passive DNS records, malware artifacts, OSINT, or network telemetry.</div>
         </div>
-        <div class="feed-item">
-          <span class="feed-time">2026-03-28 13:58:02</span>
-          <span class="feed-domain">aws-s3-bucket[.]io</span>
-          <span class="feed-type">Subdomain Takeover</span>
-          <span class="severity sev-high">HIGH</span>
-          <span class="feed-status-monitor">MONITOR</span>
+        <div class="std-badge req">REQUIRED</div>
+      </div>
+      <div class="standard-item" onclick="stdClick(this)">
+        <div class="std-num">STD-004</div>
+        <div class="std-content">
+          <div class="std-title">FALSE POSITIVE MANAGEMENT</div>
+          <div class="std-desc">All indicators are validated against known-good databases and threat intel feeds. Suspected false positives trigger a secondary review before any escalation to registrar or registry.</div>
         </div>
-        <div class="feed-item">
-          <span class="feed-time">2026-03-28 13:55:18</span>
-          <span class="feed-domain">xn--googl-9na[.]com</span>
-          <span class="feed-type">IDN Homograph</span>
-          <span class="severity sev-critical">CRITICAL</span>
-          <span class="feed-status-active">ACTIVE</span>
+        <div class="std-badge req">REQUIRED</div>
+      </div>
+      <div class="standard-item" onclick="stdClick(this)">
+        <div class="std-num">STD-005</div>
+        <div class="std-content">
+          <div class="std-title">RESPONSIBLE DISCLOSURE</div>
+          <div class="std-desc">We follow responsible disclosure norms. Where operational security permits, affected parties are notified before public disclosure. Active law enforcement investigations take priority.</div>
         </div>
-        <div class="feed-item">
-          <span class="feed-time">2026-03-28 13:52:44</span>
-          <span class="feed-domain">open-resolver[.]vn</span>
-          <span class="feed-type">DNS Amplification</span>
-          <span class="severity sev-high">HIGH</span>
-          <span class="feed-status-blocked">BLOCKED</span>
+        <div class="std-badge req">REQUIRED</div>
+      </div>
+      <div class="standard-item" onclick="stdClick(this)">
+        <div class="std-num">STD-006</div>
+        <div class="std-content">
+          <div class="std-title">STRUCTURED EVIDENCE PACKAGING</div>
+          <div class="std-desc">Reports submitted to registrars follow a standardized format: domain, abuse type, observed behavior, IOCs, evidence links, timestamps, and requested action — formatted for direct abuse desk intake.</div>
         </div>
-        <div class="feed-item">
-          <span class="feed-time">2026-03-28 13:48:29</span>
-          <span class="feed-domain">dga-rx7k2m[.]ru</span>
-          <span class="feed-type">DGA — Emotet</span>
-          <span class="severity sev-critical">CRITICAL</span>
-          <span class="feed-status-blocked">BLOCKED</span>
+        <div class="std-badge req">REQUIRED</div>
+      </div>
+      <div class="standard-item" onclick="stdClick(this)">
+        <div class="std-num">STD-007</div>
+        <div class="std-content">
+          <div class="std-title">PASSIVE DNS INTEGRATION</div>
+          <div class="std-desc">Historical DNS resolution data is incorporated to establish domain-IP relationships over time, identify infrastructure reuse, and detect fast-flux or bulletproof hosting patterns.</div>
         </div>
-        <div class="feed-item">
-          <span class="feed-time">2026-03-28 13:45:07</span>
-          <span class="feed-domain">mail-microsoft[.]net</span>
-          <span class="feed-type">Phishing / SPF Abuse</span>
-          <span class="severity sev-high">HIGH</span>
-          <span class="feed-status-active">ACTIVE</span>
+        <div class="std-badge opt">ENHANCED</div>
+      </div>
+      <div class="standard-item" onclick="stdClick(this)">
+        <div class="std-num">STD-008</div>
+        <div class="std-content">
+          <div class="std-title">THREAT INTEL CORRELATION</div>
+          <div class="std-desc">Indicators are cross-referenced against public and commercial threat intelligence sources to identify campaign attribution, actor TTPs, and infrastructure reuse patterns.</div>
         </div>
-        <div class="feed-item">
-          <span class="feed-time">2026-03-28 13:41:52</span>
-          <span class="feed-domain">cdn-static-asset[.]cc</span>
-          <span class="feed-type">Fast-Flux Hosting</span>
-          <span class="severity sev-medium">MEDIUM</span>
-          <span class="feed-status-monitor">MONITOR</span>
+        <div class="std-badge opt">ENHANCED</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TOOLS ===== -->
+<section id="tools">
+  <div class="page-content">
+    <div class="sec-head">
+      <div class="sec-tag">// THREAT ANALYSIS</div>
+      <h2 class="sec-title">LOOKUP TOOLS</h2>
+      <div class="sec-line"></div>
+    </div>
+    <div class="tools-wrap">
+      <!-- URL CHECK -->
+      <div class="tool-panel">
+        <div class="tool-header">
+          <div class="tool-icon-wrap">
+            <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="10" cy="10" r="8" fill="none" stroke="#00d4ff" stroke-width="1.2"/>
+              <path d="M6 10 Q8 6 10 10 Q12 14 14 10" fill="none" stroke="#00d4ff" stroke-width="1.2"/>
+              <line x1="2" y1="10" x2="18" y2="10" stroke="#00d4ff" stroke-width="0.8" opacity="0.5"/>
+              <line x1="10" y1="2" x2="10" y2="18" stroke="#00d4ff" stroke-width="0.8" opacity="0.5"/>
+            </svg>
+          </div>
+          <div>
+            <div class="tool-title">URL REPUTATION CHECK</div>
+            <div class="tool-sub">// POWERED BY VIRUSTOTAL API</div>
+          </div>
         </div>
-        <div class="feed-item">
-          <span class="feed-time">2026-03-28 13:38:14</span>
-          <span class="feed-domain">nxd-flood-bot[.]tk</span>
-          <span class="feed-type">NXDOMAIN Attack</span>
-          <span class="severity sev-high">HIGH</span>
-          <span class="feed-status-blocked">BLOCKED</span>
+        <div class="input-row">
+          <input type="text" class="tool-input" id="urlInput" placeholder="https://example.com or domain.com" onkeydown="if(event.key==='Enter')checkURL()">
+          <button class="tool-btn" id="urlBtn" onclick="checkURL()">SCAN</button>
         </div>
-        <!-- Duplicated for seamless loop -->
-        <div class="feed-item">
-          <span class="feed-time">2026-03-28 14:02:11</span>
-          <span class="feed-domain">update-secure-login[.]xyz</span>
-          <span class="feed-type">DNS Phishing / Fast-Flux</span>
-          <span class="severity sev-critical">CRITICAL</span>
-          <span class="feed-status-active">ACTIVE</span>
+        <div class="result-box" id="urlResult">
+          <div class="result-empty">// Enter a URL or domain to check its reputation against VirusTotal's database of 70+ security vendors.</div>
         </div>
-        <div class="feed-item">
-          <span class="feed-time">2026-03-28 14:01:47</span>
-          <span class="feed-domain">dns-tunnel-c2[.]biz</span>
-          <span class="feed-type">DNS Tunneling / C2</span>
-          <span class="severity sev-critical">CRITICAL</span>
-          <span class="feed-status-blocked">BLOCKED</span>
+        <div class="vt-disclaimer">⚠ This tool queries the VirusTotal public API. Results reflect aggregated vendor verdicts and may include cached data. Always validate with additional sources before submitting abuse reports.</div>
+      </div>
+
+      <!-- FILE/HASH CHECK -->
+      <div class="tool-panel">
+        <div class="tool-header">
+          <div class="tool-icon-wrap">
+            <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <rect x="3" y="2" width="12" height="16" fill="none" stroke="#ff4444" stroke-width="1.2" rx="1"/>
+              <line x1="6" y1="7" x2="12" y2="7" stroke="#ff4444" stroke-width="1"/>
+              <line x1="6" y1="10" x2="12" y2="10" stroke="#ff4444" stroke-width="1"/>
+              <line x1="6" y1="13" x2="9" y2="13" stroke="#ff4444" stroke-width="1"/>
+              <circle cx="15" cy="15" r="4" fill="#040a0f" stroke="#ff4444" stroke-width="1.2"/>
+              <line x1="13.5" y1="15" x2="16.5" y2="15" stroke="#ff4444" stroke-width="1.2"/>
+              <line x1="15" y1="13.5" x2="15" y2="16.5" stroke="#ff4444" stroke-width="1.2"/>
+            </svg>
+          </div>
+          <div>
+            <div class="tool-title">MALWARE HASH LOOKUP</div>
+            <div class="tool-sub">// MD5 / SHA-1 / SHA-256</div>
+          </div>
         </div>
-        <div class="feed-item">
-          <span class="feed-time">2026-03-28 13:59:33</span>
-          <span class="feed-domain">paypa1-secure[.]com</span>
-          <span class="feed-type">Typosquatting</span>
-          <span class="severity sev-high">HIGH</span>
-          <span class="feed-status-active">ACTIVE</span>
+        <div class="input-row">
+          <input type="text" class="tool-input" id="hashInput" placeholder="Paste file hash (MD5, SHA-1, or SHA-256)" onkeydown="if(event.key==='Enter')checkHash()">
+          <button class="tool-btn" id="hashBtn" onclick="checkHash()">LOOKUP</button>
         </div>
-        <div class="feed-item">
-          <span class="feed-time">2026-03-28 13:58:02</span>
-          <span class="feed-domain">aws-s3-bucket[.]io</span>
-          <span class="feed-type">Subdomain Takeover</span>
-          <span class="severity sev-high">HIGH</span>
-          <span class="feed-status-monitor">MONITOR</span>
+        <div class="result-box" id="hashResult">
+          <div class="result-empty">// Submit a file hash to retrieve VirusTotal analysis: detection ratio, malware family classification, and first/last seen timestamps.</div>
         </div>
-        <div class="feed-item">
-          <span class="feed-time">2026-03-28 13:55:18</span>
-          <span class="feed-domain">xn--googl-9na[.]com</span>
-          <span class="feed-type">IDN Homograph</span>
-          <span class="severity sev-critical">CRITICAL</span>
-          <span class="feed-status-active">ACTIVE</span>
+        <div class="vt-disclaimer">⚠ Hash lookups retrieve existing VirusTotal reports only. If a hash has no prior analysis, no results will be returned. For new files, use virustotal.com directly.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CASE STUDIES ===== -->
+<section id="cases">
+  <div class="page-content">
+    <div class="sec-head">
+      <div class="sec-tag">// RECENT ACTIVITY</div>
+      <h2 class="sec-title">CASE STUDIES</h2>
+      <div class="sec-line"></div>
+    </div>
+    <div class="cases-grid">
+      <div class="case-card" onclick="caseClick(this)">
+        <div class="case-type">⬤ BOTNET C2</div>
+        <div class="case-title">EMOTET RESURRECTION — MULTI-STAGE C2 INFRASTRUCTURE MAPPED</div>
+        <p class="case-desc">Identified a cluster of 47 domains operating as second-stage C2 nodes distributing Emotet payloads. Fast-flux DNS, bulletproof hosting across 3 ASNs, and automated domain registration patterns confirmed via passive DNS correlation.</p>
+        <div class="case-meta">
+          <div>DOMAINS: <span>47</span></div>
+          <div>ASNs: <span>3</span></div>
+          <div>REPORTED TO: <span>6 REGISTRARS</span></div>
         </div>
-        <div class="feed-item">
-          <span class="feed-time">2026-03-28 13:52:44</span>
-          <span class="feed-domain">open-resolver[.]vn</span>
-          <span class="feed-type">DNS Amplification</span>
-          <span class="severity sev-high">HIGH</span>
-          <span class="feed-status-blocked">BLOCKED</span>
+      </div>
+      <div class="case-card" onclick="caseClick(this)">
+        <div class="case-type">⬤ PHISHING</div>
+        <div class="case-title">CREDENTIAL HARVESTING CAMPAIGN — FINANCIAL SECTOR IMPERSONATION</div>
+        <p class="case-desc">Traced a large-scale phishing operation targeting 12 major financial institutions. Attacker rotated domains every 48-72 hours with typosquatted registrations and shared hosting fingerprints linking 200+ domains to single actor infrastructure.</p>
+        <div class="case-meta">
+          <div>DOMAINS: <span>200+</span></div>
+          <div>VICTIMS: <span>12 BANKS</span></div>
+          <div>DURATION: <span>6 WEEKS</span></div>
         </div>
-        <div class="feed-item">
-          <span class="feed-time">2026-03-28 13:48:29</span>
-          <span class="feed-domain">dga-rx7k2m[.]ru</span>
-          <span class="feed-type">DGA — Emotet</span>
-          <span class="severity sev-critical">CRITICAL</span>
-          <span class="feed-status-blocked">BLOCKED</span>
+      </div>
+      <div class="case-card" onclick="caseClick(this)">
+        <div class="case-type">⬤ MALWARE</div>
+        <div class="case-title">INFOSTEALER DELIVERY VIA COMPROMISED LEGITIMATE DOMAINS</div>
+        <p class="case-desc">Uncovered a campaign injecting malicious JavaScript into compromised WordPress sites to redirect to infostealer download domains. SSL certificate reuse and shared nameserver patterns exposed 80+ compromised domains in a single analysis session.</p>
+        <div class="case-meta">
+          <div>COMPROMISED: <span>80+ DOMAINS</span></div>
+          <div>VECTOR: <span>JS INJECTION</span></div>
+          <div>MALWARE: <span>INFOSTEALER</span></div>
         </div>
-        <div class="feed-item">
-          <span class="feed-time">2026-03-28 13:45:07</span>
-          <span class="feed-domain">mail-microsoft[.]net</span>
-          <span class="feed-type">Phishing / SPF Abuse</span>
-          <span class="severity sev-high">HIGH</span>
-          <span class="feed-status-active">ACTIVE</span>
+      </div>
+      <div class="case-card" onclick="caseClick(this)">
+        <div class="case-type">⬤ PHARMING</div>
+        <div class="case-title">DNS HIJACKING CAMPAIGN TARGETING RESIDENTIAL ISP CUSTOMERS</div>
+        <p class="case-desc">Investigated DNS hijacking affecting router configurations across multiple ISPs, redirecting banking traffic to pharming pages. Correlated attacker-controlled resolvers, fake SSL certificates, and overlapping WHOIS data to identify 15 threat actor domains.</p>
+        <div class="case-meta">
+          <div>ISPS AFFECTED: <span>4</span></div>
+          <div>ACTOR DOMAINS: <span>15</span></div>
+          <div>TYPE: <span>DNS HIJACK</span></div>
         </div>
-        <div class="feed-item">
-          <span class="feed-time">2026-03-28 13:41:52</span>
-          <span class="feed-domain">cdn-static-asset[.]cc</span>
-          <span class="feed-type">Fast-Flux Hosting</span>
-          <span class="severity sev-medium">MEDIUM</span>
-          <span class="feed-status-monitor">MONITOR</span>
+      </div>
+      <div class="case-card" onclick="caseClick(this)">
+        <div class="case-type">⬤ SPAM / ABUSE</div>
+        <div class="case-title">SNOWSHOE SPAM NETWORK — DISTRIBUTED LOW-VOLUME ABUSE</div>
+        <p class="case-desc">Identified a snowshoe spam operation distributing malware droppers via email. 300+ domains spread across hundreds of IPs to evade reputation systems, all tied to a single registrant organization via WHOIS history and billing address correlation.</p>
+        <div class="case-meta">
+          <div>DOMAINS: <span>300+</span></div>
+          <div>IPS: <span>800+</span></div>
+          <div>REGISTRANT: <span>SINGLE ACTOR</span></div>
         </div>
-        <div class="feed-item">
-          <span class="feed-time">2026-03-28 13:38:14</span>
-          <span class="feed-domain">nxd-flood-bot[.]tk</span>
-          <span class="feed-type">NXDOMAIN Attack</span>
-          <span class="severity sev-high">HIGH</span>
-          <span class="feed-status-blocked">BLOCKED</span>
+      </div>
+      <div class="case-card" onclick="caseClick(this)">
+        <div class="case-type">⬤ DGA</div>
+        <div class="case-title">DGA-GENERATED DOMAIN CLUSTER — RANSOMWARE BEACON IDENTIFICATION</div>
+        <p class="case-desc">Reverse-engineered a domain generation algorithm embedded in ransomware samples. Predicted 2,000+ future C2 domains, submitted pre-emptive registrar notifications, and sinkholed active beaconing domains in coordination with security researchers.</p>
+        <div class="case-meta">
+          <div>DGA DOMAINS: <span>2000+</span></div>
+          <div>SINKHOLED: <span>34</span></div>
+          <div>FAMILY: <span>RANSOMWARE</span></div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ANALYSIS -->
-<section class="fade-in">
-  <div class="section-header">
-    <span class="section-num">// 03</span>
-    <div class="section-line"></div>
-    <h2 class="section-title">PHÂN TÍCH <span>VÀ PHÂN PHỐI</span></h2>
-  </div>
-
-  <div class="analysis-row">
-    <div class="analysis-panel">
-      <div class="panel-title">PHÂN BỔ THEO LOẠI TẤN CÔNG — Q1 2026</div>
-      <div class="chart-bars">
-        <div class="chart-row">
-          <span class="chart-label">DNS PHISHING</span>
-          <div class="chart-track"><div class="chart-fill" style="width:0;background:var(--accent-red);--bar-width:78%;--delay:0.1s;animation:barGrow 2s ease 0.1s forwards"></div></div>
-          <span class="chart-val">78%</span>
+<!-- ===== ABOUT ===== -->
+<section id="about">
+  <div class="page-content">
+    <div class="sec-head">
+      <div class="sec-tag">// WHO WE ARE</div>
+      <h2 class="sec-title">ABOUT</h2>
+      <div class="sec-line"></div>
+    </div>
+    <div class="about-grid">
+      <div class="about-body">
+        <p class="about-highlight">ThreatVector Intelligence is a specialist DNS abuse investigation and reporting organization focused on evidence-based identification of malicious internet infrastructure.</p>
+        <p>We operate at the intersection of DNS abuse analysis, malware infrastructure research, and responsible disclosure — bridging the gap between threat identification and effective registrar/registry mitigation.</p>
+        <p>Our methodology is built on a single principle: every report must be defensible. We do not submit abuse reports based on suspicion, reputation signals, or content concerns. We investigate, validate, correlate, and document — then report with complete evidence packages that abuse desks can act on immediately.</p>
+        <p>We work within the five DNS abuse categories as defined by ICANN: malware distribution, botnet command-and-control infrastructure, phishing, pharming, and spam used to propagate the above. We distinguish DNS infrastructure abuse from content disputes and do not process the latter.</p>
+        <p>All work is conducted under responsible disclosure principles. Where intelligence permits and operational security allows, we coordinate disclosures with affected registrars, registries, CERTs, and law enforcement before any public release.</p>
+        <p style="margin-bottom:0">
+          <strong style="color:var(--text-bright)">General inquiries:</strong> <a href="mailto:info@threatvectorintelligence.com" style="color:var(--accent);text-decoration:none">info@threatvectorintelligence.com</a><br>
+          <strong style="color:var(--text-bright)">Abuse reports:</strong> <a href="mailto:abuse@threatvectorintelligence.com" style="color:var(--accent2);text-decoration:none">abuse@threatvectorintelligence.com</a>
+        </p>
+      </div>
+      <div class="about-sidebar">
+        <div class="side-card">
+          <div class="side-card-label">DOMAIN</div>
+          <div class="side-card-val">threatvectorintelligence.com</div>
         </div>
-        <div class="chart-row">
-          <span class="chart-label">FAST-FLUX</span>
-          <div class="chart-track"><div class="chart-fill" style="width:0;background:var(--accent-orange);--delay:0.2s;animation:barGrow 2s ease 0.2s forwards;--bar-width:61%"></div></div>
-          <span class="chart-val">61%</span>
+        <div class="side-card">
+          <div class="side-card-label">FOCUS AREAS</div>
+          <div class="side-card-val" style="font-size:11px;line-height:1.8;color:var(--text-dim);font-family:var(--font-mono)">
+            MALWARE C2 · BOTNET INFRA<br>
+            PHISHING · PHARMING · DGA<br>
+            FAST-FLUX · SNOWSHOE SPAM
+          </div>
         </div>
-        <div class="chart-row">
-          <span class="chart-label">DNS TUNNELING</span>
-          <div class="chart-track"><div class="chart-fill" style="width:0;background:var(--accent-cyan);--delay:0.3s;animation:barGrow 2s ease 0.3s forwards;--bar-width:54%"></div></div>
-          <span class="chart-val">54%</span>
+        <div class="side-card">
+          <div class="side-card-label">EVIDENCE SOURCES</div>
+          <div class="side-card-val" style="font-size:11px;line-height:1.8;color:var(--text-dim);font-family:var(--font-mono)">
+            SANDBOX ANALYSIS<br>
+            PASSIVE DNS TELEMETRY<br>
+            MALWARE SAMPLES<br>
+            NETWORK ARTIFACTS<br>
+            THREAT INTEL CORRELATION
+          </div>
         </div>
-        <div class="chart-row">
-          <span class="chart-label">DGA MALWARE</span>
-          <div class="chart-track"><div class="chart-fill" style="width:0;background:#9b59b6;--delay:0.4s;animation:barGrow 2s ease 0.4s forwards;--bar-width:47%"></div></div>
-          <span class="chart-val">47%</span>
+        <div class="side-card">
+          <div class="side-card-label">REPORTING TARGETS</div>
+          <div class="side-card-val" style="font-size:11px;line-height:1.8;color:var(--text-dim);font-family:var(--font-mono)">
+            ICANN REGISTRARS<br>
+            DNS REGISTRIES<br>
+            ABUSE DESKS<br>
+            CERT / CSIRT TEAMS<br>
+            LAW ENFORCEMENT
+          </div>
         </div>
-        <div class="chart-row">
-          <span class="chart-label">TYPOSQUATTING</span>
-          <div class="chart-track"><div class="chart-fill" style="width:0;background:var(--accent-blue);--delay:0.5s;animation:barGrow 2s ease 0.5s forwards;--bar-width:39%"></div></div>
-          <span class="chart-val">39%</span>
-        </div>
-        <div class="chart-row">
-          <span class="chart-label">CACHE POISON</span>
-          <div class="chart-track"><div class="chart-fill" style="width:0;background:var(--accent-green);--delay:0.6s;animation:barGrow 2s ease 0.6s forwards;--bar-width:28%"></div></div>
-          <span class="chart-val">28%</span>
-        </div>
-        <div class="chart-row">
-          <span class="chart-label">SUBDOMAIN TKO</span>
-          <div class="chart-track"><div class="chart-fill" style="width:0;background:#ffc800;--delay:0.7s;animation:barGrow 2s ease 0.7s forwards;--bar-width:22%"></div></div>
-          <span class="chart-val">22%</span>
-        </div>
-        <div class="chart-row">
-          <span class="chart-label">DNS AMPLIFY DDoS</span>
-          <div class="chart-track"><div class="chart-fill" style="width:0;background:#e74c3c;--delay:0.8s;animation:barGrow 2s ease 0.8s forwards;--bar-width:35%"></div></div>
-          <span class="chart-val">35%</span>
+        <div class="side-card">
+          <div class="side-card-label">POLICY</div>
+          <div class="side-card-val" style="font-size:11px;line-height:1.8;color:var(--text-dim);font-family:var(--font-mono)">
+            RESPONSIBLE DISCLOSURE<br>
+            GOOD-FAITH REPORTING<br>
+            NO FALSE POSITIVES POLICY
+          </div>
         </div>
       </div>
     </div>
+  </div>
+</section>
 
-    <div class="analysis-panel">
-      <div class="panel-title">SỰ KIỆN NỔI BẬT GẦN ĐÂY</div>
-      <div class="timeline">
-        <div class="timeline-item red">
-          <div class="timeline-time">2026-03-27 · 22:14 UTC</div>
-          <div class="timeline-event"><strong>Fast-flux botnet mới</strong> — Phát hiện mạng lưới 3.400+ IP xoay vòng với TTL 60s phục vụ phishing ngân hàng khu vực Đông Nam Á.</div>
-        </div>
-        <div class="timeline-item">
-          <div class="timeline-time">2026-03-26 · 18:03 UTC</div>
-          <div class="timeline-event"><strong>DGA cluster Emotet</strong> — Ghi nhận 1.200 domain DGA mới từ variant Emotet, đang liên lạc C2 qua DNS-over-HTTPS.</div>
-        </div>
-        <div class="timeline-item red">
-          <div class="timeline-time">2026-03-25 · 09:51 UTC</div>
-          <div class="timeline-event"><strong>Subdomain takeover</strong> — 14 subdomain của 3 tổ chức tài chính bị chiếm quyền thông qua dangling CNAME trỏ đến Azure blob đã xóa.</div>
-        </div>
-        <div class="timeline-item">
-          <div class="timeline-time">2026-03-24 · 14:22 UTC</div>
-          <div class="timeline-event"><strong>BGP + DNS kết hợp</strong> — Sự cố route leak làm 6.000 prefix bị ảnh hưởng, đồng thời ghi nhận bản ghi NS bị thay đổi tại 2 registrar lớn.</div>
-        </div>
-        <div class="timeline-item red">
-          <div class="timeline-time">2026-03-22 · 07:38 UTC</div>
-          <div class="timeline-event"><strong>IDN homograph campaign</strong> — Chiến dịch quy mô lớn sử dụng 340+ domain Unicode giả mạo Microsoft 365 và Google Workspace login page.</div>
-        </div>
+<!-- ===== REPORT ===== -->
+<section id="report">
+  <div class="page-content">
+    <div class="sec-head">
+      <div class="sec-tag">// SUBMIT INTELLIGENCE</div>
+      <h2 class="sec-title">ABUSE REPORT</h2>
+      <div class="sec-line"></div>
+    </div>
+    <div style="background:rgba(255,68,68,0.04);border:1px solid rgba(255,68,68,0.2);padding:20px 28px;margin-bottom:40px;font-family:var(--font-mono);font-size:12px;color:var(--text-dim);line-height:1.7;">
+      <span style="color:var(--accent2)">⚠ IMPORTANT:</span> This form is for DNS abuse reports only — malware C2, botnet infrastructure, phishing, pharming, and spam enabling the above. Content disputes, copyright claims, and general complaints are outside our scope. All reports require verifiable evidence. Unsubstantiated reports will not be processed.
+    </div>
+    <div class="report-grid">
+      <div class="form-group">
+        <label class="form-label">REPORTER NAME / ORGANIZATION</label>
+        <input type="text" class="form-input" placeholder="Optional — may remain anonymous" id="rName">
       </div>
+      <div class="form-group">
+        <label class="form-label">CONTACT EMAIL</label>
+        <input type="email" class="form-input" placeholder="For follow-up only" id="rEmail">
+      </div>
+      <div class="form-group">
+        <label class="form-label">ABUSIVE DOMAIN / URL *</label>
+        <input type="text" class="form-input" placeholder="e.g. malicious-domain.com" id="rDomain" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">ABUSE TYPE *</label>
+        <select class="form-select" id="rType">
+          <option value="">— SELECT ABUSE CATEGORY —</option>
+          <option value="malware">Malware Distribution / C2</option>
+          <option value="botnet">Botnet Infrastructure</option>
+          <option value="phishing">Phishing</option>
+          <option value="pharming">Pharming / DNS Hijacking</option>
+          <option value="spam">Spam (enabling DNS abuse)</option>
+          <option value="dga">DGA / Fast-Flux Domain</option>
+          <option value="other">Other DNS Abuse</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">ASSOCIATED IPs / PORTS</label>
+        <input type="text" class="form-input" placeholder="e.g. 192.168.1.1:4444" id="rIPs">
+      </div>
+      <div class="form-group">
+        <label class="form-label">FIRST OBSERVED DATE</label>
+        <input type="date" class="form-input" id="rDate" style="color-scheme:dark">
+      </div>
+      <div class="form-group full">
+        <label class="form-label">OBSERVED BEHAVIOR *</label>
+        <textarea class="form-textarea" placeholder="Describe exactly what behavior you observed: network connections, DNS resolutions, payload delivery, redirect chains, etc." id="rBehavior"></textarea>
+      </div>
+      <div class="form-group full">
+        <label class="form-label">EVIDENCE URLS / REFERENCES</label>
+        <textarea class="form-textarea" style="min-height:80px" placeholder="Links to sandbox reports, VirusTotal, URLScan.io, passive DNS, threat intel, PCAP, etc." id="rEvidence"></textarea>
+      </div>
+      <div class="form-group full">
+        <label class="form-label">INDICATORS OF COMPROMISE</label>
+        <textarea class="form-textarea" style="min-height:80px" placeholder="File hashes, registry keys, mutex names, network signatures, YARA rules, etc." id="rIOCs"></textarea>
+      </div>
+      <div class="form-group full">
+        <label class="form-label">ADDITIONAL NOTES</label>
+        <textarea class="form-textarea" style="min-height:80px" placeholder="Campaign attribution, related domains, threat actor context, urgency, or special handling instructions." id="rNotes"></textarea>
+      </div>
+    </div>
+    <div class="form-submit">
+      <button class="btn btn-danger" onclick="submitReport()" style="font-size:13px;padding:16px 36px">
+        &#9656; SUBMIT ABUSE REPORT
+      </button>
+      <span style="font-family:var(--font-mono);font-size:10px;color:var(--text-dim);margin-left:24px;letter-spacing:0.1em">
+        Reports are sent to abuse@threatvectorintelligence.com
+      </span>
     </div>
   </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-brand">
-    <svg width="32" height="32" viewBox="0 0 42 42" fill="none">
-      <polygon points="21,2 38,11.5 38,30.5 21,40 4,30.5 4,11.5" stroke="#00e5ff" stroke-width="1" fill="none" opacity="0.5"/>
-      <polygon points="21,8 33,15 33,27 21,34 9,27 9,15" stroke="#00e5ff" stroke-width="1.5" fill="none" opacity="0.8"/>
-      <polygon points="21,13 27,21 21,29 15,21" fill="none" stroke="#00e5ff" stroke-width="1.5"/>
-      <line x1="21" y1="13" x2="28" y2="7" stroke="#ff2d55" stroke-width="1.5"/>
-      <polygon points="28,7 24,9 26,13" fill="#ff2d55"/>
-      <circle cx="21" cy="21" r="2.5" fill="#00e5ff"/>
-    </svg>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a class="nav-logo" href="#" onclick="showSection('home')" style="display:inline-flex">
+        <svg class="logo-mark" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="20,2 36,11 36,29 20,38 4,29 4,11" fill="none" stroke="#00d4ff" stroke-width="1.2"/>
+          <polygon points="20,8 30,13.5 30,24.5 20,30 10,24.5 10,13.5" fill="none" stroke="#00d4ff" stroke-width="0.6" opacity="0.4"/>
+          <polyline points="13,27 20,13 27,20" fill="none" stroke="#00d4ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="27" cy="20" r="2" fill="#ff4444"/>
+          <line x1="20" y1="2" x2="20" y2="6" stroke="#00d4ff" stroke-width="0.8" opacity="0.5"/>
+          <line x1="20" y1="34" x2="20" y2="38" stroke="#00d4ff" stroke-width="0.8" opacity="0.5"/>
+        </svg>
+        <div class="nav-brand" style="margin-left:12px">THREATVECTOR<span>INTELLIGENCE</span></div>
+      </a>
+      <p>Evidence-driven DNS abuse intelligence. Malware C2 tracking, botnet infrastructure analysis, and responsible disclosure to registrars and registries worldwide.</p>
+    </div>
     <div>
-      <div style="font-family:'Orbitron',monospace;font-size:11px;color:var(--accent-cyan);letter-spacing:0.1em">THREATVECTOR INTELLIGENCE</div>
-      <div class="footer-copy">© 2026 threatvectorintelligence.com — All rights reserved</div>
+      <div class="footer-col-title">NAVIGATION</div>
+      <ul class="footer-links">
+        <li><a onclick="showSection('home')">Home</a></li>
+        <li><a onclick="showSection('services')">Services</a></li>
+        <li><a onclick="showSection('standards')">Reporting Standards</a></li>
+        <li><a onclick="showSection('tools')">Lookup Tools</a></li>
+        <li><a onclick="showSection('cases')">Case Studies</a></li>
+        <li><a onclick="showSection('about')">About</a></li>
+        <li><a onclick="showSection('report')">Submit Report</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">DNS ABUSE TYPES</div>
+      <ul class="footer-links">
+        <li><a>Malware / C2</a></li>
+        <li><a>Botnet Infrastructure</a></li>
+        <li><a>Phishing Domains</a></li>
+        <li><a>Pharming / DNS Hijack</a></li>
+        <li><a>Snowshoe Spam</a></li>
+        <li><a>DGA Domains</a></li>
+        <li><a>Fast-Flux Networks</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">CONTACT</div>
+      <div class="footer-contact">
+        <a href="mailto:info@threatvectorintelligence.com">info@threatvectorintelligence.com</a>
+        <a href="mailto:abuse@threatvectorintelligence.com" style="color:var(--accent2)">abuse@threatvectorintelligence.com</a>
+        <div style="margin-top:12px;font-family:var(--font-mono);font-size:9px;color:var(--text-dim);letter-spacing:0.15em">
+          threatvectorintelligence.com
+        </div>
+      </div>
     </div>
   </div>
-
-  <div class="footer-links">
-    <a href="#">ABUSE REPORT</a>
-    <a href="#">API DOCS</a>
-    <a href="#">PRIVACY</a>
-    <a href="#">CONTACT</a>
-  </div>
-
-  <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-dim);text-align:right">
-    <div style="color:var(--accent-green);margin-bottom:4px">● SYSTEMS OPERATIONAL</div>
-    <div>v4.2.1 · BUILD 20260328</div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2024 ThreatVector Intelligence. All rights reserved.</div>
+    <div class="footer-legal">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Responsible Use</a>
+      <a href="#">Disclaimer</a>
+    </div>
   </div>
 </footer>
 
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
 <script>
-  // ── Counter animation ──
-  function animateCounter(el) {
-    const target = parseInt(el.dataset.target);
-    const duration = 2000;
-    const step = target / (duration / 16);
-    let current = 0;
-    const timer = setInterval(() => {
-      current = Math.min(current + step, target);
-      el.textContent = Math.floor(current).toLocaleString();
-      if (current >= target) clearInterval(timer);
-    }, 16);
+// === SECTION ROUTING ===
+function showSection(id) {
+  document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+  const target = document.getElementById(id);
+  if (target) {
+    target.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.classList.toggle('active', a.dataset.page === id);
+  });
+}
+
+// === COUNTER ANIMATION ===
+function animateCount(el, target, suffix='') {
+  let start = 0;
+  const step = Math.ceil(target / 60);
+  const interval = setInterval(() => {
+    start = Math.min(start + step, target);
+    el.textContent = start.toLocaleString() + suffix;
+    if (start >= target) clearInterval(interval);
+  }, 30);
+}
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    animateCount(document.getElementById('cnt1'), 14820);
+    animateCount(document.getElementById('cnt2'), 3241);
+    animateCount(document.getElementById('cnt3'), 8906);
+    animateCount(document.getElementById('cnt4'), 5, '+');
+  }, 900);
+});
+
+// === CARD INTERACTION ===
+function cardClick(el) {
+  el.style.transform = 'scale(0.98)';
+  setTimeout(() => el.style.transform = '', 150);
+}
+function stdClick(el) {
+  el.style.background = 'rgba(0,212,255,0.05)';
+  setTimeout(() => el.style.background = '', 300);
+}
+function caseClick(el) {
+  el.style.background = 'rgba(255,68,68,0.06)';
+  setTimeout(() => el.style.background = '', 300);
+}
+
+// === TOAST ===
+function showToast(msg, type='safe') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.borderColor = type === 'safe' ? 'var(--accent3)' : type === 'danger' ? 'var(--accent2)' : 'var(--accent)';
+  t.style.color = type === 'safe' ? 'var(--accent3)' : type === 'danger' ? 'var(--accent2)' : 'var(--accent)';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// === VIRUSTOTAL API KEY (public demo — replace with your own) ===
+const VT_API_KEY = 'YOUR_VIRUSTOTAL_API_KEY'; // Replace with real key
+
+// === URL CHECK ===
+async function checkURL() {
+  const input = document.getElementById('urlInput').value.trim();
+  const btn = document.getElementById('urlBtn');
+  const box = document.getElementById('urlResult');
+  if (!input) { showToast('// Please enter a URL or domain', 'warn'); return; }
+
+  btn.disabled = true;
+  btn.textContent = '...';
+  box.innerHTML = '<div class="loading-bar"></div><span style="color:var(--accent);font-size:11px;letter-spacing:0.1em">// QUERYING VIRUSTOTAL...</span>';
+
+  try {
+    // Encode URL for VT
+    const encoded = btoa(input.replace(/\/$/, '')).replace(/=/g, '');
+    const resp = await fetch(`https://www.virustotal.com/api/v3/urls/${encoded}`, {
+      headers: { 'x-apikey': VT_API_KEY }
+    });
+
+    if (resp.status === 404) {
+      // URL not in VT, try submitting
+      box.innerHTML = renderResult({
+        status: 'neutral',
+        label: 'NOT IN DATABASE',
+        lines: [
+          { k: 'QUERY', v: input },
+          { k: 'STATUS', v: 'URL not previously analyzed by VirusTotal. Submit at virustotal.com for a full scan.', cls: 'warn' }
+        ]
+      });
+      return;
+    }
+    if (resp.status === 401) {
+      box.innerHTML = renderResult({
+        status: 'warn',
+        label: 'API KEY REQUIRED',
+        lines: [
+          { k: 'ERROR', v: 'No valid VirusTotal API key configured. Add your API key to enable live scanning.', cls: 'warn' },
+          { k: 'GET KEY', v: 'https://www.virustotal.com/gui/sign-in → API Key', cls: '' }
+        ]
+      });
+      return;
+    }
+
+    const data = await resp.json();
+    const attrs = data.data?.attributes || {};
+    const stats = attrs.last_analysis_stats || {};
+    const total = Object.values(stats).reduce((a,b)=>a+b,0);
+    const malicious = stats.malicious || 0;
+    const suspicious = stats.suspicious || 0;
+
+    let status = 'safe', label = 'CLEAN';
+    if (malicious > 5) { status = 'danger'; label = 'MALICIOUS'; }
+    else if (malicious > 0 || suspicious > 0) { status = 'warn'; label = 'SUSPICIOUS'; }
+
+    box.innerHTML = renderResult({
+      status, label,
+      lines: [
+        { k: 'URL', v: input },
+        { k: 'REPUTATION', v: attrs.reputation ?? 'N/A' },
+        { k: 'DETECTIONS', v: `${malicious} malicious / ${suspicious} suspicious / ${total} total`, cls: malicious > 0 ? 'danger' : suspicious > 0 ? 'warn' : 'safe' },
+        { k: 'CATEGORIES', v: Object.values(attrs.categories||{}).join(', ') || 'N/A' },
+        { k: 'LAST ANALYSIS', v: attrs.last_analysis_date ? new Date(attrs.last_analysis_date*1000).toUTCString() : 'N/A' },
+        { k: 'FINAL URL', v: attrs.last_final_url || input },
+        { k: 'TITLE', v: attrs.title || 'N/A' },
+        { k: 'VT LINK', v: `https://www.virustotal.com/gui/url/${encoded}` }
+      ]
+    });
+  } catch (e) {
+    box.innerHTML = renderResult({
+      status: 'warn', label: 'DEMO MODE',
+      lines: [
+        { k: 'NOTE', v: 'No API key configured — showing demo output only.', cls: 'warn' },
+        { k: 'URL QUERIED', v: input },
+        { k: 'TO ENABLE', v: 'Replace VT_API_KEY in source with your VirusTotal API key.' },
+        { k: 'GET KEY', v: 'https://www.virustotal.com/gui/sign-in' }
+      ]
+    });
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'SCAN';
+  }
+}
+
+// === HASH CHECK ===
+async function checkHash() {
+  const input = document.getElementById('hashInput').value.trim();
+  const btn = document.getElementById('hashBtn');
+  const box = document.getElementById('hashResult');
+  if (!input) { showToast('// Please enter a file hash', 'warn'); return; }
+
+  const hashType = input.length === 32 ? 'MD5' : input.length === 40 ? 'SHA-1' : input.length === 64 ? 'SHA-256' : null;
+  if (!hashType) { showToast('// Invalid hash format — use MD5 (32), SHA-1 (40), or SHA-256 (64)', 'danger'); return; }
+
+  btn.disabled = true;
+  btn.textContent = '...';
+  box.innerHTML = '<div class="loading-bar"></div><span style="color:var(--accent);font-size:11px;letter-spacing:0.1em">// QUERYING VIRUSTOTAL...</span>';
+
+  try {
+    const resp = await fetch(`https://www.virustotal.com/api/v3/files/${input}`, {
+      headers: { 'x-apikey': VT_API_KEY }
+    });
+
+    if (resp.status === 404) {
+      box.innerHTML = renderResult({
+        status: 'neutral', label: 'NOT FOUND',
+        lines: [
+          { k: 'HASH', v: input },
+          { k: 'TYPE', v: hashType },
+          { k: 'STATUS', v: 'No analysis found in VirusTotal. File may be unknown or never submitted.', cls: 'warn' }
+        ]
+      });
+      return;
+    }
+    if (resp.status === 401) {
+      box.innerHTML = renderResult({
+        status: 'warn', label: 'API KEY REQUIRED',
+        lines: [
+          { k: 'ERROR', v: 'No valid VirusTotal API key configured.', cls: 'warn' },
+          { k: 'GET KEY', v: 'https://www.virustotal.com/gui/sign-in → API Key' }
+        ]
+      });
+      return;
+    }
+
+    const data = await resp.json();
+    const attrs = data.data?.attributes || {};
+    const stats = attrs.last_analysis_stats || {};
+    const total = Object.values(stats).reduce((a,b)=>a+b,0);
+    const malicious = stats.malicious || 0;
+
+    let status = 'safe', label = 'CLEAN';
+    if (malicious > 5) { status = 'danger'; label = 'MALWARE DETECTED'; }
+    else if (malicious > 0) { status = 'warn', label = 'POTENTIALLY MALICIOUS'; }
+
+    const names = attrs.names?.slice(0,3).join(', ') || 'N/A';
+    const family = attrs.popular_threat_classification?.suggested_threat_label || 'N/A';
+
+    box.innerHTML = renderResult({
+      status, label,
+      lines: [
+        { k: 'HASH', v: input },
+        { k: 'HASH TYPE', v: hashType },
+        { k: 'FILE NAMES', v: names },
+        { k: 'FILE TYPE', v: attrs.type_description || 'N/A' },
+        { k: 'FILE SIZE', v: attrs.size ? `${(attrs.size/1024).toFixed(1)} KB` : 'N/A' },
+        { k: 'DETECTIONS', v: `${malicious} / ${total} vendors`, cls: malicious > 5 ? 'danger' : malicious > 0 ? 'warn' : 'safe' },
+        { k: 'THREAT LABEL', v: family, cls: family !== 'N/A' ? 'danger' : '' },
+        { k: 'FIRST SEEN', v: attrs.first_submission_date ? new Date(attrs.first_submission_date*1000).toUTCString() : 'N/A' },
+        { k: 'LAST SEEN', v: attrs.last_analysis_date ? new Date(attrs.last_analysis_date*1000).toUTCString() : 'N/A' },
+        { k: 'VT LINK', v: `https://www.virustotal.com/gui/file/${input}` }
+      ]
+    });
+  } catch (e) {
+    box.innerHTML = renderResult({
+      status: 'warn', label: 'DEMO MODE',
+      lines: [
+        { k: 'HASH QUERIED', v: input },
+        { k: 'TYPE', v: hashType },
+        { k: 'NOTE', v: 'No API key configured — showing demo output only.', cls: 'warn' },
+        { k: 'TO ENABLE', v: 'Replace VT_API_KEY in source with your VirusTotal API key.' }
+      ]
+    });
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'LOOKUP';
+  }
+}
+
+function renderResult({ status, label, lines }) {
+  const colors = { safe: 'var(--accent3)', danger: 'var(--accent2)', warn: '#ffaa00', neutral: 'var(--accent)' };
+  let html = `<div class="result-header"><div class="status-dot ${status}"></div><span class="status-label" style="color:${colors[status]}">${label}</span></div>`;
+  lines.forEach(l => {
+    html += `<div class="result-line"><span class="result-key">${l.k}</span><span class="result-val ${l.cls||''}">${l.v}</span></div>`;
+  });
+  return html;
+}
+
+// === REPORT FORM ===
+function submitReport() {
+  const domain = document.getElementById('rDomain').value.trim();
+  const type = document.getElementById('rType').value;
+  const behavior = document.getElementById('rBehavior').value.trim();
+  if (!domain || !type || !behavior) {
+    showToast('// Required fields missing — domain, type, and behavior description are mandatory', 'danger');
+    return;
   }
 
-  // ── Intersection Observer ──
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        entry.target.querySelectorAll('.counter').forEach(animateCounter);
-      }
-    });
-  }, { threshold: 0.1 });
+  const subject = `[DNS Abuse Report] ${type.toUpperCase()} — ${domain}`;
+  const body = `THREATVECTOR INTELLIGENCE — ABUSE REPORT
+================================
 
-  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+DOMAIN: ${domain}
+ABUSE TYPE: ${type}
+REPORTER: ${document.getElementById('rName').value || 'Anonymous'}
+CONTACT: ${document.getElementById('rEmail').value || 'Not provided'}
+ASSOCIATED IPs: ${document.getElementById('rIPs').value || 'N/A'}
+FIRST OBSERVED: ${document.getElementById('rDate').value || 'Not specified'}
 
-  // Animate hero counters on load
-  setTimeout(() => {
-    document.querySelectorAll('.hero .counter').forEach(animateCounter);
-  }, 400);
+OBSERVED BEHAVIOR:
+${behavior}
 
-  // ── Hover cursor trail ──
-  document.addEventListener('mousemove', (e) => {
-    const dot = document.createElement('div');
-    dot.style.cssText = `
-      position:fixed;left:${e.clientX}px;top:${e.clientY}px;
-      width:3px;height:3px;background:rgba(0,229,255,0.6);
-      border-radius:50%;pointer-events:none;z-index:9999;
-      transform:translate(-50%,-50%);transition:all 0.5s ease;
-    `;
-    document.body.appendChild(dot);
-    setTimeout(() => { dot.style.opacity = '0'; dot.style.transform = 'translate(-50%,-50%) scale(3)'; }, 50);
-    setTimeout(() => dot.remove(), 550);
-  });
+EVIDENCE:
+${document.getElementById('rEvidence').value || 'None provided'}
 
-  // ── Random flicker on stat numbers ──
-  setInterval(() => {
-    const nums = document.querySelectorAll('.stat-block-num');
-    const idx = Math.floor(Math.random() * nums.length);
-    nums[idx].style.opacity = '0.4';
-    setTimeout(() => nums[idx].style.opacity = '1', 80);
-  }, 3000);
+INDICATORS OF COMPROMISE:
+${document.getElementById('rIOCs').value || 'None provided'}
+
+ADDITIONAL NOTES:
+${document.getElementById('rNotes').value || 'None'}
+
+--
+Submitted via ThreatVector Intelligence portal
+threatvectorintelligence.com`;
+
+  const mailto = `mailto:abuse@threatvectorintelligence.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  window.location.href = mailto;
+  showToast('// Report prepared — opening email client', 'safe');
+}
 </script>
 </body>
 </html>
