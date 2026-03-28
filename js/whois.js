@@ -184,29 +184,6 @@ function renderWhoisResult(box, d, domain) {
   }
 
   box.innerHTML = renderResult({ status, label, rows });
-
-  // Raw WHOIS toggle (no source label shown)
-  if (d.raw) {
-    box.innerHTML += `
-      <div style="margin-top:12px">
-        <button onclick="toggleRaw(this)" class="t-btn" style="font-size:10px;padding:6px 14px">
-          SHOW RAW WHOIS
-        </button>
-        <pre id="whoisRaw" style="display:none;margin-top:10px;font-family:var(--mono);font-size:10px;
-          color:var(--dim);white-space:pre-wrap;line-height:1.6;border-top:1px solid var(--border);
-          padding-top:12px">${escHtml(d.raw)}</pre>
-      </div>`;
-  }
 }
 
-function toggleRaw(btn) {
-  const pre = document.getElementById('whoisRaw');
-  if (!pre) return;
-  const show = pre.style.display === 'none';
-  pre.style.display = show ? 'block' : 'none';
-  btn.textContent   = show ? 'HIDE RAW WHOIS' : 'SHOW RAW WHOIS';
-}
 
-function escHtml(s) {
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
