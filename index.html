@@ -1,294 +1,1539 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <title>ThreatVector Intelligence</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DNS Abuse Intelligence — ThreatVector Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@300;400;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep: #020609;
+    --bg-panel: #040d14;
+    --bg-card: #071522;
+    --accent-cyan: #00e5ff;
+    --accent-green: #00ff88;
+    --accent-red: #ff2d55;
+    --accent-orange: #ff6b1a;
+    --accent-blue: #1a6fff;
+    --text-primary: #c8e8f0;
+    --text-dim: #5a8a9f;
+    --text-bright: #e8f8ff;
+    --border-glow: rgba(0,229,255,0.3);
+    --grid-line: rgba(0,229,255,0.05);
+  }
 
-  <!-- Typography -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  <style>
-    :root {
-      --bg-1: #050915;
-      --bg-2: #0b1224;
-      --card: #0f172a;
-      --accent: #00f5c4;
-      --accent-2: #4ad7ff;
-      --text: #e6f3ff;
-      --muted: #9fb2c9;
-      --border: #0f2a3d;
-      --glow: 0 0 25px #00f5c41f;
-    }
+  body {
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    font-family: 'Rajdhani', sans-serif;
+    overflow-x: hidden;
+    cursor: crosshair;
+  }
 
-    * { box-sizing: border-box; }
+  /* ─── GRID BACKGROUND ─── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 40px 40px;
+    z-index: 0;
+    pointer-events: none;
+  }
 
-    body {
-      margin: 0;
-      font-family: 'Inter', Arial, sans-serif;
-      background: radial-gradient(120% 120% at 80% 10%, #0f233f 0%, transparent 40%),
-                  radial-gradient(100% 100% at 15% 15%, #0c2c3f 0%, transparent 45%),
-                  linear-gradient(135deg, var(--bg-1), var(--bg-2));
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+  /* Scanline overlay */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.08) 2px,
+      rgba(0,0,0,0.08) 4px
+    );
+    z-index: 1;
+    pointer-events: none;
+    animation: scanMove 8s linear infinite;
+  }
 
-    header {
-      padding: 28px 24px;
-      border-bottom: 1px solid #0a1c2f;
-      background: rgba(5, 9, 21, 0.9);
-      backdrop-filter: blur(8px);
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
+  @keyframes scanMove {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(4px); }
+  }
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
+  /* ─── NAV ─── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    height: 64px;
+    background: rgba(2,6,9,0.95);
+    border-bottom: 1px solid var(--border-glow);
+    backdrop-filter: blur(12px);
+  }
 
-    .logo {
-      width: 44px;
-      height: 44px;
-      border: 2px solid var(--accent);
-      border-radius: 12px;
-      display: grid;
-      place-items: center;
-      color: var(--accent);
-      font-weight: 700;
-      letter-spacing: -0.5px;
-      background: linear-gradient(135deg, #0b1d2f, #0f2f3f);
-      box-shadow: var(--glow);
-    }
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+  }
 
-    h1 {
-      margin: 0;
-      font-size: 24px;
-      font-weight: 700;
-      color: var(--accent);
-      letter-spacing: -0.3px;
-    }
+  /* ─── SVG LOGO ─── */
+  .logo-mark {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    filter: drop-shadow(0 0 8px var(--accent-cyan));
+    animation: logoPulse 3s ease-in-out infinite;
+  }
 
-    header p {
-      margin: 2px 0 0;
-      color: var(--muted);
-      font-size: 14px;
-    }
+  @keyframes logoPulse {
+    0%, 100% { filter: drop-shadow(0 0 8px var(--accent-cyan)); }
+    50% { filter: drop-shadow(0 0 18px var(--accent-cyan)) drop-shadow(0 0 30px rgba(0,229,255,0.4)); }
+  }
 
-    main {
-      flex: 1;
-    }
+  .logo-text-wrap {
+    display: flex;
+    flex-direction: column;
+  }
 
-    .hero {
-      max-width: 1200px;
-      margin: 60px auto 32px;
-      padding: 0 24px;
-      display: grid;
-      gap: 28px;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      align-items: center;
-    }
+  .logo-name {
+    font-family: 'Orbitron', monospace;
+    font-size: 13px;
+    font-weight: 900;
+    color: var(--accent-cyan);
+    letter-spacing: 0.12em;
+    line-height: 1;
+  }
 
-    .hero-text h2 {
-      font-size: clamp(30px, 4vw, 42px);
-      margin: 0 0 14px;
-      letter-spacing: -0.8px;
-    }
+  .logo-sub {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    color: var(--text-dim);
+    letter-spacing: 0.2em;
+    margin-top: 3px;
+  }
 
-    .hero-text p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.6;
-      font-size: 16px;
-    }
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
 
-    .cta {
-      margin-top: 22px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
+  .nav-links a {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    text-decoration: none;
+    letter-spacing: 0.15em;
+    transition: color 0.3s;
+  }
 
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      color: #04101f;
-      padding: 12px 22px;
-      border-radius: 10px;
-      text-decoration: none;
-      font-weight: 700;
-      border: none;
-      box-shadow: var(--glow);
-      transition: transform 0.12s ease, box-shadow 0.12s ease;
-    }
-    .btn:hover { transform: translateY(-1px); box-shadow: 0 8px 25px #00f5c433; }
-    .btn.secondary {
-      background: transparent;
-      color: var(--accent);
-      border: 1px solid #123145;
-      box-shadow: none;
-    }
+  .nav-links a:hover { color: var(--accent-cyan); }
+  .nav-links a.active { color: var(--accent-cyan); }
 
-    .card-grid {
-      max-width: 1200px;
-      margin: 0 auto 60px;
-      padding: 0 24px;
-      display: grid;
-      gap: 18px;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    }
+  .nav-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: var(--accent-green);
+  }
 
-    .card {
-      background: linear-gradient(145deg, #0f172a, #0c1322);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 20px 18px;
-      box-shadow: var(--glow);
-    }
+  .status-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--accent-green);
+    animation: blink 1.4s ease infinite;
+  }
 
-    .card h3 {
-      margin: 0 0 8px;
-      font-size: 18px;
-      color: var(--accent);
-    }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.2; }
+  }
 
-    .card p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.55;
-      font-size: 14px;
-    }
+  /* ─── HERO ─── */
+  .hero {
+    position: relative;
+    z-index: 2;
+    padding: 140px 80px 80px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
 
-    .badge {
-      display: inline-block;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: #0d2335;
-      border: 1px solid #0f2f45;
-      color: var(--accent-2);
-      font-size: 12px;
-      letter-spacing: 0.3px;
-      margin-bottom: 10px;
-    }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    border: 1px solid var(--accent-red);
+    border-radius: 2px;
+    margin-bottom: 28px;
+    width: fit-content;
+    background: rgba(255,45,85,0.07);
+  }
 
-    .panel {
-      max-width: 900px;
-      margin: 30px auto 72px;
-      padding: 0 24px;
-    }
+  .hero-badge span {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: var(--accent-red);
+    letter-spacing: 0.2em;
+    animation: textFlicker 4s linear infinite;
+  }
 
-    .panel-inner {
-      background: #0b1224;
-      border: 1px solid #0f2a3d;
-      border-radius: 16px;
-      padding: 26px 24px;
-      box-shadow: var(--glow);
-      display: grid;
-      gap: 16px;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    }
+  @keyframes textFlicker {
+    0%,95%,100% { opacity: 1; }
+    96% { opacity: 0.4; }
+    98% { opacity: 0.8; }
+  }
 
-    .panel h4 {
-      margin: 0 0 6px;
-      font-size: 16px;
-      color: var(--accent);
-    }
+  .hero h1 {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(36px, 5vw, 72px);
+    font-weight: 900;
+    line-height: 1.05;
+    color: var(--text-bright);
+    max-width: 860px;
+    margin-bottom: 10px;
+  }
 
-    .panel p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.5;
-    }
+  .hero h1 .highlight {
+    color: var(--accent-cyan);
+    text-shadow: 0 0 30px rgba(0,229,255,0.5);
+  }
 
-    footer {
-      text-align: center;
-      padding: 22px 16px 28px;
-      background: #040915;
-      border-top: 1px solid #0a1c2f;
-      color: var(--muted);
-      font-size: 13px;
-    }
-  </style>
+  .hero h1 .highlight-red {
+    color: var(--accent-red);
+    text-shadow: 0 0 30px rgba(255,45,85,0.4);
+  }
+
+  .hero-desc {
+    font-size: 17px;
+    color: var(--text-dim);
+    max-width: 680px;
+    line-height: 1.7;
+    margin: 24px 0 44px;
+    font-weight: 400;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 48px;
+    flex-wrap: wrap;
+  }
+
+  .hero-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .hero-stat-val {
+    font-family: 'Orbitron', monospace;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent-cyan);
+    text-shadow: 0 0 20px rgba(0,229,255,0.5);
+  }
+
+  .hero-stat-val.red { color: var(--accent-red); text-shadow: 0 0 20px rgba(255,45,85,0.5); }
+  .hero-stat-val.green { color: var(--accent-green); text-shadow: 0 0 20px rgba(0,255,136,0.5); }
+
+  .hero-stat-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.15em;
+  }
+
+  /* ─── ANIMATED PULSE RING ─── */
+  .hero-visual {
+    position: absolute;
+    right: 80px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 380px;
+    height: 380px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .pulse-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid var(--accent-cyan);
+    animation: pulseExpand 3s ease-out infinite;
+    opacity: 0;
+  }
+
+  .pulse-ring:nth-child(1) { width: 120px; height: 120px; animation-delay: 0s; }
+  .pulse-ring:nth-child(2) { width: 200px; height: 200px; animation-delay: 0.8s; }
+  .pulse-ring:nth-child(3) { width: 300px; height: 300px; animation-delay: 1.6s; }
+  .pulse-ring:nth-child(4) { width: 380px; height: 380px; animation-delay: 2.4s; }
+
+  @keyframes pulseExpand {
+    0% { opacity: 0.8; transform: scale(0.7); }
+    100% { opacity: 0; transform: scale(1); }
+  }
+
+  .hero-icon-center {
+    position: relative;
+    z-index: 2;
+    width: 80px;
+    height: 80px;
+  }
+
+  /* ─── SECTION ─── */
+  section {
+    position: relative;
+    z-index: 2;
+    padding: 80px 80px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+
+  .section-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.2em;
+  }
+
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--border-glow), transparent);
+  }
+
+  .section-title {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(20px, 2.5vw, 32px);
+    font-weight: 700;
+    color: var(--text-bright);
+    letter-spacing: 0.05em;
+  }
+
+  .section-title span { color: var(--accent-cyan); }
+
+  /* ─── ABUSE GRID ─── */
+  .abuse-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2px;
+  }
+
+  .abuse-card {
+    background: var(--bg-card);
+    border: 1px solid rgba(0,229,255,0.08);
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.4s ease;
+  }
+
+  .abuse-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--card-accent, var(--accent-cyan));
+    transition: width 0.4s ease;
+  }
+
+  .abuse-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at top left, var(--card-glow, rgba(0,229,255,0.06)), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .abuse-card:hover {
+    border-color: var(--card-accent, var(--accent-cyan));
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px var(--card-shadow, rgba(0,229,255,0.1));
+  }
+
+  .abuse-card:hover::before { width: 6px; }
+  .abuse-card:hover::after { opacity: 1; }
+
+  .card-icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .card-category {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: var(--card-accent, var(--accent-cyan));
+    letter-spacing: 0.25em;
+    margin-bottom: 10px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .card-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-bright);
+    margin-bottom: 14px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .card-desc {
+    font-size: 14px;
+    color: var(--text-dim);
+    line-height: 1.7;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    padding: 3px 10px;
+    border: 1px solid rgba(0,229,255,0.2);
+    border-radius: 2px;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+  }
+
+  /* Card variants */
+  .card-red { --card-accent: var(--accent-red); --card-glow: rgba(255,45,85,0.06); --card-shadow: rgba(255,45,85,0.12); }
+  .card-orange { --card-accent: var(--accent-orange); --card-glow: rgba(255,107,26,0.06); --card-shadow: rgba(255,107,26,0.12); }
+  .card-green { --card-accent: var(--accent-green); --card-glow: rgba(0,255,136,0.06); --card-shadow: rgba(0,255,136,0.12); }
+  .card-blue { --card-accent: var(--accent-blue); --card-glow: rgba(26,111,255,0.06); --card-shadow: rgba(26,111,255,0.12); }
+  .card-cyan { --card-accent: var(--accent-cyan); --card-glow: rgba(0,229,255,0.06); --card-shadow: rgba(0,229,255,0.12); }
+
+  /* ─── THREAT FEED ─── */
+  .feed-container {
+    background: var(--bg-card);
+    border: 1px solid var(--border-glow);
+    overflow: hidden;
+  }
+
+  .feed-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    border-bottom: 1px solid rgba(0,229,255,0.1);
+    background: rgba(0,229,255,0.03);
+  }
+
+  .feed-title {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--accent-cyan);
+    letter-spacing: 0.2em;
+  }
+
+  .feed-live {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: var(--accent-red);
+  }
+
+  .feed-scroll {
+    padding: 0;
+    max-height: 320px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .feed-track {
+    animation: feedScroll 18s linear infinite;
+  }
+
+  @keyframes feedScroll {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-50%); }
+  }
+
+  .feed-item {
+    display: grid;
+    grid-template-columns: 140px 200px 1fr 120px 100px;
+    gap: 16px;
+    align-items: center;
+    padding: 12px 24px;
+    border-bottom: 1px solid rgba(0,229,255,0.04);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    transition: background 0.2s;
+  }
+
+  .feed-item:hover { background: rgba(0,229,255,0.03); }
+
+  .feed-time { color: var(--text-dim); }
+  .feed-domain { color: var(--text-bright); }
+  .feed-type { color: var(--text-primary); }
+
+  .severity {
+    padding: 3px 10px;
+    border-radius: 2px;
+    font-size: 9px;
+    text-align: center;
+    letter-spacing: 0.1em;
+  }
+
+  .sev-critical { background: rgba(255,45,85,0.15); color: var(--accent-red); border: 1px solid rgba(255,45,85,0.3); }
+  .sev-high { background: rgba(255,107,26,0.15); color: var(--accent-orange); border: 1px solid rgba(255,107,26,0.3); }
+  .sev-medium { background: rgba(255,200,0,0.12); color: #ffc800; border: 1px solid rgba(255,200,0,0.3); }
+
+  .feed-status-active { color: var(--accent-red); }
+  .feed-status-blocked { color: var(--accent-green); }
+  .feed-status-monitor { color: var(--accent-cyan); }
+
+  /* ─── STATS ROW ─── */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    margin: 80px 80px;
+  }
+
+  .stat-block {
+    background: var(--bg-card);
+    border: 1px solid rgba(0,229,255,0.08);
+    padding: 36px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-block::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent-cyan), transparent);
+    opacity: 0.4;
+  }
+
+  .stat-block-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 42px;
+    font-weight: 900;
+    color: var(--text-bright);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .stat-block-num .unit {
+    font-size: 22px;
+    color: var(--accent-cyan);
+  }
+
+  .stat-block-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.15em;
+    margin-bottom: 12px;
+  }
+
+  .stat-bar {
+    height: 3px;
+    background: rgba(0,229,255,0.1);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .stat-bar-fill {
+    height: 100%;
+    background: var(--bar-color, var(--accent-cyan));
+    border-radius: 2px;
+    animation: barGrow 2s ease forwards;
+    width: 0;
+  }
+
+  @keyframes barGrow {
+    to { width: var(--bar-width, 75%); }
+  }
+
+  /* ─── ANALYSIS PANEL ─── */
+  .analysis-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+
+  .analysis-panel {
+    background: var(--bg-card);
+    border: 1px solid rgba(0,229,255,0.08);
+    padding: 36px;
+  }
+
+  .panel-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-bright);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .panel-title::before {
+    content: '';
+    display: block;
+    width: 10px; height: 10px;
+    border: 2px solid var(--accent-cyan);
+    transform: rotate(45deg);
+    flex-shrink: 0;
+  }
+
+  /* Attack vector chart (CSS only) */
+  .chart-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .chart-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .chart-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    width: 140px;
+    flex-shrink: 0;
+    letter-spacing: 0.08em;
+  }
+
+  .chart-track {
+    flex: 1;
+    height: 8px;
+    background: rgba(0,229,255,0.06);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .chart-fill {
+    height: 100%;
+    border-radius: 2px;
+    animation: barGrow 2.5s ease forwards;
+    animation-delay: var(--delay, 0s);
+  }
+
+  .chart-val {
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    color: var(--text-primary);
+    width: 40px;
+    text-align: right;
+  }
+
+  /* Timeline */
+  .timeline {
+    position: relative;
+    padding-left: 24px;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 7px; top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(180deg, var(--accent-cyan), transparent);
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 24px;
+  }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -21px;
+    top: 6px;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent-cyan);
+    box-shadow: 0 0 10px var(--accent-cyan);
+  }
+
+  .timeline-item.red::before {
+    background: var(--accent-red);
+    box-shadow: 0 0 10px var(--accent-red);
+  }
+
+  .timeline-time {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    color: var(--text-dim);
+    margin-bottom: 4px;
+    letter-spacing: 0.15em;
+  }
+
+  .timeline-event {
+    font-size: 13px;
+    color: var(--text-primary);
+    line-height: 1.5;
+  }
+
+  .timeline-event strong {
+    color: var(--text-bright);
+    font-weight: 600;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    position: relative;
+    z-index: 2;
+    border-top: 1px solid rgba(0,229,255,0.1);
+    padding: 40px 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .footer-copy {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 24px;
+  }
+
+  .footer-links a {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    text-decoration: none;
+    letter-spacing: 0.12em;
+    transition: color 0.3s;
+  }
+
+  .footer-links a:hover { color: var(--accent-cyan); }
+
+  /* ─── SCROLL ANIMATION ─── */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.7s ease;
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ─── GLITCH ─── */
+  .glitch {
+    position: relative;
+  }
+
+  .glitch::before, .glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+  }
+
+  .glitch::before {
+    color: var(--accent-red);
+    animation: glitch1 4s steps(1) infinite;
+    clip-path: polygon(0 20%, 100% 20%, 100% 30%, 0 30%);
+  }
+
+  .glitch::after {
+    color: var(--accent-cyan);
+    animation: glitch2 4s steps(1) infinite;
+    clip-path: polygon(0 60%, 100% 60%, 100% 70%, 0 70%);
+  }
+
+  @keyframes glitch1 {
+    0%,90%,100% { transform: none; opacity: 0; }
+    92% { transform: translate(-3px, 0); opacity: 0.8; }
+    94% { transform: translate(3px, 0); opacity: 0.6; }
+    96% { transform: translate(-1px, 0); opacity: 0.4; }
+  }
+
+  @keyframes glitch2 {
+    0%,88%,100% { transform: none; opacity: 0; }
+    90% { transform: translate(3px, 0); opacity: 0.8; }
+    93% { transform: translate(-2px, 0); opacity: 0.5; }
+    95% { transform: none; opacity: 0.3; }
+  }
+
+  /* Type animation */
+  .typewriter {
+    overflow: hidden;
+    white-space: nowrap;
+    animation: typing 3s steps(40) 0.5s both;
+    border-right: 2px solid var(--accent-cyan);
+    animation: typing 2.5s steps(30) 0.5s forwards, blink-cursor 0.8s step-end infinite;
+  }
+
+  @keyframes typing {
+    from { width: 0; }
+    to { width: 100%; }
+  }
+
+  @keyframes blink-cursor {
+    50% { border-color: transparent; }
+  }
+
+  /* ─── COUNTER ANIM ─── */
+  .counter { display: inline-block; }
+
+  @media (max-width: 1024px) {
+    nav { padding: 0 24px; }
+    .hero, section { padding-left: 32px; padding-right: 32px; }
+    .stats-row { margin: 40px 32px; grid-template-columns: repeat(2,1fr); }
+    .analysis-row { grid-template-columns: 1fr; }
+    .hero-visual { display: none; }
+    footer { flex-direction: column; gap: 20px; text-align: center; }
+    .feed-item { grid-template-columns: 120px 1fr 80px; }
+    .feed-item .feed-type, .feed-item .feed-status-active, .feed-item .feed-status-blocked, .feed-item .feed-status-monitor { display: none; }
+  }
+</style>
 </head>
-
 <body>
 
-<header>
-  <div class="brand">
-    <div class="logo">TV</div>
-    <div>
-      <h1>ThreatVector Intelligence</h1>
-      <p>Cyber Threat Intelligence • Malware Analysis • C2 Tracking</p>
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <!-- SVG LOGO -->
+    <svg class="logo-mark" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Outer hexagon -->
+      <polygon points="21,2 38,11.5 38,30.5 21,40 4,30.5 4,11.5" stroke="#00e5ff" stroke-width="1" fill="none" opacity="0.5"/>
+      <!-- Inner hexagon -->
+      <polygon points="21,8 33,15 33,27 21,34 9,27 9,15" stroke="#00e5ff" stroke-width="1.5" fill="none" opacity="0.8"/>
+      <!-- Center diamond -->
+      <polygon points="21,13 27,21 21,29 15,21" fill="none" stroke="#00e5ff" stroke-width="1.5"/>
+      <!-- Threat vector arrow -->
+      <line x1="21" y1="13" x2="28" y2="7" stroke="#ff2d55" stroke-width="1.5"/>
+      <polygon points="28,7 24,9 26,13" fill="#ff2d55"/>
+      <!-- Center dot -->
+      <circle cx="21" cy="21" r="2.5" fill="#00e5ff"/>
+      <!-- Corner indicators -->
+      <circle cx="21" cy="2" r="1.5" fill="#00e5ff" opacity="0.7"/>
+      <circle cx="38" cy="11.5" r="1.5" fill="#00e5ff" opacity="0.5"/>
+      <circle cx="38" cy="30.5" r="1.5" fill="#00e5ff" opacity="0.5"/>
+    </svg>
+    <div class="logo-text-wrap">
+      <span class="logo-name">THREATVECTOR</span>
+      <span class="logo-sub">INTELLIGENCE · threatvectorintelligence.com</span>
+    </div>
+  </a>
+
+  <ul class="nav-links">
+    <li><a href="#">OVERVIEW</a></li>
+    <li><a href="#" class="active">DNS ABUSE</a></li>
+    <li><a href="#">THREAT FEED</a></li>
+    <li><a href="#">REPORTS</a></li>
+    <li><a href="#">API</a></li>
+  </ul>
+
+  <div class="nav-status">
+    <div class="status-dot"></div>
+    LIVE MONITORING
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">
+    <div class="status-dot" style="background:var(--accent-red)"></div>
+    <span>ACTIVE THREAT INTELLIGENCE MODULE</span>
+  </div>
+
+  <h1 class="glitch" data-text="DNS ABUSE">
+    <span class="highlight-red">DNS ABUSE</span><br>
+    <span class="highlight">INTELLIGENCE</span>
+  </h1>
+
+  <p class="hero-desc">
+    Phân tích và giám sát toàn diện các hành vi lạm dụng hệ thống DNS — từ tunneling, fast-flux, typosquatting đến DNS hijacking và phishing. Dữ liệu thời gian thực, phân loại tự động, phản ứng nhanh.
+  </p>
+
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <span class="hero-stat-val counter" data-target="2847193">0</span>
+      <span class="hero-stat-label">DOMAINS ANALYZED / DAY</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-val red counter" data-target="14829">0</span>
+      <span class="hero-stat-label">ACTIVE THREATS</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-val green counter" data-target="99">0</span>
+      <span class="hero-stat-label">% DETECTION RATE</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-val counter" data-target="230">0</span>
+      <span class="hero-stat-label">COUNTRIES MONITORED</span>
     </div>
   </div>
-</header>
 
-<main>
-  <section class="hero">
-    <div class="hero-text">
-      <h2>Precision intelligence for resilient defenders.</h2>
-      <p>We hunt and report malicious infrastructure worldwide—botnet C2s, DNS abuse, malware delivery, and fraud—so you can act fast with verified, time‑bound evidence.</p>
-      <div class="cta">
-        <a class="btn" href="mailto:admin@threatvectorintelligence.com">Report Abuse</a>
-        <a class="btn secondary" href="mailto:admin@threatvectorintelligence.com?subject=Intelligence%20Briefing">Request Briefing</a>
+  <!-- Pulse Visual -->
+  <div class="hero-visual">
+    <div class="pulse-ring"></div>
+    <div class="pulse-ring"></div>
+    <div class="pulse-ring"></div>
+    <div class="pulse-ring"></div>
+    <svg class="hero-icon-center" viewBox="0 0 80 80" fill="none">
+      <polygon points="40,4 72,22 72,58 40,76 8,58 8,22" stroke="#00e5ff" stroke-width="1.5" fill="rgba(0,229,255,0.05)"/>
+      <polygon points="40,14 62,26 62,54 40,66 18,54 18,26" stroke="#00e5ff" stroke-width="1" fill="none" opacity="0.5"/>
+      <circle cx="40" cy="40" r="10" stroke="#ff2d55" stroke-width="1.5" fill="rgba(255,45,85,0.08)"/>
+      <circle cx="40" cy="40" r="4" fill="#ff2d55"/>
+      <line x1="40" y1="4" x2="40" y2="30" stroke="#00e5ff" stroke-width="0.8" stroke-dasharray="3,3"/>
+      <line x1="40" y1="50" x2="40" y2="76" stroke="#00e5ff" stroke-width="0.8" stroke-dasharray="3,3"/>
+      <line x1="8" y1="40" x2="30" y2="40" stroke="#00e5ff" stroke-width="0.8" stroke-dasharray="3,3"/>
+      <line x1="50" y1="40" x2="72" y2="40" stroke="#00e5ff" stroke-width="0.8" stroke-dasharray="3,3"/>
+    </svg>
+  </div>
+</div>
+
+<!-- STATS ROW -->
+<div class="stats-row fade-in">
+  <div class="stat-block">
+    <div class="stat-block-num"><span class="counter" data-target="12">0</span><span class="unit">+</span></div>
+    <div class="stat-block-label">LOẠI TẤN CÔNG DNS</div>
+    <div class="stat-bar"><div class="stat-bar-fill" style="--bar-width:92%; --bar-color:var(--accent-cyan)"></div></div>
+  </div>
+  <div class="stat-block">
+    <div class="stat-block-num"><span class="counter" data-target="48">0</span><span class="unit">ms</span></div>
+    <div class="stat-block-label">LATENCY PHÁT HIỆN TB</div>
+    <div class="stat-bar"><div class="stat-bar-fill" style="--bar-width:60%; --bar-color:var(--accent-green)"></div></div>
+  </div>
+  <div class="stat-block">
+    <div class="stat-block-num"><span class="counter" data-target="180">0</span><span class="unit">M</span></div>
+    <div class="stat-block-label">PASSIVE DNS RECORDS</div>
+    <div class="stat-bar"><div class="stat-bar-fill" style="--bar-width:88%; --bar-color:var(--accent-orange)"></div></div>
+  </div>
+  <div class="stat-block">
+    <div class="stat-block-num"><span class="counter" data-target="7">0</span><span class="unit">×24</span></div>
+    <div class="stat-block-label">CONTINUOUS MONITORING</div>
+    <div class="stat-bar"><div class="stat-bar-fill" style="--bar-width:100%; --bar-color:var(--accent-red)"></div></div>
+  </div>
+</div>
+
+<!-- DNS ABUSE TYPES -->
+<section class="fade-in">
+  <div class="section-header">
+    <span class="section-num">// 01</span>
+    <div class="section-line"></div>
+    <h2 class="section-title">CÁC DẠNG <span>LẠM DỤNG DNS</span></h2>
+  </div>
+
+  <div class="abuse-grid">
+
+    <div class="abuse-card card-red">
+      <svg class="card-icon" viewBox="0 0 48 48" fill="none">
+        <circle cx="24" cy="24" r="20" stroke="#ff2d55" stroke-width="1.5" fill="rgba(255,45,85,0.06)"/>
+        <path d="M16 32 L24 16 L32 32" stroke="#ff2d55" stroke-width="2"/>
+        <line x1="19" y1="27" x2="29" y2="27" stroke="#ff2d55" stroke-width="1.5"/>
+        <circle cx="24" cy="35" r="1.5" fill="#ff2d55"/>
+      </svg>
+      <div class="card-category">HIGH SEVERITY</div>
+      <div class="card-title">DNS TUNNELING</div>
+      <div class="card-desc">Ẩn dữ liệu trong các truy vấn DNS để vượt qua tường lửa và lọc mạng. Thường được dùng để exfiltrate dữ liệu nhạy cảm hoặc duy trì C2 channel trong các APT campaign.</div>
+      <div class="card-tags">
+        <span class="tag">DATA EXFIL</span>
+        <span class="tag">C2 CHANNEL</span>
+        <span class="tag">APT</span>
+        <span class="tag">COVERT COMM</span>
       </div>
     </div>
-    <div class="card">
-      <span class="badge">Active Operations</span>
-      <h3>Professional Abuse Reporting</h3>
-      <p>Coordinated takedown packages with artifacts, IoCs, registrar/hosting details, and victim exposure assessments to accelerate remediation across global partners.</p>
-    </div>
-  </section>
 
-  <section class="card-grid">
-    <div class="card">
-      <h3>C2 Tracking</h3>
-      <p>Continuous discovery of botnet command servers, protocol fingerprints, and fast‑flux nodes to dismantle adversary control channels.</p>
-    </div>
-    <div class="card">
-      <h3>Malware Analysis</h3>
-      <p>Reverse engineering, payload clustering, and behavior profiles that map families to infrastructure and operators.</p>
-    </div>
-    <div class="card">
-      <h3>DNS & Domain Abuse</h3>
-      <p>High‑confidence domain takedown reports with registrar/registry escalation and abuse desk coordination.</p>
-    </div>
-    <div class="card">
-      <h3>Fraud & Phishing</h3>
-      <p>Rapid identification of phishing kits, look‑alike brands, and monetization funnels backed by enriched telemetry.</p>
-    </div>
-  </section>
-
-  <section class="panel">
-    <div class="panel-inner">
-      <div>
-        <h4>Time-bound IoCs</h4>
-        <p>Actionable indicators with first-seen, last-seen, and confidence scores to support blocking and takedown windows.</p>
-      </div>
-      <div>
-        <h4>Evidence-grade Packages</h4>
-        <p>PCAPs, screenshots, WHOIS, hosting intel, and victim impact summaries ready for legal or trust & safety teams.</p>
-      </div>
-      <div>
-        <h4>Global Coordination</h4>
-        <p>Experience working with registries, CERTs, and cloud providers to neutralize threats swiftly.</p>
+    <div class="abuse-card card-orange">
+      <svg class="card-icon" viewBox="0 0 48 48" fill="none">
+        <rect x="8" y="8" width="32" height="32" rx="2" stroke="#ff6b1a" stroke-width="1.5" fill="rgba(255,107,26,0.06)"/>
+        <path d="M8 20 L40 20 M8 28 L40 28 M20 8 L28 40" stroke="#ff6b1a" stroke-width="1" stroke-dasharray="3,3"/>
+        <circle cx="24" cy="24" r="5" stroke="#ff6b1a" stroke-width="2"/>
+      </svg>
+      <div class="card-category">CRITICAL</div>
+      <div class="card-title">FAST-FLUX DNS</div>
+      <div class="card-desc">Thay đổi liên tục địa chỉ IP và TTL cực ngắn để ẩn hosting của phishing, botnet và malware. Cơ sở hạ tầng phân tán trên hàng trăm node bị xâm phạm.</div>
+      <div class="card-tags">
+        <span class="tag">BOTNET</span>
+        <span class="tag">PHISHING</span>
+        <span class="tag">RESILIENCE</span>
+        <span class="tag">TTL ABUSE</span>
       </div>
     </div>
-  </section>
-</main>
 
+    <div class="abuse-card card-cyan">
+      <svg class="card-icon" viewBox="0 0 48 48" fill="none">
+        <polygon points="24,6 42,36 6,36" stroke="#00e5ff" stroke-width="1.5" fill="rgba(0,229,255,0.05)"/>
+        <line x1="24" y1="16" x2="24" y2="26" stroke="#00e5ff" stroke-width="2"/>
+        <circle cx="24" cy="31" r="1.5" fill="#00e5ff"/>
+      </svg>
+      <div class="card-category">HIGH SEVERITY</div>
+      <div class="card-title">TYPOSQUATTING & IDN HOMOGRAPH</div>
+      <div class="card-desc">Đăng ký tên miền gần giống với các thương hiệu lớn (google.com → g00gle.com) hoặc dùng ký tự Unicode trông giống ASCII để lừa người dùng.</div>
+      <div class="card-tags">
+        <span class="tag">BRAND ABUSE</span>
+        <span class="tag">HOMOGRAPH</span>
+        <span class="tag">IDN</span>
+        <span class="tag">SOCIAL ENG</span>
+      </div>
+    </div>
+
+    <div class="abuse-card card-red">
+      <svg class="card-icon" viewBox="0 0 48 48" fill="none">
+        <circle cx="24" cy="24" r="18" stroke="#ff2d55" stroke-width="1.5" fill="none"/>
+        <path d="M24 6 C14 6 6 14 6 24" stroke="#ff2d55" stroke-width="2" stroke-dasharray="4,4"/>
+        <line x1="24" y1="6" x2="30" y2="14" stroke="#ff2d55" stroke-width="1.5"/>
+        <line x1="24" y1="6" x2="16" y2="14" stroke="#ff2d55" stroke-width="1.5"/>
+        <circle cx="24" cy="24" r="4" fill="rgba(255,45,85,0.2)" stroke="#ff2d55" stroke-width="1.5"/>
+      </svg>
+      <div class="card-category">CRITICAL</div>
+      <div class="card-title">DNS HIJACKING & CACHE POISONING</div>
+      <div class="card-desc">Chèn bản ghi DNS giả mạo vào cache của resolver để chuyển hướng người dùng đến server độc hại. Cache poisoning (Kaminsky attack) ảnh hưởng toàn bộ hạ tầng DNS.</div>
+      <div class="card-tags">
+        <span class="tag">MITM</span>
+        <span class="tag">CACHE</span>
+        <span class="tag">REDIRECT</span>
+        <span class="tag">KAMINSKY</span>
+      </div>
+    </div>
+
+    <div class="abuse-card card-blue">
+      <svg class="card-icon" viewBox="0 0 48 48" fill="none">
+        <rect x="6" y="14" width="36" height="22" rx="2" stroke="#1a6fff" stroke-width="1.5" fill="rgba(26,111,255,0.06)"/>
+        <path d="M12 24 L36 24 M12 20 L36 20 M12 28 L28 28" stroke="#1a6fff" stroke-width="1"/>
+        <path d="M6 14 L24 8 L42 14" stroke="#1a6fff" stroke-width="1.5"/>
+      </svg>
+      <div class="card-category">HIGH SEVERITY</div>
+      <div class="card-title">DNS AMPLIFICATION DDoS</div>
+      <div class="card-desc">Khai thác các open resolver để khuếch đại lưu lượng tấn công DDoS lên đến 70x. Gửi query nhỏ với IP giả mạo của nạn nhân, resolver phản hồi gói tin khổng lồ.</div>
+      <div class="card-tags">
+        <span class="tag">DDoS</span>
+        <span class="tag">AMPLIFY</span>
+        <span class="tag">OPEN RESOLVER</span>
+        <span class="tag">REFLECTION</span>
+      </div>
+    </div>
+
+    <div class="abuse-card card-green">
+      <svg class="card-icon" viewBox="0 0 48 48" fill="none">
+        <path d="M8 40 L24 8 L40 40 Z" stroke="#00ff88" stroke-width="1.5" fill="rgba(0,255,136,0.05)"/>
+        <circle cx="24" cy="26" r="8" stroke="#00ff88" stroke-width="1.5" fill="none"/>
+        <line x1="24" y1="18" x2="24" y2="26" stroke="#00ff88" stroke-width="2"/>
+        <line x1="24" y1="26" x2="30" y2="30" stroke="#00ff88" stroke-width="2"/>
+      </svg>
+      <div class="card-category">MEDIUM — HIGH</div>
+      <div class="card-title">SUBDOMAIN TAKEOVER</div>
+      <div class="card-desc">Chiếm quyền kiểm soát subdomain khi bản ghi DNS trỏ đến dịch vụ cloud đã bị xóa (dangling DNS). Kẻ tấn công đăng ký lại dịch vụ để serve nội dung độc hại dưới domain hợp lệ.</div>
+      <div class="card-tags">
+        <span class="tag">DANGLING DNS</span>
+        <span class="tag">CLOUD ABUSE</span>
+        <span class="tag">CNAME</span>
+        <span class="tag">SESSION HIJACK</span>
+      </div>
+    </div>
+
+    <div class="abuse-card card-orange">
+      <svg class="card-icon" viewBox="0 0 48 48" fill="none">
+        <circle cx="24" cy="16" r="10" stroke="#ff6b1a" stroke-width="1.5" fill="rgba(255,107,26,0.06)"/>
+        <circle cx="24" cy="16" r="5" stroke="#ff6b1a" stroke-width="1" fill="none"/>
+        <line x1="24" y1="26" x2="24" y2="42" stroke="#ff6b1a" stroke-width="1.5"/>
+        <line x1="16" y1="34" x2="32" y2="34" stroke="#ff6b1a" stroke-width="1.5"/>
+        <line x1="16" y1="42" x2="32" y2="42" stroke="#ff6b1a" stroke-width="1.5"/>
+      </svg>
+      <div class="card-category">HIGH SEVERITY</div>
+      <div class="card-title">DOMAIN GENERATION ALGORITHM (DGA)</div>
+      <div class="card-desc">Malware tự động tạo hàng nghìn tên miền ngẫu nhiên mỗi ngày để liên lạc với C2 server. Rất khó block vì không thể dự đoán domain nào sẽ được dùng tiếp theo.</div>
+      <div class="card-tags">
+        <span class="tag">DGA</span>
+        <span class="tag">C2</span>
+        <span class="tag">MALWARE</span>
+        <span class="tag">EVASION</span>
+      </div>
+    </div>
+
+    <div class="abuse-card card-cyan">
+      <svg class="card-icon" viewBox="0 0 48 48" fill="none">
+        <rect x="10" y="10" width="28" height="20" rx="2" stroke="#00e5ff" stroke-width="1.5" fill="rgba(0,229,255,0.05)"/>
+        <rect x="14" y="34" width="20" height="8" rx="1" stroke="#00e5ff" stroke-width="1" fill="none"/>
+        <line x1="24" y1="30" x2="24" y2="34" stroke="#00e5ff" stroke-width="1.5"/>
+        <line x1="10" y1="20" x2="4" y2="24" stroke="#ff2d55" stroke-width="1.5"/>
+        <circle cx="4" cy="24" r="2" fill="#ff2d55"/>
+        <line x1="38" y1="18" x2="44" y2="14" stroke="#ff2d55" stroke-width="1.5" stroke-dasharray="2,2"/>
+      </svg>
+      <div class="card-category">MEDIUM</div>
+      <div class="card-title">NXDOMAIN ATTACK & DNS FLOOD</div>
+      <div class="card-desc">Gửi hàng triệu query cho các domain không tồn tại để làm resolver bị quá tải. Kết hợp với random prefix attack có thể làm sập toàn bộ authoritative nameserver.</div>
+      <div class="card-tags">
+        <span class="tag">NXDOMAIN</span>
+        <span class="tag">FLOOD</span>
+        <span class="tag">RANDOM PREFIX</span>
+        <span class="tag">EXHAUSTION</span>
+      </div>
+    </div>
+
+    <div class="abuse-card card-red">
+      <svg class="card-icon" viewBox="0 0 48 48" fill="none">
+        <path d="M10 38 Q24 10 38 38" stroke="#ff2d55" stroke-width="1.5" fill="none"/>
+        <circle cx="24" cy="22" r="8" stroke="#ff2d55" stroke-width="1.5" fill="rgba(255,45,85,0.06)"/>
+        <path d="M20 20 L24 24 L28 18" stroke="#ff2d55" stroke-width="2"/>
+        <line x1="10" y1="38" x2="4" y2="44" stroke="#ff2d55" stroke-width="1.5"/>
+        <line x1="38" y1="38" x2="44" y2="44" stroke="#ff2d55" stroke-width="1.5"/>
+      </svg>
+      <div class="card-category">CRITICAL</div>
+      <div class="card-title">DNS-BASED PHISHING & PHARMING</div>
+      <div class="card-desc">Sử dụng domain giả mạo kết hợp với chứng chỉ SSL hợp lệ để tạo trang phishing tin cậy. Pharming sửa DNS để chuyển hướng hàng loạt người dùng mà không cần click link.</div>
+      <div class="card-tags">
+        <span class="tag">PHISHING</span>
+        <span class="tag">PHARMING</span>
+        <span class="tag">SSL ABUSE</span>
+        <span class="tag">CREDENTIAL</span>
+      </div>
+    </div>
+
+    <div class="abuse-card card-blue">
+      <svg class="card-icon" viewBox="0 0 48 48" fill="none">
+        <circle cx="24" cy="24" r="16" stroke="#1a6fff" stroke-width="1.5" fill="none"/>
+        <path d="M24 8 L24 16 M24 32 L24 40 M8 24 L16 24 M32 24 L40 24" stroke="#1a6fff" stroke-width="1.5"/>
+        <circle cx="24" cy="16" r="3" fill="#1a6fff" opacity="0.7"/>
+        <circle cx="16" cy="28" r="2" fill="#1a6fff" opacity="0.5"/>
+        <circle cx="32" cy="28" r="2" fill="#1a6fff" opacity="0.5"/>
+        <path d="M24 24 L24 16 M24 24 L16 28 M24 24 L32 28" stroke="#1a6fff" stroke-width="1"/>
+      </svg>
+      <div class="card-category">HIGH</div>
+      <div class="card-title">BGP HIJACKING + DNS ABUSE</div>
+      <div class="card-desc">Kết hợp BGP route hijacking với thao túng DNS để kiểm soát hoàn toàn traffic của một AS. Được ghi nhận trong các cuộc tấn công nhà nước với quy mô quốc gia.</div>
+      <div class="card-tags">
+        <span class="tag">BGP</span>
+        <span class="tag">ROUTING</span>
+        <span class="tag">NATION-STATE</span>
+        <span class="tag">AS HIJACK</span>
+      </div>
+    </div>
+
+    <div class="abuse-card card-green">
+      <svg class="card-icon" viewBox="0 0 48 48" fill="none">
+        <rect x="8" y="16" width="32" height="20" rx="3" stroke="#00ff88" stroke-width="1.5" fill="rgba(0,255,136,0.05)"/>
+        <circle cx="16" cy="26" r="3" stroke="#00ff88" stroke-width="1.5" fill="none"/>
+        <line x1="22" y1="22" x2="36" y2="22" stroke="#00ff88" stroke-width="1"/>
+        <line x1="22" y1="26" x2="36" y2="26" stroke="#00ff88" stroke-width="1"/>
+        <line x1="22" y1="30" x2="30" y2="30" stroke="#00ff88" stroke-width="1"/>
+        <path d="M24 8 L34 16" stroke="#ff2d55" stroke-width="1.5" stroke-dasharray="3,2"/>
+        <circle cx="34" cy="16" r="2" fill="#ff2d55"/>
+      </svg>
+      <div class="card-category">MEDIUM — HIGH</div>
+      <div class="card-title">REGISTRAR ABUSE & DOMAIN SQUATTING</div>
+      <div class="card-desc">Đăng ký hàng loạt tên miền để bán lại (cybersquatting), hoặc lợi dụng giai đoạn redemption/grace period để tạm thời sở hữu domain có traffic cao.</div>
+      <div class="card-tags">
+        <span class="tag">SQUATTING</span>
+        <span class="tag">REGISTRAR</span>
+        <span class="tag">GRACE PERIOD</span>
+        <span class="tag">BULK REG</span>
+      </div>
+    </div>
+
+    <div class="abuse-card card-orange">
+      <svg class="card-icon" viewBox="0 0 48 48" fill="none">
+        <path d="M6 42 L14 20 L24 30 L34 10 L42 26" stroke="#ff6b1a" stroke-width="2" fill="none"/>
+        <circle cx="14" cy="20" r="3" fill="#ff6b1a" opacity="0.7"/>
+        <circle cx="24" cy="30" r="3" fill="#ff6b1a" opacity="0.7"/>
+        <circle cx="34" cy="10" r="3" fill="#ff6b1a" opacity="0.7"/>
+        <line x1="6" y1="6" x2="6" y2="42" stroke="#ff6b1a" stroke-width="1" opacity="0.3"/>
+        <line x1="6" y1="42" x2="42" y2="42" stroke="#ff6b1a" stroke-width="1" opacity="0.3"/>
+      </svg>
+      <div class="card-category">MEDIUM</div>
+      <div class="card-title">MALICIOUS SPF/DKIM/DMARC ABUSE</div>
+      <div class="card-desc">Misconfigure hoặc giả mạo DNS email authentication records (SPF, DKIM, DMARC) để gửi email giả mạo domain hợp lệ, bypass spam filter và email security gateway.</div>
+      <div class="card-tags">
+        <span class="tag">SPF</span>
+        <span class="tag">DKIM</span>
+        <span class="tag">DMARC</span>
+        <span class="tag">EMAIL SPOOF</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- LIVE THREAT FEED -->
+<section class="fade-in">
+  <div class="section-header">
+    <span class="section-num">// 02</span>
+    <div class="section-line"></div>
+    <h2 class="section-title">LIVE <span>THREAT FEED</span></h2>
+  </div>
+
+  <div class="feed-container">
+    <div class="feed-header">
+      <span class="feed-title">REALTIME DNS ABUSE EVENTS — threatvectorintelligence.com</span>
+      <div class="feed-live">
+        <div class="status-dot"></div>
+        LIVE
+      </div>
+    </div>
+    <div class="feed-scroll">
+      <div class="feed-track">
+        <!-- First set -->
+        <div class="feed-item">
+          <span class="feed-time">2026-03-28 14:02:11</span>
+          <span class="feed-domain">update-secure-login[.]xyz</span>
+          <span class="feed-type">DNS Phishing / Fast-Flux</span>
+          <span class="severity sev-critical">CRITICAL</span>
+          <span class="feed-status-active">ACTIVE</span>
+        </div>
+        <div class="feed-item">
+          <span class="feed-time">2026-03-28 14:01:47</span>
+          <span class="feed-domain">dns-tunnel-c2[.]biz</span>
+          <span class="feed-type">DNS Tunneling / C2</span>
+          <span class="severity sev-critical">CRITICAL</span>
+          <span class="feed-status-blocked">BLOCKED</span>
+        </div>
+        <div class="feed-item">
+          <span class="feed-time">2026-03-28 13:59:33</span>
+          <span class="feed-domain">paypa1-secure[.]com</span>
+          <span class="feed-type">Typosquatting</span>
+          <span class="severity sev-high">HIGH</span>
+          <span class="feed-status-active">ACTIVE</span>
+        </div>
+        <div class="feed-item">
+          <span class="feed-time">2026-03-28 13:58:02</span>
+          <span class="feed-domain">aws-s3-bucket[.]io</span>
+          <span class="feed-type">Subdomain Takeover</span>
+          <span class="severity sev-high">HIGH</span>
+          <span class="feed-status-monitor">MONITOR</span>
+        </div>
+        <div class="feed-item">
+          <span class="feed-time">2026-03-28 13:55:18</span>
+          <span class="feed-domain">xn--googl-9na[.]com</span>
+          <span class="feed-type">IDN Homograph</span>
+          <span class="severity sev-critical">CRITICAL</span>
+          <span class="feed-status-active">ACTIVE</span>
+        </div>
+        <div class="feed-item">
+          <span class="feed-time">2026-03-28 13:52:44</span>
+          <span class="feed-domain">open-resolver[.]vn</span>
+          <span class="feed-type">DNS Amplification</span>
+          <span class="severity sev-high">HIGH</span>
+          <span class="feed-status-blocked">BLOCKED</span>
+        </div>
+        <div class="feed-item">
+          <span class="feed-time">2026-03-28 13:48:29</span>
+          <span class="feed-domain">dga-rx7k2m[.]ru</span>
+          <span class="feed-type">DGA — Emotet</span>
+          <span class="severity sev-critical">CRITICAL</span>
+          <span class="feed-status-blocked">BLOCKED</span>
+        </div>
+        <div class="feed-item">
+          <span class="feed-time">2026-03-28 13:45:07</span>
+          <span class="feed-domain">mail-microsoft[.]net</span>
+          <span class="feed-type">Phishing / SPF Abuse</span>
+          <span class="severity sev-high">HIGH</span>
+          <span class="feed-status-active">ACTIVE</span>
+        </div>
+        <div class="feed-item">
+          <span class="feed-time">2026-03-28 13:41:52</span>
+          <span class="feed-domain">cdn-static-asset[.]cc</span>
+          <span class="feed-type">Fast-Flux Hosting</span>
+          <span class="severity sev-medium">MEDIUM</span>
+          <span class="feed-status-monitor">MONITOR</span>
+        </div>
+        <div class="feed-item">
+          <span class="feed-time">2026-03-28 13:38:14</span>
+          <span class="feed-domain">nxd-flood-bot[.]tk</span>
+          <span class="feed-type">NXDOMAIN Attack</span>
+          <span class="severity sev-high">HIGH</span>
+          <span class="feed-status-blocked">BLOCKED</span>
+        </div>
+        <!-- Duplicated for seamless loop -->
+        <div class="feed-item">
+          <span class="feed-time">2026-03-28 14:02:11</span>
+          <span class="feed-domain">update-secure-login[.]xyz</span>
+          <span class="feed-type">DNS Phishing / Fast-Flux</span>
+          <span class="severity sev-critical">CRITICAL</span>
+          <span class="feed-status-active">ACTIVE</span>
+        </div>
+        <div class="feed-item">
+          <span class="feed-time">2026-03-28 14:01:47</span>
+          <span class="feed-domain">dns-tunnel-c2[.]biz</span>
+          <span class="feed-type">DNS Tunneling / C2</span>
+          <span class="severity sev-critical">CRITICAL</span>
+          <span class="feed-status-blocked">BLOCKED</span>
+        </div>
+        <div class="feed-item">
+          <span class="feed-time">2026-03-28 13:59:33</span>
+          <span class="feed-domain">paypa1-secure[.]com</span>
+          <span class="feed-type">Typosquatting</span>
+          <span class="severity sev-high">HIGH</span>
+          <span class="feed-status-active">ACTIVE</span>
+        </div>
+        <div class="feed-item">
+          <span class="feed-time">2026-03-28 13:58:02</span>
+          <span class="feed-domain">aws-s3-bucket[.]io</span>
+          <span class="feed-type">Subdomain Takeover</span>
+          <span class="severity sev-high">HIGH</span>
+          <span class="feed-status-monitor">MONITOR</span>
+        </div>
+        <div class="feed-item">
+          <span class="feed-time">2026-03-28 13:55:18</span>
+          <span class="feed-domain">xn--googl-9na[.]com</span>
+          <span class="feed-type">IDN Homograph</span>
+          <span class="severity sev-critical">CRITICAL</span>
+          <span class="feed-status-active">ACTIVE</span>
+        </div>
+        <div class="feed-item">
+          <span class="feed-time">2026-03-28 13:52:44</span>
+          <span class="feed-domain">open-resolver[.]vn</span>
+          <span class="feed-type">DNS Amplification</span>
+          <span class="severity sev-high">HIGH</span>
+          <span class="feed-status-blocked">BLOCKED</span>
+        </div>
+        <div class="feed-item">
+          <span class="feed-time">2026-03-28 13:48:29</span>
+          <span class="feed-domain">dga-rx7k2m[.]ru</span>
+          <span class="feed-type">DGA — Emotet</span>
+          <span class="severity sev-critical">CRITICAL</span>
+          <span class="feed-status-blocked">BLOCKED</span>
+        </div>
+        <div class="feed-item">
+          <span class="feed-time">2026-03-28 13:45:07</span>
+          <span class="feed-domain">mail-microsoft[.]net</span>
+          <span class="feed-type">Phishing / SPF Abuse</span>
+          <span class="severity sev-high">HIGH</span>
+          <span class="feed-status-active">ACTIVE</span>
+        </div>
+        <div class="feed-item">
+          <span class="feed-time">2026-03-28 13:41:52</span>
+          <span class="feed-domain">cdn-static-asset[.]cc</span>
+          <span class="feed-type">Fast-Flux Hosting</span>
+          <span class="severity sev-medium">MEDIUM</span>
+          <span class="feed-status-monitor">MONITOR</span>
+        </div>
+        <div class="feed-item">
+          <span class="feed-time">2026-03-28 13:38:14</span>
+          <span class="feed-domain">nxd-flood-bot[.]tk</span>
+          <span class="feed-type">NXDOMAIN Attack</span>
+          <span class="severity sev-high">HIGH</span>
+          <span class="feed-status-blocked">BLOCKED</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ANALYSIS -->
+<section class="fade-in">
+  <div class="section-header">
+    <span class="section-num">// 03</span>
+    <div class="section-line"></div>
+    <h2 class="section-title">PHÂN TÍCH <span>VÀ PHÂN PHỐI</span></h2>
+  </div>
+
+  <div class="analysis-row">
+    <div class="analysis-panel">
+      <div class="panel-title">PHÂN BỔ THEO LOẠI TẤN CÔNG — Q1 2026</div>
+      <div class="chart-bars">
+        <div class="chart-row">
+          <span class="chart-label">DNS PHISHING</span>
+          <div class="chart-track"><div class="chart-fill" style="width:0;background:var(--accent-red);--bar-width:78%;--delay:0.1s;animation:barGrow 2s ease 0.1s forwards"></div></div>
+          <span class="chart-val">78%</span>
+        </div>
+        <div class="chart-row">
+          <span class="chart-label">FAST-FLUX</span>
+          <div class="chart-track"><div class="chart-fill" style="width:0;background:var(--accent-orange);--delay:0.2s;animation:barGrow 2s ease 0.2s forwards;--bar-width:61%"></div></div>
+          <span class="chart-val">61%</span>
+        </div>
+        <div class="chart-row">
+          <span class="chart-label">DNS TUNNELING</span>
+          <div class="chart-track"><div class="chart-fill" style="width:0;background:var(--accent-cyan);--delay:0.3s;animation:barGrow 2s ease 0.3s forwards;--bar-width:54%"></div></div>
+          <span class="chart-val">54%</span>
+        </div>
+        <div class="chart-row">
+          <span class="chart-label">DGA MALWARE</span>
+          <div class="chart-track"><div class="chart-fill" style="width:0;background:#9b59b6;--delay:0.4s;animation:barGrow 2s ease 0.4s forwards;--bar-width:47%"></div></div>
+          <span class="chart-val">47%</span>
+        </div>
+        <div class="chart-row">
+          <span class="chart-label">TYPOSQUATTING</span>
+          <div class="chart-track"><div class="chart-fill" style="width:0;background:var(--accent-blue);--delay:0.5s;animation:barGrow 2s ease 0.5s forwards;--bar-width:39%"></div></div>
+          <span class="chart-val">39%</span>
+        </div>
+        <div class="chart-row">
+          <span class="chart-label">CACHE POISON</span>
+          <div class="chart-track"><div class="chart-fill" style="width:0;background:var(--accent-green);--delay:0.6s;animation:barGrow 2s ease 0.6s forwards;--bar-width:28%"></div></div>
+          <span class="chart-val">28%</span>
+        </div>
+        <div class="chart-row">
+          <span class="chart-label">SUBDOMAIN TKO</span>
+          <div class="chart-track"><div class="chart-fill" style="width:0;background:#ffc800;--delay:0.7s;animation:barGrow 2s ease 0.7s forwards;--bar-width:22%"></div></div>
+          <span class="chart-val">22%</span>
+        </div>
+        <div class="chart-row">
+          <span class="chart-label">DNS AMPLIFY DDoS</span>
+          <div class="chart-track"><div class="chart-fill" style="width:0;background:#e74c3c;--delay:0.8s;animation:barGrow 2s ease 0.8s forwards;--bar-width:35%"></div></div>
+          <span class="chart-val">35%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="analysis-panel">
+      <div class="panel-title">SỰ KIỆN NỔI BẬT GẦN ĐÂY</div>
+      <div class="timeline">
+        <div class="timeline-item red">
+          <div class="timeline-time">2026-03-27 · 22:14 UTC</div>
+          <div class="timeline-event"><strong>Fast-flux botnet mới</strong> — Phát hiện mạng lưới 3.400+ IP xoay vòng với TTL 60s phục vụ phishing ngân hàng khu vực Đông Nam Á.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-time">2026-03-26 · 18:03 UTC</div>
+          <div class="timeline-event"><strong>DGA cluster Emotet</strong> — Ghi nhận 1.200 domain DGA mới từ variant Emotet, đang liên lạc C2 qua DNS-over-HTTPS.</div>
+        </div>
+        <div class="timeline-item red">
+          <div class="timeline-time">2026-03-25 · 09:51 UTC</div>
+          <div class="timeline-event"><strong>Subdomain takeover</strong> — 14 subdomain của 3 tổ chức tài chính bị chiếm quyền thông qua dangling CNAME trỏ đến Azure blob đã xóa.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-time">2026-03-24 · 14:22 UTC</div>
+          <div class="timeline-event"><strong>BGP + DNS kết hợp</strong> — Sự cố route leak làm 6.000 prefix bị ảnh hưởng, đồng thời ghi nhận bản ghi NS bị thay đổi tại 2 registrar lớn.</div>
+        </div>
+        <div class="timeline-item red">
+          <div class="timeline-time">2026-03-22 · 07:38 UTC</div>
+          <div class="timeline-event"><strong>IDN homograph campaign</strong> — Chiến dịch quy mô lớn sử dụng 340+ domain Unicode giả mạo Microsoft 365 và Google Workspace login page.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
 <footer>
-  © 2026 ThreatVector Intelligence — Operational threat intelligence for defenders.
+  <div class="footer-brand">
+    <svg width="32" height="32" viewBox="0 0 42 42" fill="none">
+      <polygon points="21,2 38,11.5 38,30.5 21,40 4,30.5 4,11.5" stroke="#00e5ff" stroke-width="1" fill="none" opacity="0.5"/>
+      <polygon points="21,8 33,15 33,27 21,34 9,27 9,15" stroke="#00e5ff" stroke-width="1.5" fill="none" opacity="0.8"/>
+      <polygon points="21,13 27,21 21,29 15,21" fill="none" stroke="#00e5ff" stroke-width="1.5"/>
+      <line x1="21" y1="13" x2="28" y2="7" stroke="#ff2d55" stroke-width="1.5"/>
+      <polygon points="28,7 24,9 26,13" fill="#ff2d55"/>
+      <circle cx="21" cy="21" r="2.5" fill="#00e5ff"/>
+    </svg>
+    <div>
+      <div style="font-family:'Orbitron',monospace;font-size:11px;color:var(--accent-cyan);letter-spacing:0.1em">THREATVECTOR INTELLIGENCE</div>
+      <div class="footer-copy">© 2026 threatvectorintelligence.com — All rights reserved</div>
+    </div>
+  </div>
+
+  <div class="footer-links">
+    <a href="#">ABUSE REPORT</a>
+    <a href="#">API DOCS</a>
+    <a href="#">PRIVACY</a>
+    <a href="#">CONTACT</a>
+  </div>
+
+  <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-dim);text-align:right">
+    <div style="color:var(--accent-green);margin-bottom:4px">● SYSTEMS OPERATIONAL</div>
+    <div>v4.2.1 · BUILD 20260328</div>
+  </div>
 </footer>
 
+<script>
+  // ── Counter animation ──
+  function animateCounter(el) {
+    const target = parseInt(el.dataset.target);
+    const duration = 2000;
+    const step = target / (duration / 16);
+    let current = 0;
+    const timer = setInterval(() => {
+      current = Math.min(current + step, target);
+      el.textContent = Math.floor(current).toLocaleString();
+      if (current >= target) clearInterval(timer);
+    }, 16);
+  }
+
+  // ── Intersection Observer ──
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        entry.target.querySelectorAll('.counter').forEach(animateCounter);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // Animate hero counters on load
+  setTimeout(() => {
+    document.querySelectorAll('.hero .counter').forEach(animateCounter);
+  }, 400);
+
+  // ── Hover cursor trail ──
+  document.addEventListener('mousemove', (e) => {
+    const dot = document.createElement('div');
+    dot.style.cssText = `
+      position:fixed;left:${e.clientX}px;top:${e.clientY}px;
+      width:3px;height:3px;background:rgba(0,229,255,0.6);
+      border-radius:50%;pointer-events:none;z-index:9999;
+      transform:translate(-50%,-50%);transition:all 0.5s ease;
+    `;
+    document.body.appendChild(dot);
+    setTimeout(() => { dot.style.opacity = '0'; dot.style.transform = 'translate(-50%,-50%) scale(3)'; }, 50);
+    setTimeout(() => dot.remove(), 550);
+  });
+
+  // ── Random flicker on stat numbers ──
+  setInterval(() => {
+    const nums = document.querySelectorAll('.stat-block-num');
+    const idx = Math.floor(Math.random() * nums.length);
+    nums[idx].style.opacity = '0.4';
+    setTimeout(() => nums[idx].style.opacity = '1', 80);
+  }, 3000);
+</script>
 </body>
 </html>
