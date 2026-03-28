@@ -30,8 +30,7 @@ async function checkWhois() {
   try {
     let data = null;
 
-    // Source 1
-    setStep('whoisResult', '// Querying registration data...');
+    setStep('whoisResult', '// Querying WHOIS database...');
     try {
       const r1 = await fetch(`${WHOIS_PROXY}/whois/centralnic?domain=${encodeURIComponent(domain)}`);
       if (r1.ok) {
@@ -42,7 +41,6 @@ async function checkWhois() {
       }
     } catch(_) {}
 
-    // Source 2
     if (!data) {
       try {
         const r2 = await fetch(`https://rdap.identitydigital.services/rdap/domain/${domain}`);
@@ -50,7 +48,6 @@ async function checkWhois() {
       } catch(_) {}
     }
 
-    // Source 3
     if (!data) {
       try {
         const r3 = await fetch(`https://rdap.verisign.com/com/v1/domain/${domain}`);
@@ -58,7 +55,6 @@ async function checkWhois() {
       } catch(_) {}
     }
 
-    // Source 4
     if (!data) {
       try {
         const r4 = await fetch(`https://rdap.org/domain/${domain}`);
