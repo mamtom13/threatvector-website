@@ -1,0 +1,72 @@
+/* ================================================================
+   home.css — Hero, Stats bar, Ticker
+================================================================ */
+#home { position: relative; }
+.hero-bg {
+  position: absolute; inset: 0; top: 62px;
+  background-image:
+    linear-gradient(rgba(0,212,255,0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,0.035) 1px, transparent 1px);
+  background-size: 56px 56px;
+  animation: gridPulse 5s ease-in-out infinite;
+  pointer-events: none;
+}
+.hero-orb { position: absolute; border-radius: 50%; filter: blur(90px); pointer-events: none; }
+.hero-orb-1 {
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, rgba(0,212,255,0.10) 0%, transparent 68%);
+  top: -80px; right: -120px; animation: floatY 9s ease-in-out infinite;
+}
+.hero-orb-2 {
+  width: 480px; height: 480px;
+  background: radial-gradient(circle, rgba(255,61,61,0.07) 0%, transparent 68%);
+  bottom: 60px; left: -80px; animation: floatY 11s ease-in-out infinite reverse;
+}
+.hero-inner {
+  position: relative; z-index: 2;
+  max-width: 1100px; margin: 0 auto; padding: 110px 40px 64px;
+}
+.hero-label {
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.32em;
+  color: var(--accent); text-transform: uppercase;
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 28px; animation: fadeUp .7s .1s both;
+}
+.hero-label::before { content: ''; width: 30px; height: 1px; background: var(--accent); box-shadow: var(--glow); flex-shrink: 0; }
+.hero-h1 {
+  font-family: var(--disp); font-size: clamp(38px,5.5vw,74px);
+  font-weight: 900; color: var(--bright); line-height: 1.0;
+  letter-spacing: 0.02em; margin-bottom: 6px; animation: fadeUp .7s .22s both;
+}
+.hero-h1 .ca { color: var(--accent); }
+.hero-h1 .cd { color: var(--dim); font-size: .58em; letter-spacing: .08em; display: block; margin-top: 4px; }
+.hero-sub { font-family: var(--ui); font-size: 20px; font-weight: 300; color: var(--dim); letter-spacing: .02em; max-width: 680px; margin-bottom: 20px; animation: fadeUp .7s .34s both; }
+.hero-desc { font-size: 14.5px; color: var(--dim); max-width: 620px; line-height: 1.85; margin-bottom: 48px; animation: fadeUp .7s .46s both; }
+.hero-actions { display: flex; gap: 14px; flex-wrap: wrap; animation: fadeUp .7s .58s both; }
+
+/* Stats bar */
+.stats-bar {
+  position: relative; z-index: 2;
+  border-top: 1px solid var(--border); background: rgba(6,14,23,.85);
+  display: grid; grid-template-columns: repeat(4,1fr);
+  animation: fadeUp .7s .72s both;
+}
+.stat { padding: 26px 36px; border-right: 1px solid var(--border); transition: background .3s; }
+.stat:last-child { border-right: none; }
+.stat:hover { background: rgba(0,212,255,0.03); }
+.stat-n { font-family: var(--disp); font-size: 30px; color: var(--accent); display: block; text-shadow: var(--glow); }
+.stat-l { font-family: var(--mono); font-size: 9.5px; letter-spacing: .22em; text-transform: uppercase; color: var(--dim); margin-top: 4px; }
+
+/* Ticker */
+.ticker-wrap {
+  overflow: hidden;
+  border-top: 1px solid rgba(0,212,255,.12);
+  border-bottom: 1px solid rgba(0,212,255,.12);
+  background: rgba(0,212,255,.04); padding: 9px 0;
+}
+.ticker-track { display: flex; white-space: nowrap; animation: ticker 45s linear infinite; }
+.tick { font-family: var(--mono); font-size: 10.5px; color: var(--accent); opacity: .65; padding: 0 36px; }
+.tick .sep { color: var(--red); margin: 0 10px; }
+
+@media(max-width:960px) { .stats-bar { grid-template-columns: 1fr 1fr; } }
+@media(max-width:640px) { .hero-inner { padding: 80px 20px 40px; } }
