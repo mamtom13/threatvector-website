@@ -1,1 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Responsible Use Policy — ThreatVector Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./css/base.css">
+<link rel="stylesheet" href="./css/nav.css">
+<link rel="stylesheet" href="./css/pages.css">
+<style>
+  body { padding-top: 62px; }
+  .back-link {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: .14em;
+    color: var(--dim); text-decoration: none;
+    border: 1px solid var(--border); padding: 8px 18px;
+    transition: all .2s; margin-bottom: 40px; display: inline-flex;
+  }
+  .back-link:hover { color: var(--accent); border-color: var(--accent); background: rgba(0,212,255,.05); }
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="./index.html">
+    <svg width="42" height="42" viewBox="0 0 42 42" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="21,2 38,11.5 38,30.5 21,40 4,30.5 4,11.5" fill="none" stroke="#00d4ff" stroke-width="1.3"/>
+      <polyline points="13,29 21,13 29,21" fill="none" stroke="#00d4ff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="29" cy="21" r="2.4" fill="#ff3d3d"/>
+    </svg>
+    <div class="nav-brand">THREATVECTOR<small>INTELLIGENCE</small></div>
+  </a>
+  <ul class="nav-menu">
+    <li><a href="./index.html">HOME</a></li>
+    <li><a href="./index.html#services">SERVICES</a></li>
+    <li><a href="./index.html#standards">STANDARDS</a></li>
+    <li><a href="./index.html#tools">TOOLS</a></li>
+    <li><a href="./index.html#cases">CASE STUDIES</a></li>
+    <li><a href="./index.html#about">ABOUT</a></li>
+    <li class="nav-cta"><a href="./index.html#report">SUBMIT REPORT</a></li>
+  </ul>
+</nav>
 
+<div class="wrap">
+  <a class="back-link" href="./index.html">← BACK TO HOME</a>
+  <div class="sec-head">
+    <div class="sec-tag" style="color:var(--accent)">// LEGAL</div>
+    <h2 class="sec-title">RESPONSIBLE USE POLICY</h2>
+    <div class="sec-rule" style="background:linear-gradient(90deg,var(--accent),transparent)"></div>
+  </div>
+  <div style="font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.1em;margin-bottom:36px">Last updated: March 2024</div>
+  <div class="abuse-section">
+    <div class="abuse-section-title">Purpose</div>
+    <p class="abuse-body">This policy establishes the standards of responsible use that apply to all individuals who submit abuse reports, use our lookup tools, or otherwise interact with this platform.</p>
+  </div>
+  <div class="abuse-section">
+    <div class="abuse-section-title">Permitted Use</div>
+    <p class="abuse-body">Permitted uses include: submitting good-faith DNS abuse reports for malware C2, botnet, phishing, pharming, and spam-enabling domains; using URL Check, Hash Lookup, and WHOIS tools for legitimate abuse investigation; accessing documentation for educational purposes.</p>
+  </div>
+  <div class="abuse-section">
+    <div class="abuse-section-title">Prohibited Use</div>
+    <p class="abuse-body">The following are strictly prohibited:<br>• Submitting false, misleading, or fabricated abuse reports<br>• Using tools to harass or investigate individuals without legitimate cause<br>• Submitting reports intended to cause unjustified domain suspensions (reverse abuse)<br>• Automated bulk querying beyond reasonable research use<br>• Attempting to probe or attack our infrastructure<br>• Submitting content disputes, copyright claims, or general complaints outside DNS abuse scope</p>
+  </div>
+  <div class="abuse-section">
+    <div class="abuse-section-title">Good-Faith Reporting</div>
+    <p class="abuse-body">All reports must be submitted in good faith with a reasonable belief that the reported domain is engaged in DNS abuse as defined by ICANN. Reports must include verifiable technical evidence. Submitting reports with intent to harm a legitimate domain operator is misuse and may be reported to authorities.</p>
+  </div>
+  <div class="abuse-section">
+    <div class="abuse-section-title">Evidence Requirements</div>
+    <p class="abuse-body">All reports require supporting evidence. Accepted types include: sandbox analysis reports, network packet captures (PCAP), passive DNS records, malware sample hashes, screenshots with timestamps, and URLScan.io reports. Reports without evidence will not be processed.</p>
+  </div>
+  <div class="abuse-section">
+    <div class="abuse-section-title">Reporter Accountability</div>
+    <p class="abuse-body">By submitting a report, you represent that the information is accurate to the best of your knowledge and that you are acting in good faith. We reserve the right to decline any report that does not meet our evidence and good-faith standards.</p>
+  </div>
+  <div class="abuse-section">
+    <div class="abuse-section-title">Enforcement</div>
+    <p class="abuse-body">Violations may result in rejection of current and future submissions and notification to relevant authorities in cases of deliberate abuse. We reserve the right to update this policy at any time.</p>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-bot" style="max-width:1100px;margin:0 auto;padding:18px 40px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border)">
+    <div class="footer-copy">© 2024 ThreatVector Intelligence. All rights reserved.</div>
+    <div class="footer-legal">
+      <a href="./privacy-policy.html">Privacy Policy</a>
+      <a href="./responsible-use.html">Responsible Use</a>
+      <a href="./disclaimer.html">Disclaimer</a>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
