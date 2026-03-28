@@ -110,3 +110,46 @@
 .tool-note  { font-family: var(--mono); font-size: 10px; color: var(--dim); opacity: .55; margin-top: 12px; line-height: 1.6; }
 
 @media(max-width:960px) { .tools-grid { grid-template-columns: 1fr; } .vt-cols { grid-template-columns: 1fr; } }
+
+/* ── TOOL TABS ── */
+.tool-tabs {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 2px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-bottom: none;
+  padding: 2px 2px 0;
+}
+.tool-tab {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.15em;
+  padding: 11px 22px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--dim);
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: -1px;
+}
+.tool-tab:hover {
+  color: var(--accent);
+  background: rgba(0,212,255,0.04);
+}
+.tool-tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+  background: rgba(0,212,255,0.06);
+}
+
+/* Tool panel (tab content) */
+.tool-panel { display: none; }
+.tool-panel.active { display: block; }
+.tool-panel .tool-box {
+  border-top: none !important;
+}
