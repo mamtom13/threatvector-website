@@ -1386,8 +1386,8 @@
         <p>We work within the five DNS abuse categories as defined by ICANN: malware distribution, botnet command-and-control infrastructure, phishing, pharming, and spam used to propagate the above. We distinguish DNS infrastructure abuse from content disputes and do not process the latter.</p>
         <p>All work is conducted under responsible disclosure principles. Where intelligence permits and operational security allows, we coordinate disclosures with affected registrars, registries, CERTs, and law enforcement before any public release.</p>
         <p style="margin-bottom:0">
-          <strong style="color:var(--text-bright)">General inquiries:</strong> <a href="mailto:info@threatvectorintelligence.com" style="color:var(--accent);text-decoration:none">info@threatvectorintelligence.com</a><br>
-          <strong style="color:var(--text-bright)">Abuse reports:</strong> <a href="mailto:abuse@threatvectorintelligence.com" style="color:var(--accent2);text-decoration:none">abuse@threatvectorintelligence.com</a>
+          <strong style="color:var(--text-bright)">General inquiries:</strong> <a href="/cdn-cgi/l/email-protection#e980878f86a99d819b8c889d9f8c8a9d869b80879d8c8585808e8c878a8cc78a8684" style="color:var(--accent);text-decoration:none"><span class="__cf_email__" data-cfemail="f0999e969fb0849882959184869593849f82999e84959c9c9997959e9395de939f9d">[email&#160;protected]</span></a><br>
+          <strong style="color:var(--text-bright)">Abuse reports:</strong> <a href="/cdn-cgi/l/email-protection#fa9b988f899fba8e92889f9b8e8c9f998e958893948e9f9696939d9f94999fd4999597" style="color:var(--accent2);text-decoration:none"><span class="__cf_email__" data-cfemail="9ffefdeaecfadfebf7edfafeebe9fafcebf0edf6f1ebfaf3f3f6f8faf1fcfab1fcf0f2">[email&#160;protected]</span></a>
         </p>
       </div>
       <div class="about-sidebar">
@@ -1503,7 +1503,7 @@
         &#9656; SUBMIT ABUSE REPORT
       </button>
       <span style="font-family:var(--font-mono);font-size:10px;color:var(--text-dim);margin-left:24px;letter-spacing:0.1em">
-        Reports are sent to abuse@threatvectorintelligence.com
+        Reports are sent to <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a5c4c7d0d6c0e5d1cdd7c0c4d1d3c0c6d1cad7cccbd1c0c9c9ccc2c0cbc6c08bc6cac8">[email&#160;protected]</a>
       </span>
     </div>
   </div>
@@ -1553,8 +1553,8 @@
     <div>
       <div class="footer-col-title">CONTACT</div>
       <div class="footer-contact">
-        <a href="mailto:info@threatvectorintelligence.com">info@threatvectorintelligence.com</a>
-        <a href="mailto:abuse@threatvectorintelligence.com" style="color:var(--accent2)">abuse@threatvectorintelligence.com</a>
+        <a href="/cdn-cgi/l/email-protection#177e79717857637f657276636172746378657e7963727b7b7e70727974723974787a"><span class="__cf_email__" data-cfemail="a8c1c6cec7e8dcc0dacdc9dcdecdcbdcc7dac1c6dccdc4c4c1cfcdc6cbcd86cbc7c5">[email&#160;protected]</span></a>
+        <a href="/cdn-cgi/l/email-protection#7e1f1c0b0d1b3e0a160c1b1f0a081b1d0a110c17100a1b121217191b101d1b501d1113" style="color:var(--accent2)"><span class="__cf_email__" data-cfemail="2b4a495e584e6b5f43594e4a5f5d4e485f445942455f4e4747424c4e45484e05484446">[email&#160;protected]</span></a>
         <div style="margin-top:12px;font-family:var(--font-mono);font-size:9px;color:var(--text-dim);letter-spacing:0.15em">
           threatvectorintelligence.com
         </div>
@@ -1574,7 +1574,7 @@
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // === SECTION ROUTING ===
 function showSection(id) {
   document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
@@ -1631,8 +1631,8 @@ function showToast(msg, type='safe') {
   setTimeout(() => t.classList.remove('show'), 3000);
 }
 
-// === VIRUSTOTAL API KEY (public demo — replace with your own) ===
-const VT_API_KEY = 'f4a9e2e8bce7ef662decc2a13bf96f5b7288d6b4dcf7833fd3e1c4b39359b985'; // Replace with real key
+// === CLOUDFLARE WORKER PROXY ===
+const PROXY = 'https://vt-proxy.websentine1990.workers.dev';
 
 // === URL CHECK ===
 async function checkURL() {
@@ -1646,31 +1646,15 @@ async function checkURL() {
   box.innerHTML = '<div class="loading-bar"></div><span style="color:var(--accent);font-size:11px;letter-spacing:0.1em">// QUERYING VIRUSTOTAL...</span>';
 
   try {
-    // Encode URL for VT
     const encoded = btoa(input.replace(/\/$/, '')).replace(/=/g, '');
-    const resp = await fetch(`https://www.virustotal.com/api/v3/urls/${encoded}`, {
-      headers: { 'x-apikey': VT_API_KEY }
-    });
+    const resp = await fetch(`${PROXY}?endpoint=urls/${encoded}`);
 
     if (resp.status === 404) {
-      // URL not in VT, try submitting
       box.innerHTML = renderResult({
-        status: 'neutral',
-        label: 'NOT IN DATABASE',
+        status: 'neutral', label: 'NOT IN DATABASE',
         lines: [
           { k: 'QUERY', v: input },
-          { k: 'STATUS', v: 'URL not previously analyzed by VirusTotal. Submit at virustotal.com for a full scan.', cls: 'warn' }
-        ]
-      });
-      return;
-    }
-    if (resp.status === 401) {
-      box.innerHTML = renderResult({
-        status: 'warn',
-        label: 'API KEY REQUIRED',
-        lines: [
-          { k: 'ERROR', v: 'No valid VirusTotal API key configured. Add your API key to enable live scanning.', cls: 'warn' },
-          { k: 'GET KEY', v: 'https://www.virustotal.com/gui/sign-in → API Key', cls: '' }
+          { k: 'STATUS', v: 'URL not previously analyzed. Submit at virustotal.com for a full scan.', cls: 'warn' }
         ]
       });
       return;
@@ -1702,12 +1686,11 @@ async function checkURL() {
     });
   } catch (e) {
     box.innerHTML = renderResult({
-      status: 'warn', label: 'DEMO MODE',
+      status: 'warn', label: 'CONNECTION ERROR',
       lines: [
-        { k: 'NOTE', v: 'No API key configured — showing demo output only.', cls: 'warn' },
+        { k: 'ERROR', v: e.message, cls: 'warn' },
         { k: 'URL QUERIED', v: input },
-        { k: 'TO ENABLE', v: 'Replace VT_API_KEY in source with your VirusTotal API key.' },
-        { k: 'GET KEY', v: 'https://www.virustotal.com/gui/sign-in' }
+        { k: 'TIP', v: 'Check Worker is deployed and domain is whitelisted.' }
       ]
     });
   } finally {
@@ -1724,16 +1707,14 @@ async function checkHash() {
   if (!input) { showToast('// Please enter a file hash', 'warn'); return; }
 
   const hashType = input.length === 32 ? 'MD5' : input.length === 40 ? 'SHA-1' : input.length === 64 ? 'SHA-256' : null;
-  if (!hashType) { showToast('// Invalid hash format — use MD5 (32), SHA-1 (40), or SHA-256 (64)', 'danger'); return; }
+  if (!hashType) { showToast('// Invalid hash — use MD5 (32), SHA-1 (40), or SHA-256 (64) chars', 'danger'); return; }
 
   btn.disabled = true;
   btn.textContent = '...';
   box.innerHTML = '<div class="loading-bar"></div><span style="color:var(--accent);font-size:11px;letter-spacing:0.1em">// QUERYING VIRUSTOTAL...</span>';
 
   try {
-    const resp = await fetch(`https://www.virustotal.com/api/v3/files/${input}`, {
-      headers: { 'x-apikey': VT_API_KEY }
-    });
+    const resp = await fetch(`${PROXY}?endpoint=files/${input}`);
 
     if (resp.status === 404) {
       box.innerHTML = renderResult({
@@ -1741,17 +1722,7 @@ async function checkHash() {
         lines: [
           { k: 'HASH', v: input },
           { k: 'TYPE', v: hashType },
-          { k: 'STATUS', v: 'No analysis found in VirusTotal. File may be unknown or never submitted.', cls: 'warn' }
-        ]
-      });
-      return;
-    }
-    if (resp.status === 401) {
-      box.innerHTML = renderResult({
-        status: 'warn', label: 'API KEY REQUIRED',
-        lines: [
-          { k: 'ERROR', v: 'No valid VirusTotal API key configured.', cls: 'warn' },
-          { k: 'GET KEY', v: 'https://www.virustotal.com/gui/sign-in → API Key' }
+          { k: 'STATUS', v: 'No analysis found. File may be unknown or never submitted to VirusTotal.', cls: 'warn' }
         ]
       });
       return;
@@ -1765,7 +1736,7 @@ async function checkHash() {
 
     let status = 'safe', label = 'CLEAN';
     if (malicious > 5) { status = 'danger'; label = 'MALWARE DETECTED'; }
-    else if (malicious > 0) { status = 'warn', label = 'POTENTIALLY MALICIOUS'; }
+    else if (malicious > 0) { status = 'warn'; label = 'POTENTIALLY MALICIOUS'; }
 
     const names = attrs.names?.slice(0,3).join(', ') || 'N/A';
     const family = attrs.popular_threat_classification?.suggested_threat_label || 'N/A';
@@ -1787,12 +1758,11 @@ async function checkHash() {
     });
   } catch (e) {
     box.innerHTML = renderResult({
-      status: 'warn', label: 'DEMO MODE',
+      status: 'warn', label: 'CONNECTION ERROR',
       lines: [
         { k: 'HASH QUERIED', v: input },
         { k: 'TYPE', v: hashType },
-        { k: 'NOTE', v: 'No API key configured — showing demo output only.', cls: 'warn' },
-        { k: 'TO ENABLE', v: 'Replace VT_API_KEY in source with your VirusTotal API key.' }
+        { k: 'ERROR', v: e.message, cls: 'warn' }
       ]
     });
   } finally {
@@ -1825,32 +1795,4 @@ function submitReport() {
 ================================
 
 DOMAIN: ${domain}
-ABUSE TYPE: ${type}
-REPORTER: ${document.getElementById('rName').value || 'Anonymous'}
-CONTACT: ${document.getElementById('rEmail').value || 'Not provided'}
-ASSOCIATED IPs: ${document.getElementById('rIPs').value || 'N/A'}
-FIRST OBSERVED: ${document.getElementById('rDate').value || 'Not specified'}
-
-OBSERVED BEHAVIOR:
-${behavior}
-
-EVIDENCE:
-${document.getElementById('rEvidence').value || 'None provided'}
-
-INDICATORS OF COMPROMISE:
-${document.getElementById('rIOCs').value || 'None provided'}
-
-ADDITIONAL NOTES:
-${document.getElementById('rNotes').value || 'None'}
-
---
-Submitted via ThreatVector Intelligence portal
-threatvectorintelligence.com`;
-
-  const mailto = `mailto:abuse@threatvectorintelligence.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  window.location.href = mailto;
-  showToast('// Report prepared — opening email client', 'safe');
-}
-</script>
-</body>
-</html>
+ABUSE TYPE: $
