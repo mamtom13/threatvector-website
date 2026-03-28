@@ -6,640 +6,30 @@
 <title>ThreatVector Intelligence — DNS Abuse & Malicious Infrastructure</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
-<style>
-/* ================================================================
-   VARIABLES & RESET
-================================================================ */
-:root {
-  --bg:      #040a0f;
-  --panel:   #060e17;
-  --border:  #0d2233;
-  --border2: #122a3a;
-  --accent:  #00d4ff;
-  --red:     #ff3d3d;
-  --green:   #00ff88;
-  --warn:    #ffaa00;
-  --text:    #c8dde8;
-  --dim:     #456070;
-  --bright:  #eaf6ff;
-  --glow:    0 0 18px rgba(0,212,255,0.35);
-  --glow2:   0 0 18px rgba(255,61,61,0.35);
-  --mono:    'Share Tech Mono', monospace;
-  --ui:      'Rajdhani', sans-serif;
-  --disp:    'Orbitron', monospace;
-}
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--ui);
-  font-size: 16px;
-  line-height: 1.6;
-  overflow-x: hidden;
-}
-
-/* Scanlines overlay */
-body::before {
-  content: '';
-  position: fixed; inset: 0;
-  background: repeating-linear-gradient(
-    0deg, transparent, transparent 2px,
-    rgba(0,212,255,0.012) 2px, rgba(0,212,255,0.012) 4px
-  );
-  pointer-events: none;
-  z-index: 9998;
-}
-/* Vignette */
-body::after {
-  content: '';
-  position: fixed; inset: 0;
-  background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.5) 100%);
-  pointer-events: none;
-  z-index: 9997;
-}
-
-/* Scrollbar */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: var(--accent); }
-
-/* ================================================================
-   NAVIGATION
-================================================================ */
-nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-  height: 62px;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 40px;
-  background: rgba(4,10,15,0.94);
-  border-bottom: 1px solid var(--border);
-  backdrop-filter: blur(16px);
-}
-.nav-logo {
-  display: flex; align-items: center; gap: 12px;
-  text-decoration: none; cursor: pointer;
-}
-.nav-brand {
-  font-family: var(--disp);
-  font-size: 12.5px; font-weight: 700;
-  color: var(--bright); letter-spacing: 0.07em; line-height: 1.25;
-}
-.nav-brand small {
-  display: block; font-size: 8.5px; font-weight: 400;
-  letter-spacing: 0.25em; color: var(--accent); font-family: var(--mono);
-}
-.nav-menu { list-style: none; display: flex; align-items: center; gap: 2px; }
-.nav-menu a {
-  font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.12em;
-  color: var(--dim); text-decoration: none;
-  padding: 6px 14px; border: 1px solid transparent;
-  transition: all .2s; display: block; cursor: pointer;
-}
-.nav-menu a:hover, .nav-menu a.active {
-  color: var(--accent);
-  border-color: rgba(0,212,255,0.25);
-  background: rgba(0,212,255,0.05);
-}
-.nav-cta a {
-  color: var(--red) !important;
-  border-color: rgba(255,61,61,0.4) !important;
-  background: rgba(255,61,61,0.06) !important;
-  margin-left: 6px;
-}
-.nav-cta a:hover {
-  background: var(--red) !important;
-  color: #fff !important;
-  border-color: var(--red) !important;
-}
-
-/* ================================================================
-   PAGE SYSTEM
-================================================================ */
-.page { display: none; min-height: 100vh; padding-top: 62px; }
-.page.active { display: block; }
-
-/* ================================================================
-   BUTTONS
-================================================================ */
-.btn {
-  font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.14em;
-  padding: 13px 28px; border: 1px solid; background: transparent;
-  cursor: pointer; transition: all .22s;
-  text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
-}
-.btn-p { border-color: var(--accent); color: var(--accent); background: rgba(0,212,255,0.05); }
-.btn-p:hover { background: var(--accent); color: var(--bg); box-shadow: var(--glow); transform: translateY(-2px); }
-.btn-d { border-color: var(--red); color: var(--red); background: rgba(255,61,61,0.05); }
-.btn-d:hover { background: var(--red); color: #fff; box-shadow: var(--glow2); transform: translateY(-2px); }
-.btn-g { border-color: var(--border2); color: var(--dim); }
-.btn-g:hover { border-color: var(--dim); color: var(--text); }
-
-/* ================================================================
-   SECTION SHELL
-================================================================ */
-.wrap { max-width: 1100px; margin: 0 auto; padding: 80px 40px; }
-.sec-head { margin-bottom: 56px; }
-.sec-tag {
-  font-family: var(--mono); font-size: 10px;
-  letter-spacing: 0.3em; color: var(--accent);
-  text-transform: uppercase; margin-bottom: 10px;
-}
-.sec-title {
-  font-family: var(--disp); font-size: clamp(24px, 3.5vw, 42px);
-  font-weight: 900; color: var(--bright); letter-spacing: 0.03em; line-height: 1.1;
-}
-.sec-rule {
-  width: 56px; height: 2px;
-  background: linear-gradient(90deg, var(--accent), transparent);
-  box-shadow: var(--glow); margin-top: 16px;
-}
-
-/* ================================================================
-   ANIMATIONS
-================================================================ */
-@keyframes fadeUp { from { opacity:0; transform:translateY(22px); } to { opacity:1; transform:translateY(0); } }
-@keyframes floatY { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-24px)} }
-@keyframes blink  { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.55;transform:scale(.78)} }
-@keyframes loadBar {
-  0%  { transform:scaleX(0); transform-origin:left; }
-  50% { transform:scaleX(1); transform-origin:left; }
-  51% { transform:scaleX(1); transform-origin:right; }
-  100%{ transform:scaleX(0); transform-origin:right; }
-}
-@keyframes ticker   { from{transform:translateX(0)} to{transform:translateX(-50%)} }
-@keyframes gridPulse{ 0%,100%{opacity:.55} 50%{opacity:1} }
-
-/* ================================================================
-   HOME — HERO
-================================================================ */
-#home { position: relative; }
-.hero-bg {
-  position: absolute; inset: 0; top: 62px;
-  background-image:
-    linear-gradient(rgba(0,212,255,0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,212,255,0.035) 1px, transparent 1px);
-  background-size: 56px 56px;
-  animation: gridPulse 5s ease-in-out infinite;
-  pointer-events: none;
-}
-.hero-orb { position: absolute; border-radius: 50%; filter: blur(90px); pointer-events: none; }
-.hero-orb-1 {
-  width: 700px; height: 700px;
-  background: radial-gradient(circle, rgba(0,212,255,0.10) 0%, transparent 68%);
-  top: -80px; right: -120px;
-  animation: floatY 9s ease-in-out infinite;
-}
-.hero-orb-2 {
-  width: 480px; height: 480px;
-  background: radial-gradient(circle, rgba(255,61,61,0.07) 0%, transparent 68%);
-  bottom: 60px; left: -80px;
-  animation: floatY 11s ease-in-out infinite reverse;
-}
-.hero-inner {
-  position: relative; z-index: 2;
-  max-width: 1100px; margin: 0 auto;
-  padding: 110px 40px 64px;
-}
-.hero-label {
-  font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.32em;
-  color: var(--accent); text-transform: uppercase;
-  display: flex; align-items: center; gap: 14px;
-  margin-bottom: 28px; animation: fadeUp .7s .1s both;
-}
-.hero-label::before {
-  content: ''; width: 30px; height: 1px;
-  background: var(--accent); box-shadow: var(--glow); flex-shrink: 0;
-}
-.hero-h1 {
-  font-family: var(--disp); font-size: clamp(38px, 5.5vw, 74px);
-  font-weight: 900; color: var(--bright); line-height: 1.0;
-  letter-spacing: 0.02em; margin-bottom: 6px;
-  animation: fadeUp .7s .22s both;
-}
-.hero-h1 .ca { color: var(--accent); }
-.hero-h1 .cd { color: var(--dim); font-size: .58em; letter-spacing: .08em; display: block; margin-top: 4px; }
-.hero-sub {
-  font-family: var(--ui); font-size: 20px; font-weight: 300;
-  color: var(--dim); letter-spacing: .02em; max-width: 680px;
-  margin-bottom: 20px; animation: fadeUp .7s .34s both;
-}
-.hero-desc {
-  font-size: 14.5px; color: var(--dim); max-width: 620px;
-  line-height: 1.85; margin-bottom: 48px; animation: fadeUp .7s .46s both;
-}
-.hero-actions {
-  display: flex; gap: 14px; flex-wrap: wrap;
-  animation: fadeUp .7s .58s both;
-}
-
-/* Stats bar */
-.stats-bar {
-  position: relative; z-index: 2;
-  border-top: 1px solid var(--border);
-  background: rgba(6,14,23,.85);
-  display: grid; grid-template-columns: repeat(4,1fr);
-  animation: fadeUp .7s .72s both;
-}
-.stat {
-  padding: 26px 36px; border-right: 1px solid var(--border);
-  transition: background .3s;
-}
-.stat:last-child { border-right: none; }
-.stat:hover { background: rgba(0,212,255,0.03); }
-.stat-n { font-family: var(--disp); font-size: 30px; color: var(--accent); display: block; text-shadow: var(--glow); }
-.stat-l { font-family: var(--mono); font-size: 9.5px; letter-spacing: .22em; text-transform: uppercase; color: var(--dim); margin-top: 4px; }
-
-/* Ticker */
-.ticker-wrap {
-  overflow: hidden;
-  border-top: 1px solid rgba(0,212,255,.12);
-  border-bottom: 1px solid rgba(0,212,255,.12);
-  background: rgba(0,212,255,.04); padding: 9px 0;
-}
-.ticker-track { display: flex; white-space: nowrap; animation: ticker 45s linear infinite; }
-.tick { font-family: var(--mono); font-size: 10.5px; color: var(--accent); opacity: .65; padding: 0 36px; }
-.tick .sep { color: var(--red); margin: 0 10px; }
-
-/* ================================================================
-   SERVICES
-================================================================ */
-.svc-grid {
-  display: grid; grid-template-columns: repeat(3,1fr);
-  gap: 1px; background: var(--border); border: 1px solid var(--border);
-}
-.svc-card {
-  background: var(--panel); padding: 36px 30px;
-  position: relative; overflow: hidden; cursor: pointer;
-  transition: background .28s;
-}
-.svc-card::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-  background: var(--accent); transform: scaleX(0); transform-origin: left;
-  transition: transform .3s;
-}
-.svc-card:hover { background: rgba(0,212,255,.04); }
-.svc-card:hover::before { transform: scaleX(1); }
-.svc-card:active { transform: scale(.985); }
-.svc-num { font-family: var(--mono); font-size: 9.5px; letter-spacing: .22em; color: var(--dim); margin-bottom: 16px; }
-.svc-icon { width: 44px; height: 44px; margin-bottom: 18px; }
-.svc-title { font-family: var(--disp); font-size: 12.5px; letter-spacing: .08em; color: var(--bright); margin-bottom: 12px; }
-.svc-desc { font-size: 13px; color: var(--dim); line-height: 1.72; }
-
-/* ================================================================
-   STANDARDS
-================================================================ */
-.std-list {
-  display: flex; flex-direction: column; gap: 1px;
-  background: var(--border); border: 1px solid var(--border);
-}
-.std-row {
-  background: var(--panel);
-  display: grid; grid-template-columns: 160px 1fr auto;
-  gap: 28px; align-items: center; padding: 26px 32px;
-  cursor: pointer; transition: background .25s;
-}
-.std-row:hover { background: rgba(0,212,255,.03); }
-.std-row:active { background: rgba(0,212,255,.07); }
-.std-id { font-family: var(--disp); font-size: 10.5px; letter-spacing: .1em; color: var(--accent); }
-.std-title { font-family: var(--disp); font-size: 12.5px; letter-spacing: .06em; color: var(--bright); margin-bottom: 5px; }
-.std-desc { font-size: 13px; color: var(--dim); line-height: 1.65; }
-.badge { font-family: var(--mono); font-size: 8.5px; letter-spacing: .18em; text-transform: uppercase; padding: 4px 10px; border: 1px solid; white-space: nowrap; }
-.badge-r { border-color: rgba(0,212,255,.4); color: var(--accent); }
-.badge-e { border-color: rgba(0,255,136,.35); color: var(--green); }
-
-/* ================================================================
-   TOOLS
-================================================================ */
-.tools-grid {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 2px; background: var(--border); border: 1px solid var(--border);
-}
-.tool-box { background: var(--panel); padding: 38px; }
-.tool-head {
-  display: flex; align-items: center; gap: 14px;
-  padding-bottom: 22px; border-bottom: 1px solid var(--border); margin-bottom: 26px;
-}
-.tool-icon-sq {
-  width: 38px; height: 38px;
-  border: 1px solid rgba(0,212,255,.28);
-  background: rgba(0,212,255,.05);
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-}
-.tool-name { font-family: var(--disp); font-size: 12.5px; letter-spacing: .09em; color: var(--bright); }
-.tool-sub  { font-family: var(--mono); font-size: 9.5px; letter-spacing: .18em; color: var(--dim); margin-top: 3px; }
-
-.input-group { display: flex; margin-bottom: 14px; }
-.t-input {
-  flex: 1; background: rgba(0,0,0,.45);
-  border: 1px solid var(--border2); border-right: none;
-  color: var(--bright); font-family: var(--mono); font-size: 12px;
-  padding: 12px 16px; outline: none; transition: border-color .2s;
-}
-.t-input:focus { border-color: var(--accent); }
-.t-input::placeholder { color: var(--dim); }
-.t-btn {
-  font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em;
-  padding: 12px 22px; border: 1px solid var(--accent);
-  background: rgba(0,212,255,.08); color: var(--accent);
-  cursor: pointer; transition: all .2s; white-space: nowrap;
-}
-.t-btn:hover { background: var(--accent); color: var(--bg); }
-.t-btn:disabled { opacity: .45; cursor: not-allowed; }
-
-/* Result panel */
-.result-panel {
-  background: rgba(0,0,0,.5); border: 1px solid var(--border);
-  min-height: 200px; max-height: 520px; overflow-y: auto;
-  padding: 18px; font-family: var(--mono); font-size: 12px;
-}
-.r-empty  { color: var(--dim); font-size: 11px; letter-spacing: .08em; opacity: .5; }
-.r-loading {
-  height: 2px; background: linear-gradient(90deg, var(--accent), transparent);
-  margin-bottom: 12px; animation: loadBar 1.4s ease-in-out infinite;
-}
-.r-header {
-  display: flex; align-items: center; gap: 10px;
-  margin-bottom: 14px; padding-bottom: 12px;
-  border-bottom: 1px solid var(--border);
-}
-.r-dot {
-  width: 8px; height: 8px; border-radius: 50%;
-  animation: blink 1.6s ease-in-out infinite; flex-shrink: 0;
-}
-.r-dot.safe   { background: var(--green); box-shadow: 0 0 8px var(--green); }
-.r-dot.danger { background: var(--red);   box-shadow: 0 0 8px var(--red);   }
-.r-dot.warn   { background: var(--warn);  box-shadow: 0 0 8px var(--warn);  }
-.r-dot.neutral{ background: var(--accent);box-shadow: 0 0 8px var(--accent);}
-.r-status { font-size: 12.5px; letter-spacing: .1em; font-family: var(--mono); }
-.r-row { display: flex; gap: 12px; margin-bottom: 7px; line-height: 1.5; }
-.r-key { color: var(--accent); min-width: 150px; flex-shrink: 0; }
-.r-val { color: var(--bright); word-break: break-all; }
-.r-val.safe   { color: var(--green); }
-.r-val.danger { color: var(--red);   }
-.r-val.warn   { color: var(--warn);  }
-
-/* Detection gauge bar */
-.vt-gauge {
-  width: 100%; height: 5px; background: var(--border2);
-  margin: 12px 0 4px; border-radius: 3px; overflow: hidden;
-}
-.vt-gauge-fill {
-  height: 100%; border-radius: 3px; transition: width .5s ease;
-}
-.vt-gauge-fill.safe   { background: var(--green); }
-.vt-gauge-fill.danger { background: var(--red);   }
-.vt-gauge-fill.warn   { background: var(--warn);  }
-
-/* Website screenshot */
-.vt-screenshot {
-  width: 100%; border: 1px solid var(--border2);
-  margin-top: 14px; display: block; border-radius: 2px;
-}
-.vt-ss-label {
-  font-family: var(--mono); font-size: 9.5px; color: var(--dim);
-  letter-spacing: .15em; margin-top: 14px; margin-bottom: 6px;
-}
-
-/* Step progress text */
-.vt-progress {
-  font-family: var(--mono); font-size: 10.5px;
-  color: var(--accent); letter-spacing: .1em;
-  margin-top: 8px; display: block; opacity: .8;
-}
-
-.tool-note {
-  font-family: var(--mono); font-size: 10px;
-  color: var(--dim); opacity: .55; margin-top: 12px; line-height: 1.6;
-}
-
-/* ================================================================
-   CASE STUDIES
-================================================================ */
-.cases-grid {
-  display: grid; grid-template-columns: repeat(3,1fr);
-  gap: 1px; background: var(--border); border: 1px solid var(--border);
-}
-.case-card {
-  background: var(--panel); padding: 30px 28px;
-  cursor: pointer; transition: background .25s;
-}
-.case-card:hover  { background: rgba(255,61,61,.03); }
-.case-card:active { background: rgba(255,61,61,.07); }
-.case-type  { font-family: var(--mono); font-size: 9px; letter-spacing: .26em; text-transform: uppercase; color: var(--red); margin-bottom: 12px; }
-.case-title { font-family: var(--disp); font-size: 12px; letter-spacing: .05em; color: var(--bright); line-height: 1.45; margin-bottom: 12px; }
-.case-desc  { font-size: 12.5px; color: var(--dim); line-height: 1.72; }
-.case-meta  {
-  margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border);
-  font-family: var(--mono); font-size: 9.5px; color: var(--dim);
-  display: flex; gap: 18px; flex-wrap: wrap;
-}
-.case-meta span { color: var(--green); }
-
-/* ================================================================
-   ABOUT
-================================================================ */
-.about-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 64px; align-items: start; }
-.about-hl {
-  font-size: 19px; font-weight: 500; color: var(--bright);
-  border-left: 2px solid var(--accent); padding-left: 20px;
-  margin-bottom: 28px; line-height: 1.55;
-  box-shadow: -4px 0 20px rgba(0,212,255,.12);
-}
-.about-body p { font-size: 14.5px; color: var(--dim); line-height: 1.85; margin-bottom: 18px; }
-.about-body a       { color: var(--accent); text-decoration: none; }
-.about-body a:hover { text-decoration: underline; }
-.about-body .a2     { color: var(--red); }
-.info-cards { display: flex; flex-direction: column; gap: 2px; }
-.info-card { background: var(--panel); border: 1px solid var(--border); padding: 18px 22px; transition: border-color .2s; }
-.info-card:hover { border-color: var(--border2); }
-.ic-lbl  { font-family: var(--mono); font-size: 8.5px; letter-spacing: .26em; text-transform: uppercase; color: var(--dim); margin-bottom: 7px; }
-.ic-val  { font-family: var(--disp); font-size: 12px; color: var(--accent); letter-spacing: .04em; }
-.ic-list { font-family: var(--mono); font-size: 11px; color: var(--dim); line-height: 1.85; }
-
-/* ================================================================
-   REPORT FORM
-================================================================ */
-.report-alert {
-  background: rgba(255,61,61,.04); border: 1px solid rgba(255,61,61,.2);
-  padding: 18px 24px; font-family: var(--mono); font-size: 11.5px;
-  color: var(--dim); line-height: 1.7; margin-bottom: 40px;
-}
-.report-alert strong { color: var(--red); }
-.report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.fg { display: flex; flex-direction: column; gap: 6px; }
-.fg.full { grid-column: 1 / -1; }
-.fg label { font-family: var(--mono); font-size: 9.5px; letter-spacing: .22em; text-transform: uppercase; color: var(--dim); }
-.f-in, .f-sel, .f-ta {
-  background: rgba(0,0,0,.45); border: 1px solid var(--border2);
-  color: var(--bright); font-family: var(--mono); font-size: 12px;
-  padding: 12px 16px; outline: none; transition: border-color .2s; width: 100%;
-}
-.f-in:focus, .f-sel:focus, .f-ta:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 1px rgba(0,212,255,.12);
-}
-.f-in::placeholder, .f-ta::placeholder { color: var(--dim); }
-.f-sel {
-  appearance: none; cursor: pointer;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath fill='%23456070' d='M5 7L0 2h10z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 14px center;
-}
-.f-sel option { background: #040a0f; }
-.f-ta { min-height: 110px; resize: vertical; }
-.f-in[type="date"] { color-scheme: dark; }
-.report-footer { margin-top: 28px; display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
-.report-footer small { font-family: var(--mono); font-size: 9.5px; color: var(--dim); letter-spacing: .1em; opacity: .65; }
-
-/* ================================================================
-   TOAST
-================================================================ */
-.toast {
-  position: fixed; bottom: 28px; right: 28px;
-  background: var(--panel); border: 1px solid var(--green);
-  color: var(--green); font-family: var(--mono); font-size: 11.5px;
-  letter-spacing: .1em; padding: 13px 22px; z-index: 9999;
-  transform: translateY(16px); opacity: 0; transition: all .35s ease;
-  box-shadow: 0 0 28px rgba(0,255,136,.18); pointer-events: none;
-}
-.toast.show { opacity: 1; transform: translateY(0); }
-
-/* ================================================================
-   FOOTER
-================================================================ */
-footer { border-top: 1px solid var(--border); background: var(--panel); }
-.footer-top {
-  max-width: 1100px; margin: 0 auto; padding: 64px 40px 40px;
-  display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 44px;
-}
-.f-brand p { font-size: 13px; color: var(--dim); margin-top: 16px; line-height: 1.75; max-width: 260px; }
-.f-col-ttl { font-family: var(--mono); font-size: 9.5px; letter-spacing: .28em; color: var(--accent); text-transform: uppercase; margin-bottom: 16px; }
-.f-links { list-style: none; display: flex; flex-direction: column; gap: 9px; }
-.f-links a { font-size: 13px; color: var(--dim); text-decoration: none; cursor: pointer; transition: color .2s; }
-.f-links a:hover { color: var(--accent); }
-.f-contact a { display: block; font-family: var(--mono); font-size: 11px; color: var(--dim); text-decoration: none; margin-bottom: 8px; transition: color .2s; word-break: break-all; }
-.f-contact a:hover { color: var(--accent); }
-.f-contact .ab:hover { color: var(--red); }
-.footer-bot {
-  border-top: 1px solid var(--border); max-width: 1100px; margin: 0 auto;
-  padding: 18px 40px; display: flex; justify-content: space-between; align-items: center;
-}
-.footer-copy { font-family: var(--mono); font-size: 9.5px; color: var(--dim); opacity: .55; }
-.footer-legal { display: flex; gap: 22px; }
-.footer-legal a { font-family: var(--mono); font-size: 9.5px; color: var(--dim); text-decoration: none; opacity: .55; cursor: pointer; transition: opacity .2s; }
-.footer-legal a:hover { opacity: 1; color: var(--accent); }
-
-/* ================================================================
-   RESPONSIVE
-================================================================ */
-@media(max-width:960px) {
-  .svc-grid    { grid-template-columns: 1fr 1fr; }
-  .tools-grid  { grid-template-columns: 1fr; }
-  .about-grid  { grid-template-columns: 1fr; }
-  .footer-top  { grid-template-columns: 1fr 1fr; }
-  .cases-grid  { grid-template-columns: 1fr 1fr; }
-  .std-row     { grid-template-columns: 1fr; }
-  .stats-bar   { grid-template-columns: 1fr 1fr; }
-  .report-grid { grid-template-columns: 1fr; }
-}
-@media(max-width:640px) {
-  nav { padding: 0 18px; }
-  .nav-menu { display: none; }
-  .hero-inner { padding: 80px 20px 40px; }
-  .wrap { padding: 56px 20px; }
-  .svc-grid, .cases-grid { grid-template-columns: 1fr; }
-  .footer-top { grid-template-columns: 1fr; padding: 40px 20px; }
-  .footer-bot { flex-direction: column; gap: 10px; padding: 18px 20px; }
-  .stat { padding: 18px 20px; }
-}
-
-/* ================================================================
-   VT RESULT — rich layout giống web tham khảo
-================================================================ */
-.vt-result { margin-top: 4px; }
-
-/* Verdict header */
-.vt-verdict {
-  display: flex; align-items: center; gap: 16px;
-  padding: 16px 20px; margin-bottom: 14px; border-radius: 2px;
-}
-.vt-verdict.clean   { background: rgba(0,255,136,.07);  border: 1px solid rgba(0,255,136,.25); }
-.vt-verdict.danger  { background: rgba(255,61,61,.08);  border: 1px solid rgba(255,61,61,.3);  }
-.vt-verdict.warn    { background: rgba(255,170,0,.07);  border: 1px solid rgba(255,170,0,.3);  }
-.vt-verdict-icon    { font-size: 28px; flex-shrink: 0; line-height: 1; }
-.vt-verdict-text    { flex: 1; }
-.vt-verdict-text h3 { font-family: var(--disp); font-size: 14px; font-weight: 700; margin-bottom: 4px; letter-spacing: .05em; }
-.vt-verdict-text p  { font-family: var(--mono); font-size: 10px; color: var(--dim); letter-spacing: .08em; word-break: break-all; }
-.vt-score           { text-align: right; flex-shrink: 0; }
-.vt-score .sc-num   { font-family: var(--disp); font-size: 28px; font-weight: 900; line-height: 1; }
-.vt-score .sc-lbl   { font-family: var(--mono); font-size: 9px; color: var(--dim); letter-spacing: .15em; margin-top: 3px; text-transform: uppercase; }
-
-/* Two-column layout: engines + screenshot */
-.vt-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
-.vt-box  { background: rgba(0,0,0,.3); border: 1px solid var(--border); padding: 14px 16px; }
-.vt-box h4 {
-  font-family: var(--mono); font-size: 9px; font-weight: 700;
-  color: var(--dim); text-transform: uppercase; letter-spacing: .2em; margin-bottom: 10px;
-}
-
-/* Engine list */
-.engine-list { display: flex; flex-direction: column; gap: 5px; max-height: 200px; overflow-y: auto; }
-.engine-list::-webkit-scrollbar { width: 3px; }
-.engine-list::-webkit-scrollbar-thumb { background: var(--border2); }
-.engine-row  { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-family: var(--mono); font-size: 11px; }
-.engine-name { color: var(--dim); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.engine-badge { padding: 2px 8px; font-size: 9.5px; font-weight: 700; white-space: nowrap; flex-shrink: 0; }
-.eb-mal  { background: rgba(255,61,61,.15);  color: var(--red);  border: 1px solid rgba(255,61,61,.3);  }
-.eb-sus  { background: rgba(255,170,0,.12);  color: var(--warn); border: 1px solid rgba(255,170,0,.3);  }
-
-/* Screenshot */
-.vt-ss-wrap  { position: relative; }
-.vt-ss-wrap .ss-overlay {
-  position: absolute; bottom: 0; left: 0; right: 0;
-  background: rgba(255,61,61,.85); color: #fff;
-  font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
-  padding: 6px 10px; text-align: center;
-}
-.vt-screenshot { width: 100%; display: block; border: 1px solid var(--border2); }
-
-/* Footer row */
-.vt-footer { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
-.vt-link {
-  font-family: var(--mono); font-size: 10.5px; color: var(--accent);
-  text-decoration: none; letter-spacing: .08em; transition: opacity .2s;
-  display: inline-flex; align-items: center; gap: 6px;
-}
-.vt-link:hover { opacity: .75; }
-.vt-counts {
-  font-family: var(--mono); font-size: 10px; color: var(--dim);
-  margin-left: auto; letter-spacing: .08em;
-}
-</style>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/nav.css">
+<link rel="stylesheet" href="css/home.css">
+<link rel="stylesheet" href="css/tools.css">
+<link rel="stylesheet" href="css/pages.css">
 </head>
 <body>
 
-<!-- ══ NAV ══════════════════════════════════════════════════════ -->
 <nav>
   <div class="nav-logo" onclick="nav('home')">
     <svg width="42" height="42" viewBox="0 0 42 42" xmlns="http://www.w3.org/2000/svg">
-      <polygon points="21,2 38,11.5 38,30.5 21,40 4,30.5 4,11.5"
-               fill="none" stroke="#00d4ff" stroke-width="1.3" stroke-linejoin="round"/>
-      <polygon points="21,9 31,14.5 31,25.5 21,31 11,25.5 11,14.5"
-               fill="none" stroke="#00d4ff" stroke-width="0.55" opacity="0.38"/>
-      <polyline points="13,29 21,13 29,21"
-                fill="none" stroke="#00d4ff" stroke-width="2.2"
-                stroke-linecap="round" stroke-linejoin="round"/>
+      <polygon points="21,2 38,11.5 38,30.5 21,40 4,30.5 4,11.5" fill="none" stroke="#00d4ff" stroke-width="1.3" stroke-linejoin="round"/>
+      <polygon points="21,9 31,14.5 31,25.5 21,31 11,25.5 11,14.5" fill="none" stroke="#00d4ff" stroke-width="0.55" opacity="0.38"/>
+      <polyline points="13,29 21,13 29,21" fill="none" stroke="#00d4ff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
       <circle cx="29" cy="21" r="2.4" fill="#ff3d3d"/>
-      <circle cx="29" cy="21" r="4"   fill="none" stroke="#ff3d3d" stroke-width="0.6" opacity="0.5"/>
-      <line x1="21" y1="2"  x2="21" y2="6.5" stroke="#00d4ff" stroke-width="0.8" opacity="0.4"/>
-      <line x1="21" y1="37" x2="21" y2="40"  stroke="#00d4ff" stroke-width="0.8" opacity="0.4"/>
-      <line x1="4"  y1="21" x2="7"  y2="21"  stroke="#00d4ff" stroke-width="0.8" opacity="0.4"/>
-      <line x1="35" y1="21" x2="38" y2="21"  stroke="#00d4ff" stroke-width="0.8" opacity="0.4"/>
+      <circle cx="29" cy="21" r="4" fill="none" stroke="#ff3d3d" stroke-width="0.6" opacity="0.5"/>
+      <line x1="21" y1="2" x2="21" y2="6.5" stroke="#00d4ff" stroke-width="0.8" opacity="0.4"/>
+      <line x1="21" y1="37" x2="21" y2="40" stroke="#00d4ff" stroke-width="0.8" opacity="0.4"/>
+      <line x1="4" y1="21" x2="7" y2="21" stroke="#00d4ff" stroke-width="0.8" opacity="0.4"/>
+      <line x1="35" y1="21" x2="38" y2="21" stroke="#00d4ff" stroke-width="0.8" opacity="0.4"/>
     </svg>
     <div class="nav-brand">THREATVECTOR<small>INTELLIGENCE</small></div>
   </div>
-  <ul class="nav-menu" id="navMenu">
+  <ul class="nav-menu">
     <li><a onclick="nav('home')"      data-p="home"      class="active">HOME</a></li>
     <li><a onclick="nav('services')"  data-p="services">SERVICES</a></li>
     <li><a onclick="nav('standards')" data-p="standards">STANDARDS</a></li>
@@ -650,7 +40,7 @@ footer { border-top: 1px solid var(--border); background: var(--panel); }
   </ul>
 </nav>
 
-<!-- ══ PAGE: HOME ═══════════════════════════════════════════════ -->
+<!-- HOME -->
 <div class="page active" id="home">
   <div class="hero-bg"></div>
   <div class="hero-orb hero-orb-1"></div>
@@ -680,183 +70,134 @@ footer { border-top: 1px solid var(--border); background: var(--panel); }
       <span class="tick">RESPONSIBLE DISCLOSURE ACTIVE <span class="sep">|</span></span>
       <span class="tick">ICANN COMPLIANT METHODOLOGY <span class="sep">|</span></span>
       <span class="tick">PASSIVE DNS TELEMETRY ENABLED <span class="sep">|</span></span>
-      <span class="tick">SANDBOX ANALYSIS INTEGRATED <span class="sep">|</span></span>
       <span class="tick">MONITORING ACTIVE <span class="sep">|</span></span>
       <span class="tick">DNS ABUSE: MALWARE · BOTNET · PHISHING · PHARMING · SPAM <span class="sep">|</span></span>
       <span class="tick">EVIDENCE-BASED REPORTING ONLY <span class="sep">|</span></span>
       <span class="tick">RESPONSIBLE DISCLOSURE ACTIVE <span class="sep">|</span></span>
       <span class="tick">ICANN COMPLIANT METHODOLOGY <span class="sep">|</span></span>
       <span class="tick">PASSIVE DNS TELEMETRY ENABLED <span class="sep">|</span></span>
-      <span class="tick">SANDBOX ANALYSIS INTEGRATED <span class="sep">|</span></span>
     </div>
   </div>
 </div>
 
-<!-- ══ PAGE: SERVICES ════════════════════════════════════════════ -->
+<!-- SERVICES -->
 <div class="page" id="services">
   <div class="wrap">
-    <div class="sec-head">
-      <div class="sec-tag">// What We Do</div>
-      <h2 class="sec-title">INTELLIGENCE SERVICES</h2>
-      <div class="sec-rule"></div>
-    </div>
+    <div class="sec-head"><div class="sec-tag">// What We Do</div><h2 class="sec-title">INTELLIGENCE SERVICES</h2><div class="sec-rule"></div></div>
     <div class="svc-grid">
       <div class="svc-card"><div class="svc-num">01</div><svg class="svc-icon" viewBox="0 0 44 44"><circle cx="22" cy="22" r="18" fill="none" stroke="#00d4ff" stroke-width="1"/><circle cx="22" cy="22" r="3" fill="#00d4ff"/><circle cx="22" cy="22" r="9" fill="none" stroke="#00d4ff" stroke-width="0.5" stroke-dasharray="2 3"/><line x1="22" y1="4" x2="22" y2="13" stroke="#00d4ff" stroke-width="1.5"/><line x1="22" y1="31" x2="22" y2="40" stroke="#00d4ff" stroke-width="1.5"/><line x1="4" y1="22" x2="13" y2="22" stroke="#00d4ff" stroke-width="1.5"/><line x1="31" y1="22" x2="40" y2="22" stroke="#00d4ff" stroke-width="1.5"/></svg><div class="svc-title">DNS ABUSE INVESTIGATION</div><p class="svc-desc">In-depth analysis of domain registration patterns, DNS record anomalies, fast-flux behavior, DGA activity, and abusive domain lifecycles across registries and registrars.</p></div>
       <div class="svc-card"><div class="svc-num">02</div><svg class="svc-icon" viewBox="0 0 44 44"><rect x="5" y="5" width="34" height="34" fill="none" stroke="#ff3d3d" stroke-width="1" rx="2"/><polyline points="12,30 18,19 26,25 32,14" fill="none" stroke="#ff3d3d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="32" cy="14" r="2.8" fill="#ff3d3d"/></svg><div class="svc-title">MALWARE C2 TRACKING</div><p class="svc-desc">Continuous monitoring and correlation of command-and-control infrastructure. Map domain-to-IP relationships, hosting patterns, ASN data, and active C2 beacon endpoints.</p></div>
-      <div class="svc-card"><div class="svc-num">03</div><svg class="svc-icon" viewBox="0 0 44 44"><polygon points="22,4 40,34 4,34" fill="none" stroke="#00ff88" stroke-width="1.2"/><line x1="22" y1="14" x2="22" y2="26" stroke="#00ff88" stroke-width="2" stroke-linecap="round"/><circle cx="22" cy="30" r="1.8" fill="#00ff88"/></svg><div class="svc-title">ABUSE EVIDENCE COLLECTION</div><p class="svc-desc">Structured collection of abuse indicators — sandbox reports, WHOIS records, passive DNS history, SSL certificates, and network packet artifacts — into defensible evidence packages.</p></div>
-      <div class="svc-card"><div class="svc-num">04</div><svg class="svc-icon" viewBox="0 0 44 44"><rect x="7" y="18" width="30" height="20" fill="none" stroke="#00d4ff" stroke-width="1" rx="1"/><path d="M15 18 L15 12 Q15 6 22 6 Q29 6 29 12 L29 18" fill="none" stroke="#00d4ff" stroke-width="1.5"/><circle cx="22" cy="28" r="3" fill="none" stroke="#00d4ff" stroke-width="1.5"/><line x1="22" y1="31" x2="22" y2="35" stroke="#00d4ff" stroke-width="1.5"/></svg><div class="svc-title">REGISTRAR REPORTING SUPPORT</div><p class="svc-desc">We prepare and submit evidence packages to registrars, registries, and abuse desks in formats aligned with ICANN abuse handling requirements and industry best practices.</p></div>
-      <div class="svc-card"><div class="svc-num">05</div><svg class="svc-icon" viewBox="0 0 44 44"><circle cx="10" cy="10" r="4" fill="none" stroke="#00d4ff" stroke-width="1.2"/><circle cx="34" cy="10" r="4" fill="none" stroke="#ff3d3d" stroke-width="1.2"/><circle cx="10" cy="34" r="4" fill="none" stroke="#00ff88" stroke-width="1.2"/><circle cx="34" cy="34" r="4" fill="none" stroke="#00d4ff" stroke-width="1.2"/><circle cx="22" cy="22" r="4" fill="none" stroke="#ffaa00" stroke-width="1.2"/><line x1="14" y1="10" x2="30" y2="10" stroke="#00d4ff" stroke-width="0.7" stroke-dasharray="2,2"/><line x1="10" y1="14" x2="10" y2="30" stroke="#00d4ff" stroke-width="0.7" stroke-dasharray="2,2"/><line x1="14" y1="22" x2="18" y2="22" stroke="#00d4ff" stroke-width="0.8"/><line x1="26" y1="22" x2="30" y2="22" stroke="#00d4ff" stroke-width="0.8"/><line x1="22" y1="18" x2="22" y2="26" stroke="#00d4ff" stroke-width="0.8"/></svg><div class="svc-title">INFRASTRUCTURE CORRELATION</div><p class="svc-desc">Cross-referencing domains, IPs, ASNs, nameservers, and SSL fingerprints to map attacker infrastructure clusters and identify related malicious assets across campaigns.</p></div>
-      <div class="svc-card"><div class="svc-num">06</div><svg class="svc-icon" viewBox="0 0 44 44"><rect x="7" y="7" width="30" height="8" fill="none" stroke="#00ff88" stroke-width="1" rx="1"/><rect x="7" y="18" width="30" height="8" fill="none" stroke="#00ff88" stroke-width="1" rx="1"/><rect x="7" y="29" width="30" height="8" fill="none" stroke="#00ff88" stroke-width="0.5" rx="1" opacity="0.35"/><line x1="12" y1="11" x2="20" y2="11" stroke="#00ff88" stroke-width="1.5" stroke-linecap="round"/><line x1="12" y1="22" x2="24" y2="22" stroke="#00ff88" stroke-width="1.5" stroke-linecap="round"/><circle cx="33" cy="11" r="2.2" fill="#00ff88"/><circle cx="33" cy="22" r="2.2" fill="#ff3d3d"/></svg><div class="svc-title">TRIAGE &amp; VALIDATION</div><p class="svc-desc">Systematic triage of submitted abuse reports, false-positive filtering, multi-source validation, and evidence quality control before any escalation to registrar or registry abuse teams.</p></div>
+      <div class="svc-card"><div class="svc-num">03</div><svg class="svc-icon" viewBox="0 0 44 44"><polygon points="22,4 40,34 4,34" fill="none" stroke="#00ff88" stroke-width="1.2"/><line x1="22" y1="14" x2="22" y2="26" stroke="#00ff88" stroke-width="2" stroke-linecap="round"/><circle cx="22" cy="30" r="1.8" fill="#00ff88"/></svg><div class="svc-title">ABUSE EVIDENCE COLLECTION</div><p class="svc-desc">Structured collection of abuse indicators into defensible evidence packages for registrar and registry submission.</p></div>
+      <div class="svc-card"><div class="svc-num">04</div><svg class="svc-icon" viewBox="0 0 44 44"><rect x="7" y="18" width="30" height="20" fill="none" stroke="#00d4ff" stroke-width="1" rx="1"/><path d="M15 18 L15 12 Q15 6 22 6 Q29 6 29 12 L29 18" fill="none" stroke="#00d4ff" stroke-width="1.5"/><circle cx="22" cy="28" r="3" fill="none" stroke="#00d4ff" stroke-width="1.5"/><line x1="22" y1="31" x2="22" y2="35" stroke="#00d4ff" stroke-width="1.5"/></svg><div class="svc-title">REGISTRAR REPORTING SUPPORT</div><p class="svc-desc">We prepare and submit evidence packages to registrars, registries, and abuse desks aligned with ICANN abuse handling requirements.</p></div>
+      <div class="svc-card"><div class="svc-num">05</div><svg class="svc-icon" viewBox="0 0 44 44"><circle cx="10" cy="10" r="4" fill="none" stroke="#00d4ff" stroke-width="1.2"/><circle cx="34" cy="10" r="4" fill="none" stroke="#ff3d3d" stroke-width="1.2"/><circle cx="10" cy="34" r="4" fill="none" stroke="#00ff88" stroke-width="1.2"/><circle cx="34" cy="34" r="4" fill="none" stroke="#00d4ff" stroke-width="1.2"/><circle cx="22" cy="22" r="4" fill="none" stroke="#ffaa00" stroke-width="1.2"/><line x1="14" y1="22" x2="18" y2="22" stroke="#00d4ff" stroke-width="0.8"/><line x1="26" y1="22" x2="30" y2="22" stroke="#00d4ff" stroke-width="0.8"/><line x1="22" y1="18" x2="22" y2="26" stroke="#00d4ff" stroke-width="0.8"/></svg><div class="svc-title">INFRASTRUCTURE CORRELATION</div><p class="svc-desc">Cross-referencing domains, IPs, ASNs, nameservers, and SSL fingerprints to map attacker infrastructure clusters and identify related malicious assets across campaigns.</p></div>
+      <div class="svc-card"><div class="svc-num">06</div><svg class="svc-icon" viewBox="0 0 44 44"><rect x="7" y="7" width="30" height="8" fill="none" stroke="#00ff88" stroke-width="1" rx="1"/><rect x="7" y="18" width="30" height="8" fill="none" stroke="#00ff88" stroke-width="1" rx="1"/><rect x="7" y="29" width="30" height="8" fill="none" stroke="#00ff88" stroke-width="0.5" rx="1" opacity="0.35"/><line x1="12" y1="11" x2="20" y2="11" stroke="#00ff88" stroke-width="1.5" stroke-linecap="round"/><line x1="12" y1="22" x2="24" y2="22" stroke="#00ff88" stroke-width="1.5" stroke-linecap="round"/><circle cx="33" cy="11" r="2.2" fill="#00ff88"/><circle cx="33" cy="22" r="2.2" fill="#ff3d3d"/></svg><div class="svc-title">TRIAGE &amp; VALIDATION</div><p class="svc-desc">Systematic triage of submitted abuse reports, false-positive filtering, multi-source validation, and quality control before escalation to registrar or registry abuse teams.</p></div>
     </div>
   </div>
 </div>
 
-<!-- ══ PAGE: STANDARDS ═══════════════════════════════════════════ -->
+<!-- STANDARDS -->
 <div class="page" id="standards">
   <div class="wrap">
-    <div class="sec-head">
-      <div class="sec-tag">// Methodology</div>
-      <h2 class="sec-title">REPORTING STANDARDS</h2>
-      <div class="sec-rule"></div>
-    </div>
+    <div class="sec-head"><div class="sec-tag">// Methodology</div><h2 class="sec-title">REPORTING STANDARDS</h2><div class="sec-rule"></div></div>
     <div class="std-list">
-      <div class="std-row" onclick="flash(this)"><div class="std-id">STD-001</div><div><div class="std-title">EVIDENCE-FIRST REPORTING</div><div class="std-desc">All domain abuse reports must be accompanied by verifiable, timestamped technical evidence. Assertions without supporting artifacts are rejected at triage — no exceptions.</div></div><div class="badge badge-r">REQUIRED</div></div>
-      <div class="std-row" onclick="flash(this)"><div class="std-id">STD-002</div><div><div class="std-title">DNS ABUSE SCOPE DEFINITION</div><div class="std-desc">We operate within ICANN's five DNS abuse categories: malware, botnets, phishing, pharming, and spam enabling the above. Content disputes outside this scope are not processed.</div></div><div class="badge badge-r">REQUIRED</div></div>
+      <div class="std-row" onclick="flash(this)"><div class="std-id">STD-001</div><div><div class="std-title">EVIDENCE-FIRST REPORTING</div><div class="std-desc">All domain abuse reports must be accompanied by verifiable, timestamped technical evidence. Assertions without supporting artifacts are rejected at triage.</div></div><div class="badge badge-r">REQUIRED</div></div>
+      <div class="std-row" onclick="flash(this)"><div class="std-id">STD-002</div><div><div class="std-title">DNS ABUSE SCOPE DEFINITION</div><div class="std-desc">We operate within ICANN's five DNS abuse categories: malware, botnets, phishing, pharming, and spam enabling the above. Content disputes are not processed.</div></div><div class="badge badge-r">REQUIRED</div></div>
       <div class="std-row" onclick="flash(this)"><div class="std-id">STD-003</div><div><div class="std-title">MULTI-SOURCE CORROBORATION</div><div class="std-desc">High-confidence reports require corroboration from at least two independent sources: sandbox analysis, passive DNS records, malware artifacts, OSINT, or network telemetry.</div></div><div class="badge badge-r">REQUIRED</div></div>
-      <div class="std-row" onclick="flash(this)"><div class="std-id">STD-004</div><div><div class="std-title">FALSE POSITIVE MANAGEMENT</div><div class="std-desc">All indicators are validated against known-good databases and threat intel feeds. Suspected false positives trigger a secondary review before any escalation to registrar or registry.</div></div><div class="badge badge-r">REQUIRED</div></div>
-      <div class="std-row" onclick="flash(this)"><div class="std-id">STD-005</div><div><div class="std-title">RESPONSIBLE DISCLOSURE</div><div class="std-desc">We follow responsible disclosure norms. Where operational security permits, affected parties are notified before public disclosure. Active law enforcement investigations take priority.</div></div><div class="badge badge-r">REQUIRED</div></div>
-      <div class="std-row" onclick="flash(this)"><div class="std-id">STD-006</div><div><div class="std-title">STRUCTURED EVIDENCE PACKAGING</div><div class="std-desc">Reports follow a standardized format: domain, abuse type, observed behavior, IOCs, evidence links, timestamps, and requested action — formatted for direct abuse desk intake.</div></div><div class="badge badge-r">REQUIRED</div></div>
-      <div class="std-row" onclick="flash(this)"><div class="std-id">STD-007</div><div><div class="std-title">PASSIVE DNS INTEGRATION</div><div class="std-desc">Historical DNS resolution data is incorporated to establish domain-IP relationships over time, identify infrastructure reuse, and detect fast-flux or bulletproof hosting patterns.</div></div><div class="badge badge-e">ENHANCED</div></div>
-      <div class="std-row" onclick="flash(this)"><div class="std-id">STD-008</div><div><div class="std-title">THREAT INTEL CORRELATION</div><div class="std-desc">Indicators are cross-referenced against public and commercial threat intelligence sources to identify campaign attribution, actor TTPs, and infrastructure reuse patterns.</div></div><div class="badge badge-e">ENHANCED</div></div>
+      <div class="std-row" onclick="flash(this)"><div class="std-id">STD-004</div><div><div class="std-title">FALSE POSITIVE MANAGEMENT</div><div class="std-desc">All indicators are validated against known-good databases and threat intel feeds. Suspected false positives trigger secondary review before any escalation.</div></div><div class="badge badge-r">REQUIRED</div></div>
+      <div class="std-row" onclick="flash(this)"><div class="std-id">STD-005</div><div><div class="std-title">RESPONSIBLE DISCLOSURE</div><div class="std-desc">We follow responsible disclosure norms. Where operational security permits, affected parties are notified before public disclosure.</div></div><div class="badge badge-r">REQUIRED</div></div>
+      <div class="std-row" onclick="flash(this)"><div class="std-id">STD-006</div><div><div class="std-title">STRUCTURED EVIDENCE PACKAGING</div><div class="std-desc">Reports follow a standardized format: domain, abuse type, observed behavior, IOCs, evidence links, timestamps, and requested action for direct abuse desk intake.</div></div><div class="badge badge-r">REQUIRED</div></div>
+      <div class="std-row" onclick="flash(this)"><div class="std-id">STD-007</div><div><div class="std-title">PASSIVE DNS INTEGRATION</div><div class="std-desc">Historical DNS resolution data is incorporated to establish domain-IP relationships over time and detect fast-flux or bulletproof hosting patterns.</div></div><div class="badge badge-e">ENHANCED</div></div>
+      <div class="std-row" onclick="flash(this)"><div class="std-id">STD-008</div><div><div class="std-title">THREAT INTEL CORRELATION</div><div class="std-desc">Indicators are cross-referenced against public and commercial threat intelligence sources to identify campaign attribution and actor TTPs.</div></div><div class="badge badge-e">ENHANCED</div></div>
     </div>
   </div>
 </div>
 
-<!-- ══ PAGE: TOOLS ═══════════════════════════════════════════════ -->
+<!-- TOOLS -->
 <div class="page" id="tools">
   <div class="wrap">
-    <div class="sec-head">
-      <div class="sec-tag">// Threat Analysis</div>
-      <h2 class="sec-title">LOOKUP TOOLS</h2>
-      <div class="sec-rule"></div>
-    </div>
+    <div class="sec-head"><div class="sec-tag">// Threat Analysis</div><h2 class="sec-title">LOOKUP TOOLS</h2><div class="sec-rule"></div></div>
     <div class="tools-grid">
-
-      <!-- URL CHECK -->
       <div class="tool-box">
         <div class="tool-head">
-          <div class="tool-icon-sq">
-            <svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="none" stroke="#00d4ff" stroke-width="1.2"/><ellipse cx="10" cy="10" rx="4" ry="8" fill="none" stroke="#00d4ff" stroke-width="0.7" opacity="0.5"/><line x1="2" y1="10" x2="18" y2="10" stroke="#00d4ff" stroke-width="0.7" opacity="0.5"/><line x1="2" y1="6.5" x2="18" y2="6.5" stroke="#00d4ff" stroke-width="0.5" opacity="0.3"/><line x1="2" y1="13.5" x2="18" y2="13.5" stroke="#00d4ff" stroke-width="0.5" opacity="0.3"/></svg>
-          </div>
-          <div>
-            <div class="tool-name">URL REPUTATION CHECK</div>
-            <div class="tool-sub">// Powered by VirusTotal — full 4-step scan</div>
-          </div>
+          <div class="tool-icon-sq"><svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="none" stroke="#00d4ff" stroke-width="1.2"/><ellipse cx="10" cy="10" rx="4" ry="8" fill="none" stroke="#00d4ff" stroke-width="0.7" opacity="0.5"/><line x1="2" y1="10" x2="18" y2="10" stroke="#00d4ff" stroke-width="0.7" opacity="0.5"/></svg></div>
+          <div><div class="tool-name">URL REPUTATION CHECK</div><div class="tool-sub">// VirusTotal — 4-step full scan + engine list</div></div>
         </div>
         <div class="input-group">
-          <input type="text" class="t-input" id="urlInput"
-                 placeholder="https://example.com or domain.com"
-                 onkeydown="if(event.key==='Enter')checkURL()">
+          <input type="text" class="t-input" id="urlInput" placeholder="https://example.com or domain.com" onkeydown="if(event.key==='Enter')checkURL()">
           <button class="t-btn" id="urlBtn" onclick="checkURL()">SCAN</button>
         </div>
         <div class="result-panel" id="urlResult">
           <div class="r-empty">// Enter a URL or domain to check against VirusTotal's 70+ security vendors. New URLs are automatically submitted and analyzed.</div>
         </div>
-        <div class="tool-note">⚠ New URLs are submitted to VirusTotal and polled until analysis completes (~10–30s). Results include detection counts, categories, and a website screenshot.</div>
+        <div class="tool-note">⚠ New URLs are submitted to VirusTotal and polled until analysis completes (~10–30s). Results include engine list, verdict, and website screenshot.</div>
       </div>
-
-      <!-- HASH CHECK -->
       <div class="tool-box">
         <div class="tool-head">
-          <div class="tool-icon-sq">
-            <svg width="20" height="20" viewBox="0 0 20 20"><rect x="3" y="2" width="11" height="14" fill="none" stroke="#ff3d3d" stroke-width="1.2" rx="1"/><line x1="6" y1="6.5" x2="11" y2="6.5" stroke="#ff3d3d" stroke-width="1"/><line x1="6" y1="9" x2="11" y2="9" stroke="#ff3d3d" stroke-width="1"/><line x1="6" y1="11.5" x2="9" y2="11.5" stroke="#ff3d3d" stroke-width="1"/><circle cx="15" cy="15" r="4" fill="#040a0f" stroke="#ff3d3d" stroke-width="1.2"/><line x1="13.5" y1="15" x2="16.5" y2="15" stroke="#ff3d3d" stroke-width="1.3"/><line x1="15" y1="13.5" x2="15" y2="16.5" stroke="#ff3d3d" stroke-width="1.3"/></svg>
-          </div>
-          <div>
-            <div class="tool-name">MALWARE HASH LOOKUP</div>
-            <div class="tool-sub">// MD5 / SHA-1 / SHA-256</div>
-          </div>
+          <div class="tool-icon-sq"><svg width="20" height="20" viewBox="0 0 20 20"><rect x="3" y="2" width="11" height="14" fill="none" stroke="#ff3d3d" stroke-width="1.2" rx="1"/><line x1="6" y1="6.5" x2="11" y2="6.5" stroke="#ff3d3d" stroke-width="1"/><line x1="6" y1="9" x2="11" y2="9" stroke="#ff3d3d" stroke-width="1"/><line x1="6" y1="11.5" x2="9" y2="11.5" stroke="#ff3d3d" stroke-width="1"/><circle cx="15" cy="15" r="4" fill="#040a0f" stroke="#ff3d3d" stroke-width="1.2"/><line x1="13.5" y1="15" x2="16.5" y2="15" stroke="#ff3d3d" stroke-width="1.3"/><line x1="15" y1="13.5" x2="15" y2="16.5" stroke="#ff3d3d" stroke-width="1.3"/></svg></div>
+          <div><div class="tool-name">MALWARE HASH LOOKUP</div><div class="tool-sub">// MD5 / SHA-1 / SHA-256</div></div>
         </div>
         <div class="input-group">
-          <input type="text" class="t-input" id="hashInput"
-                 placeholder="Paste file hash (MD5, SHA-1, or SHA-256)"
-                 onkeydown="if(event.key==='Enter')checkHash()">
+          <input type="text" class="t-input" id="hashInput" placeholder="Paste file hash (MD5, SHA-1, or SHA-256)" onkeydown="if(event.key==='Enter')checkHash()">
           <button class="t-btn" id="hashBtn" onclick="checkHash()">LOOKUP</button>
         </div>
         <div class="result-panel" id="hashResult">
-          <div class="r-empty">// Submit a file hash to retrieve VirusTotal analysis: detection ratio, malware family classification, and first/last seen timestamps.</div>
+          <div class="r-empty">// Submit a file hash to retrieve VirusTotal analysis: detection ratio, malware family, and first/last seen timestamps.</div>
         </div>
-        <div class="tool-note">⚠ Hash lookups retrieve existing VirusTotal reports only. If a hash has no prior analysis, no results will be returned. For new files, submit directly at virustotal.com.</div>
+        <div class="tool-note">⚠ Hash lookups retrieve existing VirusTotal reports only. Unknown files return no results.</div>
       </div>
-
     </div>
   </div>
 </div>
 
-<!-- ══ PAGE: CASE STUDIES ════════════════════════════════════════ -->
+<!-- CASES -->
 <div class="page" id="cases">
   <div class="wrap">
-    <div class="sec-head">
-      <div class="sec-tag">// Recent Activity</div>
-      <h2 class="sec-title">CASE STUDIES</h2>
-      <div class="sec-rule"></div>
-    </div>
+    <div class="sec-head"><div class="sec-tag">// Recent Activity</div><h2 class="sec-title">CASE STUDIES</h2><div class="sec-rule"></div></div>
     <div class="cases-grid">
-      <div class="case-card"><div class="case-type">⬤ BOTNET C2</div><div class="case-title">EMOTET RESURRECTION — MULTI-STAGE C2 INFRASTRUCTURE MAPPED</div><p class="case-desc">Identified a cluster of 47 domains operating as second-stage C2 nodes distributing Emotet payloads. Fast-flux DNS, bulletproof hosting across 3 ASNs, and automated domain registration patterns confirmed via passive DNS correlation.</p><div class="case-meta"><div>DOMAINS: <span>47</span></div><div>ASNs: <span>3</span></div><div>REPORTED: <span>6 REGISTRARS</span></div></div></div>
-      <div class="case-card"><div class="case-type">⬤ PHISHING</div><div class="case-title">CREDENTIAL HARVESTING — FINANCIAL SECTOR IMPERSONATION</div><p class="case-desc">Traced a large-scale phishing operation targeting 12 major financial institutions. Attacker rotated domains every 48–72 hours with typosquatted registrations; shared hosting fingerprints linked 200+ domains to a single actor infrastructure.</p><div class="case-meta"><div>DOMAINS: <span>200+</span></div><div>TARGETS: <span>12 BANKS</span></div><div>DURATION: <span>6 WEEKS</span></div></div></div>
-      <div class="case-card"><div class="case-type">⬤ MALWARE</div><div class="case-title">INFOSTEALER DELIVERY VIA COMPROMISED LEGITIMATE DOMAINS</div><p class="case-desc">Uncovered a campaign injecting malicious JavaScript into compromised WordPress sites redirecting to infostealer download domains. SSL certificate reuse and shared nameserver patterns exposed 80+ compromised domains in a single analysis session.</p><div class="case-meta"><div>COMPROMISED: <span>80+</span></div><div>VECTOR: <span>JS INJECT</span></div><div>MALWARE: <span>INFOSTEALER</span></div></div></div>
-      <div class="case-card"><div class="case-type">⬤ PHARMING</div><div class="case-title">DNS HIJACKING CAMPAIGN TARGETING RESIDENTIAL ISP CUSTOMERS</div><p class="case-desc">Investigated DNS hijacking affecting router configurations across multiple ISPs, redirecting banking traffic to pharming pages. Correlated attacker-controlled resolvers, fake SSL certificates, and overlapping WHOIS data to identify 15 threat actor domains.</p><div class="case-meta"><div>ISPs: <span>4</span></div><div>ACTOR DOMAINS: <span>15</span></div><div>TYPE: <span>DNS HIJACK</span></div></div></div>
-      <div class="case-card"><div class="case-type">⬤ SPAM / ABUSE</div><div class="case-title">SNOWSHOE SPAM NETWORK — DISTRIBUTED LOW-VOLUME ABUSE</div><p class="case-desc">Identified a snowshoe spam operation distributing malware droppers via email. 300+ domains spread across hundreds of IPs to evade reputation systems, all tied to a single registrant via WHOIS history and billing address correlation.</p><div class="case-meta"><div>DOMAINS: <span>300+</span></div><div>IPs: <span>800+</span></div><div>ACTOR: <span>SINGLE</span></div></div></div>
-      <div class="case-card"><div class="case-type">⬤ DGA</div><div class="case-title">DGA CLUSTER — RANSOMWARE C2 BEACON IDENTIFICATION</div><p class="case-desc">Reverse-engineered a domain generation algorithm embedded in ransomware samples. Predicted 2,000+ future C2 domains, submitted pre-emptive registrar notifications, and sinkholed active beaconing domains in coordination with security researchers.</p><div class="case-meta"><div>DGA DOMAINS: <span>2000+</span></div><div>SINKHOLED: <span>34</span></div><div>FAMILY: <span>RANSOMWARE</span></div></div></div>
+      <div class="case-card"><div class="case-type">⬤ BOTNET C2</div><div class="case-title">EMOTET RESURRECTION — MULTI-STAGE C2 INFRASTRUCTURE MAPPED</div><p class="case-desc">Identified a cluster of 47 domains operating as second-stage C2 nodes. Fast-flux DNS, bulletproof hosting across 3 ASNs confirmed via passive DNS correlation.</p><div class="case-meta"><div>DOMAINS: <span>47</span></div><div>ASNs: <span>3</span></div><div>REPORTED: <span>6 REGISTRARS</span></div></div></div>
+      <div class="case-card"><div class="case-type">⬤ PHISHING</div><div class="case-title">CREDENTIAL HARVESTING — FINANCIAL SECTOR IMPERSONATION</div><p class="case-desc">Traced a phishing operation targeting 12 major financial institutions. Attacker rotated domains every 48–72 hours; shared hosting fingerprints linked 200+ domains to a single actor.</p><div class="case-meta"><div>DOMAINS: <span>200+</span></div><div>TARGETS: <span>12 BANKS</span></div><div>DURATION: <span>6 WEEKS</span></div></div></div>
+      <div class="case-card"><div class="case-type">⬤ MALWARE</div><div class="case-title">INFOSTEALER DELIVERY VIA COMPROMISED LEGITIMATE DOMAINS</div><p class="case-desc">Uncovered malicious JavaScript injection into compromised WordPress sites. SSL certificate reuse patterns exposed 80+ compromised domains in a single analysis session.</p><div class="case-meta"><div>COMPROMISED: <span>80+</span></div><div>VECTOR: <span>JS INJECT</span></div><div>MALWARE: <span>INFOSTEALER</span></div></div></div>
+      <div class="case-card"><div class="case-type">⬤ PHARMING</div><div class="case-title">DNS HIJACKING CAMPAIGN TARGETING RESIDENTIAL ISP CUSTOMERS</div><p class="case-desc">Investigated DNS hijacking affecting router configs across multiple ISPs, redirecting banking traffic to pharming pages. Identified 15 attacker-controlled domains.</p><div class="case-meta"><div>ISPs: <span>4</span></div><div>ACTOR DOMAINS: <span>15</span></div><div>TYPE: <span>DNS HIJACK</span></div></div></div>
+      <div class="case-card"><div class="case-type">⬤ SPAM</div><div class="case-title">SNOWSHOE SPAM NETWORK — DISTRIBUTED LOW-VOLUME ABUSE</div><p class="case-desc">Identified a snowshoe spam operation distributing malware droppers. 300+ domains across 800+ IPs, all tied to a single registrant via WHOIS history correlation.</p><div class="case-meta"><div>DOMAINS: <span>300+</span></div><div>IPs: <span>800+</span></div><div>ACTOR: <span>SINGLE</span></div></div></div>
+      <div class="case-card"><div class="case-type">⬤ DGA</div><div class="case-title">DGA CLUSTER — RANSOMWARE C2 BEACON IDENTIFICATION</div><p class="case-desc">Reverse-engineered a DGA embedded in ransomware. Predicted 2,000+ future C2 domains and sinkholed 34 active beaconing domains in coordination with security researchers.</p><div class="case-meta"><div>DGA DOMAINS: <span>2000+</span></div><div>SINKHOLED: <span>34</span></div><div>FAMILY: <span>RANSOMWARE</span></div></div></div>
     </div>
   </div>
 </div>
 
-<!-- ══ PAGE: ABOUT ═══════════════════════════════════════════════ -->
+<!-- ABOUT -->
 <div class="page" id="about">
   <div class="wrap">
-    <div class="sec-head">
-      <div class="sec-tag">// Who We Are</div>
-      <h2 class="sec-title">ABOUT</h2>
-      <div class="sec-rule"></div>
-    </div>
+    <div class="sec-head"><div class="sec-tag">// Who We Are</div><h2 class="sec-title">ABOUT</h2><div class="sec-rule"></div></div>
     <div class="about-grid">
       <div class="about-body">
         <p class="about-hl">ThreatVector Intelligence is a specialist DNS abuse investigation and reporting organization focused on evidence-based identification of malicious internet infrastructure.</p>
         <p>We operate at the intersection of DNS abuse analysis, malware infrastructure research, and responsible disclosure — bridging the gap between threat identification and effective registrar and registry mitigation.</p>
-        <p>Our methodology is built on a single principle: every report must be defensible. We do not submit abuse reports based on suspicion, reputation signals, or content concerns. We investigate, validate, correlate, and document — then report with complete evidence packages that abuse desks can act on immediately.</p>
-        <p>We work within the five DNS abuse categories as defined by ICANN: malware distribution, botnet C2 infrastructure, phishing, pharming, and spam used to propagate the above. We distinguish DNS infrastructure abuse from content disputes and do not process the latter.</p>
-        <p>All work is conducted under responsible disclosure principles. Where intelligence permits and operational security allows, we coordinate disclosures with affected registrars, registries, CERTs, and law enforcement before any public release.</p>
+        <p>Our methodology is built on a single principle: every report must be defensible. We investigate, validate, correlate, and document — then report with complete evidence packages that abuse desks can act on immediately.</p>
+        <p>We work within the five DNS abuse categories as defined by ICANN: malware distribution, botnet C2 infrastructure, phishing, pharming, and spam used to propagate the above.</p>
+        <p>All work is conducted under responsible disclosure principles. We coordinate disclosures with affected registrars, registries, CERTs, and law enforcement before any public release.</p>
         <p style="margin-bottom:0">
-          <strong style="color:var(--bright)">General inquiries:</strong>&nbsp;
-          <a href="/cdn-cgi/l/email-protection#137a7d757c53677b61767267657670677c617a7d67767f7f7a74767d70763d707c7e"><span class="__cf_email__" data-cfemail="a9c0c7cfc6e9ddc1dbccc8dddfcccaddc6dbc0c7ddccc5c5c0ceccc7cacc87cac6c4">[email&#160;protected]</span></a><br>
-          <strong style="color:var(--bright)">Abuse reports:</strong>&nbsp;
-          <a class="a2" href="/cdn-cgi/l/email-protection#bbdad9cec8defbcfd3c9dedacfcdded8cfd4c9d2d5cfded7d7d2dcded5d8de95d8d4d6"><span class="__cf_email__" data-cfemail="a6c7c4d3d5c3e6d2ced4c3c7d2d0c3c5d2c9d4cfc8d2c3cacacfc1c3c8c5c388c5c9cb">[email&#160;protected]</span></a>
+          <strong style="color:var(--bright)">General:</strong>&nbsp;<a href="mailto:info@threatvectorintelligence.com">info@threatvectorintelligence.com</a><br>
+          <strong style="color:var(--bright)">Abuse reports:</strong>&nbsp;<a class="a2" href="mailto:abuse@threatvectorintelligence.com">abuse@threatvectorintelligence.com</a>
         </p>
       </div>
       <div class="info-cards">
         <div class="info-card"><div class="ic-lbl">Domain</div><div class="ic-val">threatvectorintelligence.com</div></div>
         <div class="info-card"><div class="ic-lbl">Focus Areas</div><div class="ic-list">Malware C2 · Botnet Infra · Phishing<br>Pharming · DGA · Fast-Flux · Snowshoe</div></div>
-        <div class="info-card"><div class="ic-lbl">Evidence Sources</div><div class="ic-list">Sandbox Analysis · Passive DNS Telemetry<br>Malware Samples · Network Artifacts<br>Threat Intel Correlation</div></div>
-        <div class="info-card"><div class="ic-lbl">Reporting Targets</div><div class="ic-list">ICANN Registrars · DNS Registries<br>Abuse Desks · CERT / CSIRT Teams<br>Law Enforcement</div></div>
-        <div class="info-card"><div class="ic-lbl">Policy</div><div class="ic-list">Responsible Disclosure · Good-Faith Reporting<br>No False Positives Policy</div></div>
+        <div class="info-card"><div class="ic-lbl">Evidence Sources</div><div class="ic-list">Sandbox Analysis · Passive DNS<br>Malware Samples · Network Artifacts<br>Threat Intel Correlation</div></div>
+        <div class="info-card"><div class="ic-lbl">Reporting Targets</div><div class="ic-list">ICANN Registrars · DNS Registries<br>Abuse Desks · CERT / CSIRT · Law Enforcement</div></div>
+        <div class="info-card"><div class="ic-lbl">Policy</div><div class="ic-list">Responsible Disclosure<br>Good-Faith Reporting · No False Positives</div></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══ PAGE: REPORT ══════════════════════════════════════════════ -->
+<!-- REPORT -->
 <div class="page" id="report">
   <div class="wrap">
-    <div class="sec-head">
-      <div class="sec-tag">// Submit Intelligence</div>
-      <h2 class="sec-title">ABUSE REPORT</h2>
-      <div class="sec-rule"></div>
-    </div>
-    <div class="report-alert">
-      <strong>⚠ IMPORTANT:</strong> This form is for DNS abuse reports only — malware C2, botnet infrastructure, phishing, pharming, and spam enabling the above. Content disputes, copyright claims, and general complaints are outside our scope. All reports require verifiable evidence. Unsubstantiated reports will not be processed.
-    </div>
+    <div class="sec-head"><div class="sec-tag">// Submit Intelligence</div><h2 class="sec-title">ABUSE REPORT</h2><div class="sec-rule"></div></div>
+    <div class="report-alert"><strong>⚠ IMPORTANT:</strong> DNS abuse reports only — malware C2, botnet, phishing, pharming, spam. Content disputes are outside our scope. All reports require verifiable evidence.</div>
     <div class="report-grid">
-      <div class="fg"><label>REPORTER NAME / ORGANIZATION</label><input type="text" class="f-in" id="rName" placeholder="Optional — may remain anonymous"></div>
+      <div class="fg"><label>REPORTER / ORGANIZATION</label><input type="text" class="f-in" id="rName" placeholder="Optional — may remain anonymous"></div>
       <div class="fg"><label>CONTACT EMAIL</label><input type="email" class="f-in" id="rEmail" placeholder="For follow-up only"></div>
       <div class="fg"><label>ABUSIVE DOMAIN / URL *</label><input type="text" class="f-in" id="rDomain" placeholder="e.g. malicious-domain.com" required></div>
       <div class="fg"><label>ABUSE TYPE *</label>
@@ -873,14 +214,14 @@ footer { border-top: 1px solid var(--border); background: var(--panel); }
       </div>
       <div class="fg"><label>ASSOCIATED IPs / PORTS</label><input type="text" class="f-in" id="rIPs" placeholder="e.g. 192.168.1.1:4444"></div>
       <div class="fg"><label>FIRST OBSERVED DATE</label><input type="date" class="f-in" id="rDate"></div>
-      <div class="fg full"><label>OBSERVED BEHAVIOR *</label><textarea class="f-ta" id="rBehavior" placeholder="Describe exactly what you observed: network connections, DNS resolutions, payload delivery, redirect chains, etc."></textarea></div>
-      <div class="fg full"><label>EVIDENCE URLS / REFERENCES</label><textarea class="f-ta" style="min-height:80px" id="rEvidence" placeholder="Links to sandbox reports, VirusTotal, URLScan.io, passive DNS, threat intel, PCAP, etc."></textarea></div>
+      <div class="fg full"><label>OBSERVED BEHAVIOR *</label><textarea class="f-ta" id="rBehavior" placeholder="Network connections, DNS resolutions, payload delivery, redirect chains, etc."></textarea></div>
+      <div class="fg full"><label>EVIDENCE URLS / REFERENCES</label><textarea class="f-ta" style="min-height:80px" id="rEvidence" placeholder="Sandbox reports, VirusTotal, URLScan.io, passive DNS, threat intel, PCAP, etc."></textarea></div>
       <div class="fg full"><label>INDICATORS OF COMPROMISE</label><textarea class="f-ta" style="min-height:80px" id="rIOCs" placeholder="File hashes, registry keys, mutex names, network signatures, YARA rules, etc."></textarea></div>
-      <div class="fg full"><label>ADDITIONAL NOTES</label><textarea class="f-ta" style="min-height:80px" id="rNotes" placeholder="Campaign attribution, related domains, threat actor context, urgency, or special handling instructions."></textarea></div>
+      <div class="fg full"><label>ADDITIONAL NOTES</label><textarea class="f-ta" style="min-height:80px" id="rNotes" placeholder="Campaign attribution, related domains, urgency, special handling instructions."></textarea></div>
     </div>
     <div class="report-footer">
       <button class="btn btn-d" onclick="submitReport()">&#9656;&nbsp; SUBMIT ABUSE REPORT</button>
-      <small>Reports are sent to <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c7a6a5b2b4a287b3afb5a2a6b3b1a2a4b3a8b5aea9b3a2ababaea0a2a9a4a2e9a4a8aa">[email&#160;protected]</a></small>
+      <small>Sent to abuse@threatvectorintelligence.com</small>
     </div>
   </div>
 </div>
@@ -893,7 +234,7 @@ footer { border-top: 1px solid var(--border); background: var(--panel); }
         <svg width="38" height="38" viewBox="0 0 42 42"><polygon points="21,2 38,11.5 38,30.5 21,40 4,30.5 4,11.5" fill="none" stroke="#00d4ff" stroke-width="1.3"/><polyline points="13,29 21,13 29,21" fill="none" stroke="#00d4ff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="29" cy="21" r="2.4" fill="#ff3d3d"/></svg>
         <div class="nav-brand" style="margin-left:10px">THREATVECTOR<small>INTELLIGENCE</small></div>
       </div>
-      <p>Evidence-driven DNS abuse intelligence. Malware C2 tracking, botnet infrastructure analysis, and responsible disclosure to registrars and registries worldwide.</p>
+      <p>Evidence-driven DNS abuse intelligence. Malware C2 tracking, botnet infrastructure analysis, and responsible disclosure worldwide.</p>
     </div>
     <div>
       <div class="f-col-ttl">NAVIGATION</div>
@@ -915,15 +256,14 @@ footer { border-top: 1px solid var(--border); background: var(--panel); }
         <li><a>Phishing Domains</a></li>
         <li><a>Pharming / DNS Hijack</a></li>
         <li><a>Snowshoe Spam</a></li>
-        <li><a>DGA Domains</a></li>
-        <li><a>Fast-Flux Networks</a></li>
+        <li><a>DGA / Fast-Flux</a></li>
       </ul>
     </div>
     <div>
       <div class="f-col-ttl">CONTACT</div>
       <div class="f-contact">
-        <a href="/cdn-cgi/l/email-protection#2a43444c456a5e42584f4b5e5c4f495e455843445e4f4646434d4f44494f04494547"><span class="__cf_email__" data-cfemail="026b6c646d42766a70676376746761766d706b6c76676e6e6b65676c61672c616d6f">[email&#160;protected]</span></a>
-        <a class="ab" href="/cdn-cgi/l/email-protection#36575443455376425e445357424053554259445f5842535a5a5f51535855531855595b"><span class="__cf_email__" data-cfemail="48292a3d3b2d083c203a2d293c3e2d2b3c273a21263c2d2424212f2d262b2d662b2725">[email&#160;protected]</span></a>
+        <a href="mailto:info@threatvectorintelligence.com">info@threatvectorintelligence.com</a>
+        <a class="ab" href="mailto:abuse@threatvectorintelligence.com">abuse@threatvectorintelligence.com</a>
         <div style="margin-top:14px;font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:.15em;opacity:.6">threatvectorintelligence.com</div>
       </div>
     </div>
@@ -936,402 +276,9 @@ footer { border-top: 1px solid var(--border); background: var(--panel); }
 
 <div class="toast" id="toast"></div>
 
-<!-- ================================================================
-     JAVASCRIPT — single clean block, no duplicates
-================================================================ -->
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-'use strict';
-
-/* ─── CONFIG ──────────────────────────────────────────────────────
-   Cloudflare Worker proxy URL.
-   Worker handles CORS and forwards all requests to VirusTotal.
-   Change this only if you redeploy the Worker to a new URL.
-─────────────────────────────────────────────────────────────────── */
-const VT = 'https://vt-proxy.websentinel1990.workers.dev/vt';
-
-/* ─── NAVIGATION ────────────────────────────────────────────────── */
-function nav(pageId) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  const target = document.getElementById(pageId);
-  if (target) target.classList.add('active');
-  document.querySelectorAll('.nav-menu a').forEach(a =>
-    a.classList.toggle('active', a.dataset.p === pageId)
-  );
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-  if (pageId === 'home') initCounters();
-}
-
-/* ─── COUNTER ANIMATION ─────────────────────────────────────────── */
-let countersRan = false;
-function initCounters() {
-  if (countersRan) return;
-  countersRan = true;
-  [
-    { id: 's1', val: 14820, sfx: ''  },
-    { id: 's2', val: 3241,  sfx: ''  },
-    { id: 's3', val: 8906,  sfx: ''  },
-    { id: 's4', val: 5,     sfx: '+' },
-  ].forEach(({ id, val, sfx }) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    let cur = 0;
-    const step = Math.max(1, Math.ceil(val / 55));
-    const iv = setInterval(() => {
-      cur = Math.min(cur + step, val);
-      el.textContent = cur.toLocaleString() + sfx;
-      if (cur >= val) clearInterval(iv);
-    }, 28);
-  });
-}
-window.addEventListener('load', () => setTimeout(initCounters, 800));
-
-/* ─── FLASH INTERACTION ─────────────────────────────────────────── */
-function flash(el) {
-  el.style.background = 'rgba(0,212,255,0.07)';
-  setTimeout(() => el.style.background = '', 360);
-}
-
-/* ─── TOAST ─────────────────────────────────────────────────────── */
-function showToast(msg, type) {
-  const colors = { safe: 'var(--green)', danger: 'var(--red)', warn: 'var(--warn)', info: 'var(--accent)' };
-  const t   = document.getElementById('toast');
-  const col = colors[type] || colors.info;
-  t.textContent       = msg;
-  t.style.borderColor = col;
-  t.style.color       = col;
-  t.style.boxShadow   = `0 0 28px ${col}44`;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3200);
-}
-
-/* ─── RESULT RENDERER ───────────────────────────────────────────── */
-function renderResult({ status, label, rows }) {
-  const col = {
-    safe:    'var(--green)',
-    danger:  'var(--red)',
-    warn:    'var(--warn)',
-    neutral: 'var(--accent)',
-  };
-  let h = `<div class="r-header">
-    <div class="r-dot ${status}"></div>
-    <span class="r-status" style="color:${col[status] || col.neutral}">${label}</span>
-  </div>`;
-  rows.forEach(([k, v, cls = '']) => {
-    h += `<div class="r-row"><span class="r-key">${k}</span><span class="r-val ${cls}">${v}</span></div>`;
-  });
-  return h;
-}
-
-/* ─── HELPERS ───────────────────────────────────────────────────── */
-// Convert URL string to VirusTotal URL ID (base64url, no padding)
-function urlToId(url) {
-  return btoa(url.replace(/\/$/, '')).replace(/=/g, '');
-}
-
-// Update the step text inside the result box
-function setStep(boxId, msg) {
-  const el = document.getElementById(boxId + '_step');
-  if (el) el.textContent = msg;
-}
-
-// Show animated loading state
-function showLoading(boxId, msg = '// Connecting to VirusTotal...') {
-  document.getElementById(boxId).innerHTML =
-    `<div class="r-loading"></div>
-     <span id="${boxId}_step" class="vt-progress">${msg}</span>`;
-}
-
-/* ─── URL CHECK — 4-step flow + rich result render ─────────────── */
-async function checkURL() {
-  const raw = document.getElementById('urlInput').value.trim();
-  const btn = document.getElementById('urlBtn');
-  const box = document.getElementById('urlResult');
-  if (!raw) { showToast('// Please enter a URL or domain', 'warn'); return; }
-
-  let clean = raw.replace(/\/$/, '');
-  if (!/^https?:\/\//i.test(clean)) clean = 'https://' + clean;
-  const urlId = urlToId(clean);
-
-  btn.disabled = true; btn.textContent = '...';
-  showLoading('urlResult', '// STEP 1/4 — Checking VirusTotal cache...');
-
-  try {
-    let reportData = null;
-
-    // Step 1: Check cache
-    setStep('urlResult', '// STEP 1/4 — Checking VirusTotal cache...');
-    const cached = await fetch(`${VT}/urls/${urlId}`);
-    if (cached.ok) {
-      const cj = await cached.json();
-      if (cj.data?.attributes?.last_analysis_stats) reportData = cj.data;
-    }
-
-    // Step 2: Submit if not cached
-    if (!reportData) {
-      setStep('urlResult', '// STEP 2/4 — Submitting URL to VirusTotal...');
-      const submit = await fetch(`${VT}/urls`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: `url=${encodeURIComponent(clean)}`,
-      });
-      if (!submit.ok) throw new Error(`Submit failed — HTTP ${submit.status}`);
-      const sj = await submit.json();
-      const analysisId = sj.data?.id;
-      if (!analysisId) throw new Error('No analysis ID returned from VirusTotal');
-
-      // Step 3: Poll until complete
-      setStep('urlResult', '// STEP 3/4 — Waiting for analysis...');
-      let tries = 0;
-      while (tries < 20) {
-        await sleep(3000);
-        const poll = await fetch(`${VT}/analyses/${analysisId}`);
-        if (poll.ok) {
-          const pj    = await poll.json();
-          const pStat = pj.data?.attributes?.status;
-          const pMal  = pj.data?.attributes?.stats?.malicious ?? 0;
-          setStep('urlResult', `// STEP 3/4 — Scanning... (${pMal} detections so far)`);
-          if (pStat === 'completed') {
-            const full = await fetch(`${VT}/urls/${urlId}`);
-            if (full.ok) { reportData = (await full.json()).data; break; }
-          }
-        }
-        tries++;
-      }
-      if (!reportData) throw new Error('Analysis timed out. Wait a few seconds and try again.');
-    }
-
-    // Step 4: Render rich result
-    setStep('urlResult', '// STEP 4/4 — Rendering results...');
-    renderVTResult(box, reportData, clean, urlId);
-    fetchScreenshot(urlId); // async, non-blocking
-
-  } catch (err) {
-    box.innerHTML = renderResult({
-      status: 'warn', label: 'ERROR',
-      rows: [
-        ['URL',   clean],
-        ['ERROR', err.message, 'warn'],
-        ['TIP',   'If this is a new URL, wait a few seconds and try again.'],
-      ]
-    });
-  } finally {
-    btn.disabled = false; btn.textContent = 'SCAN';
-  }
-}
-
-/* ─── Rich VT result renderer ───────────────────────────────────── */
-function renderVTResult(box, data, url, urlId) {
-  const a       = data.attributes || {};
-  const stats   = a.last_analysis_stats || {};
-  const engines = a.last_analysis_results || {};
-
-  const mal   = stats.malicious  || 0;
-  const sus   = stats.suspicious || 0;
-  const undet = stats.undetected || 0;
-  const harm  = stats.harmless   || 0;
-  const total = mal + sus + undet + harm;
-
-  // Verdict
-  let vCls, vIcon, vTitle, vColor;
-  if      (mal >= 3)          { vCls='danger'; vIcon='🚨'; vColor='var(--red)';   vTitle=`Dangerous — flagged by ${mal} engines`; }
-  else if (mal > 0 || sus > 0){ vCls='warn';   vIcon='⚠️'; vColor='var(--warn)';  vTitle=`Suspicious — ${mal+sus} engine(s) flagged`; }
-  else                        { vCls='clean';  vIcon='✅'; vColor='var(--green)'; vTitle='No threats detected'; }
-
-  // Engine rows — malicious & suspicious first
-  const allEng = Object.entries(engines);
-  allEng.sort(([,a],[,b]) => {
-    const s = r => r.category==='malicious'?3:r.category==='suspicious'?2:0;
-    return s(b) - s(a);
-  });
-  const bad = allEng.filter(([,r]) => r.category==='malicious'||r.category==='suspicious');
-  const engineHTML = bad.length
-    ? bad.map(([name, r]) => {
-        const lbl  = r.result || r.category;
-        const disp = lbl.length > 28 ? lbl.slice(0,28)+'…' : lbl;
-        const cls  = r.category==='malicious' ? 'eb-mal' : 'eb-sus';
-        return `<div class="engine-row">
-          <span class="engine-name">${name}</span>
-          <span class="engine-badge ${cls}">${disp}</span>
-        </div>`;
-      }).join('')
-    : `<div style="color:var(--green);font-family:var(--mono);font-size:11px;padding:4px 0">✓ No engines flagged this URL</div>`;
-
-  const cats = Object.values(a.categories||{}).join(', ') || 'N/A';
-  const date = a.last_analysis_date
-    ? new Date(a.last_analysis_date*1000).toLocaleString() : 'Just now';
-  const vtLink = `https://www.virustotal.com/gui/url/${urlId}`;
-
-  box.innerHTML = `
-<div class="vt-result">
-  <div class="vt-verdict ${vCls}">
-    <div class="vt-verdict-icon">${vIcon}</div>
-    <div class="vt-verdict-text">
-      <h3 style="color:${vColor}">${vTitle}</h3>
-      <p>${url} &nbsp;·&nbsp; Scanned: ${date}</p>
-    </div>
-    <div class="vt-score">
-      <div class="sc-num" style="color:${vColor}">${mal}/${total}</div>
-      <div class="sc-lbl">engines flagged</div>
-    </div>
-  </div>
-
-  <div style="margin-bottom:12px">
-    ${mRow('TITLE',      a.title||'—')}
-    ${mRow('CATEGORIES', cats)}
-    ${mRow('REPUTATION', a.reputation!=null?String(a.reputation):'N/A')}
-    ${mRow('FINAL URL',  a.last_final_url||url)}
-  </div>
-
-  <div class="vt-cols">
-    <div class="vt-box">
-      <h4>🔍 Engine Results &nbsp;<span style="color:var(--red);font-weight:700">${bad.length} flagged</span></h4>
-      <div class="engine-list">${engineHTML}</div>
-    </div>
-    <div class="vt-box">
-      <h4>📸 Website Screenshot</h4>
-      <div id="vtScreenWrap" style="min-height:80px;display:flex;align-items:center">
-        <span style="color:var(--dim);font-family:var(--mono);font-size:10px">Loading…</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="vt-footer">
-    <a href="${vtLink}" target="_blank" rel="noopener" class="vt-link">🔗 View full report on VirusTotal →</a>
-    <span class="vt-counts">🟢 ${harm} clean &nbsp;·&nbsp; 🔴 ${mal} malicious &nbsp;·&nbsp; 🟡 ${sus} suspicious &nbsp;·&nbsp; ⬜ ${undet} undetected</span>
-  </div>
-</div>`;
-}
-
-function mRow(k, v) {
-  return `<div class="r-row"><span class="r-key">${k}</span><span class="r-val">${v}</span></div>`;
-}
-
-/* Screenshot injected async into existing slot */
-async function fetchScreenshot(urlId) {
-  const wrap = document.getElementById('vtScreenWrap');
-  if (!wrap) return;
-  try {
-    const res = await fetch(`${VT}/urls/${urlId}/screenshot`);
-    if (!res.ok) throw new Error('not available');
-    const blob   = await res.blob();
-    const imgUrl = URL.createObjectURL(blob);
-    wrap.innerHTML = `<img src="${imgUrl}" class="vt-screenshot" alt="Screenshot"
-      onerror="this.parentElement.innerHTML='<span style=\\'color:var(--dim);font-family:var(--mono);font-size:10px\\'>Screenshot not available</span>'">`;
-  } catch (_) {
-    wrap.innerHTML = `<span style="color:var(--dim);font-family:var(--mono);font-size:10px">Screenshot not available</span>`;
-  }
-}
-
-
-/* ─── HASH LOOKUP ───────────────────────────────────────────────── */
-async function checkHash() {
-  const raw  = document.getElementById('hashInput').value.trim();
-  const btn  = document.getElementById('hashBtn');
-  const box  = document.getElementById('hashResult');
-
-  if (!raw) { showToast('// Please enter a file hash', 'warn'); return; }
-
-  const hashType = raw.length === 32 ? 'MD5'
-                 : raw.length === 40 ? 'SHA-1'
-                 : raw.length === 64 ? 'SHA-256'
-                 : null;
-  if (!hashType) {
-    showToast('// Invalid hash — MD5 (32), SHA-1 (40), SHA-256 (64) hex chars', 'danger');
-    return;
-  }
-
-  btn.disabled = true;
-  btn.textContent = '...';
-  showLoading('hashResult', '// Querying VirusTotal database...');
-
-  try {
-    const resp = await fetch(`${VT}/files/${raw}`);
-
-    if (resp.status === 404) {
-      box.innerHTML = renderResult({
-        status: 'neutral', label: 'NOT FOUND',
-        rows: [
-          ['HASH',   raw],
-          ['TYPE',   hashType],
-          ['STATUS', 'No analysis found. File may be unknown or never submitted to VirusTotal.', 'warn'],
-        ]
-      });
-      return;
-    }
-    if (!resp.ok) throw new Error(`HTTP ${resp.status} — ${resp.statusText}`);
-
-    const jd    = await resp.json();
-    const a     = jd.data?.attributes || {};
-    const stats = a.last_analysis_stats || {};
-    const total = Object.values(stats).reduce((x, y) => x + y, 0);
-    const mal   = stats.malicious || 0;
-
-    let status = 'safe', label = 'CLEAN';
-    if      (mal > 5) { status = 'danger'; label = 'MALWARE DETECTED';      }
-    else if (mal > 0) { status = 'warn';   label = 'POTENTIALLY MALICIOUS'; }
-
-    const names  = (a.names || []).slice(0, 3).join(', ') || 'N/A';
-    const family = a.popular_threat_classification?.suggested_threat_label || 'N/A';
-    const pct    = total > 0 ? Math.round((mal / total) * 100) : 0;
-
-    box.innerHTML = renderResult({ status, label, rows: [
-      ['HASH',         raw],
-      ['HASH TYPE',    hashType],
-      ['FILE NAMES',   names],
-      ['FILE TYPE',    a.type_description || 'N/A'],
-      ['FILE SIZE',    a.size ? `${(a.size / 1024).toFixed(1)} KB` : 'N/A'],
-      ['DETECTIONS',   `${mal} / ${total} vendors`,
-                       mal > 5 ? 'danger' : mal > 0 ? 'warn' : 'safe'],
-      ['THREAT LABEL', family, family !== 'N/A' ? 'danger' : ''],
-      ['FIRST SEEN',   a.first_submission_date
-                         ? new Date(a.first_submission_date * 1000).toUTCString() : 'N/A'],
-      ['LAST SEEN',    a.last_analysis_date
-                         ? new Date(a.last_analysis_date * 1000).toUTCString() : 'N/A'],
-      ['VT REPORT',    `https://www.virustotal.com/gui/file/${raw}`],
-    ]}) +
-    `<div class="vt-gauge">
-       <div class="vt-gauge-fill ${status}" style="width:${pct}%"></div>
-     </div>`;
-
-  } catch (err) {
-    box.innerHTML = renderResult({
-      status: 'warn', label: 'ERROR',
-      rows: [
-        ['HASH',  raw],
-        ['TYPE',  hashType],
-        ['ERROR', err.message, 'warn'],
-      ]
-    });
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'LOOKUP';
-  }
-}
-
-/* ─── REPORT FORM ───────────────────────────────────────────────── */
-function submitReport() {
-  const domain   = document.getElementById('rDomain').value.trim();
-  const type     = document.getElementById('rType').value;
-  const behavior = document.getElementById('rBehavior').value.trim();
-
-  if (!domain || !type || !behavior) {
-    showToast('// Required: domain, abuse type, and observed behavior', 'danger');
-    return;
-  }
-
-  const subject = `[DNS Abuse Report] ${type.toUpperCase()} — ${domain}`;
-  const body = [
-    'THREATVECTOR INTELLIGENCE — ABUSE REPORT',
-    '='.repeat(42),
-    '',
-    `DOMAIN:         ${domain}`,
-    `ABUSE TYPE:     ${type}`,
-    `REPORTER:       ${document.getElementById('rName').value  || 'Anonymous'}`,
-    `CONTACT:        ${document.getElementById('rEmail').value || 'Not provided'}`,
-    `ASSOCIATED IPs: ${document.getElementById('rIPs').value   || 'N/A'}`,
-    `FIRST OBSERVED: ${document.getElementById('rDate').value  || 'Not specified'}`,
-    '',
-    'OBSERVED BEHAVIOR:',
-    behavior,
-    '',
-    'E
+<script src="js/nav.js"></script>
+<script src="js/vt-url.js"></script>
+<script src="js/vt-hash.js"></script>
+<script src="js/report.js"></script>
+</body>
+</html>
