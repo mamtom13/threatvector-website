@@ -1,415 +1,105 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ThreatVector Intelligence — DNS Abuse & Malicious Infrastructure</title>
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
-<!-- SEO: Meta description -->
-<meta name="description" content="ThreatVector Intelligence investigates DNS abuse, malware C2 infrastructure, phishing, botnet, and pharming at scale. Evidence-based reporting aligned with ICANN standards.">
-<meta name="keywords" content="DNS abuse, malware C2, phishing detection, botnet tracking, pharming, threat intelligence, ICANN reporting">
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://threatvectorintelligence.com/">
+  <url>
+    <loc>https://threatvectorintelligence.com/</loc>
+    <lastmod>2026-03-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://threatvectorintelligence.com/services.html</loc>
+    <lastmod>2026-03-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://threatvectorintelligence.com/standards.html</loc>
+    <lastmod>2026-03-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://threatvectorintelligence.com/tools.html</loc>
+    <lastmod>2026-03-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://threatvectorintelligence.com/cases.html</loc>
+    <lastmod>2026-03-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://threatvectorintelligence.com/about.html</loc>
+    <lastmod>2026-03-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://threatvectorintelligence.com/report.html</loc>
+    <lastmod>2026-03-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
 
-<!-- SEO: Open Graph (Facebook, LinkedIn, etc.) -->
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://threatvectorintelligence.com/">
-<meta property="og:title" content="ThreatVector Intelligence — DNS Abuse & Malicious Infrastructure">
-<meta property="og:description" content="Evidence-driven DNS abuse detection and malicious infrastructure tracking. We investigate malware C2, phishing, botnet and pharming — backed by verifiable technical evidence.">
-<meta property="og:image" content="https://threatvectorintelligence.com/og-image.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:site_name" content="ThreatVector Intelligence">
-<meta property="og:locale" content="en_US">
+  <!-- DNS Abuse reference pages -->
+  <url>
+    <loc>https://threatvectorintelligence.com/dns-abuse/botnet.html</loc>
+    <lastmod>2026-03-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://threatvectorintelligence.com/dns-abuse/dga-fast-flux.html</loc>
+    <lastmod>2026-03-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://threatvectorintelligence.com/dns-abuse/malware-c2.html</loc>
+    <lastmod>2026-03-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://threatvectorintelligence.com/dns-abuse/pharming.html</loc>
+    <lastmod>2026-03-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://threatvectorintelligence.com/dns-abuse/phishing.html</loc>
+    <lastmod>2026-03-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://threatvectorintelligence.com/dns-abuse/snowshoe-spam.html</loc>
+    <lastmod>2026-03-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
 
-<!-- SEO: Twitter Card -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:url" content="https://threatvectorintelligence.com/">
-<meta name="twitter:title" content="ThreatVector Intelligence — DNS Abuse & Malicious Infrastructure">
-<meta name="twitter:description" content="Evidence-driven DNS abuse detection and malicious infrastructure tracking. Malware C2, phishing, botnet, pharming — ICANN-aligned reporting.">
-<meta name="twitter:image" content="https://threatvectorintelligence.com/og-image.png">
+  <!-- Legal pages -->
+  <url>
+    <loc>https://threatvectorintelligence.com/disclaimer.html</loc>
+    <lastmod>2026-03-29</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://threatvectorintelligence.com/privacy-policy.html</loc>
+    <lastmod>2026-03-29</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://threatvectorintelligence.com/responsible-use.html</loc>
+    <lastmod>2026-03-29</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
 
-<!-- Favicon -->
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
-<link rel="icon" type="image/png" href="favicon.png">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/base.css">
-<link rel="stylesheet" href="css/nav.css">
-<link rel="stylesheet" href="css/home.css">
-<link rel="stylesheet" href="css/tools.css">
-<link rel="stylesheet" href="css/pages.css">
-<!-- SEO: Structured Data -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "Organization",
-      "@id": "https://threatvectorintelligence.com/#organization",
-      "name": "ThreatVector Intelligence",
-      "url": "https://threatvectorintelligence.com",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "https://threatvectorintelligence.com/favicon.png"
-      },
-      "description": "ThreatVector Intelligence investigates DNS abuse, malware C2 infrastructure, phishing, botnet and pharming at scale. Evidence-based reporting aligned with ICANN standards.",
-      "knowsAbout": [
-        "DNS Abuse",
-        "Malware C2 Tracking",
-        "Phishing Detection",
-        "Botnet Infrastructure",
-        "Pharming",
-        "Threat Intelligence"
-      ]
-    },
-    {
-      "@type": "WebSite",
-      "@id": "https://threatvectorintelligence.com/#website",
-      "url": "https://threatvectorintelligence.com",
-      "name": "ThreatVector Intelligence",
-      "publisher": {
-        "@id": "https://threatvectorintelligence.com/#organization"
-      },
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": {
-          "@type": "EntryPoint",
-          "urlTemplate": "https://threatvectorintelligence.com/?q={search_term_string}"
-        },
-        "query-input": "required name=search_term_string"
-      }
-    },
-    {
-      "@type": "WebPage",
-      "@id": "https://threatvectorintelligence.com/#webpage",
-      "url": "https://threatvectorintelligence.com",
-      "name": "ThreatVector Intelligence — DNS Abuse & Malicious Infrastructure",
-      "description": "Evidence-driven DNS abuse detection and malicious infrastructure tracking.",
-      "isPartOf": {
-        "@id": "https://threatvectorintelligence.com/#website"
-      },
-      "about": {
-        "@id": "https://threatvectorintelligence.com/#organization"
-      }
-    }
-  ]
-}
-</script>
-</head>
-<body>
-
-<nav>
-  <div class="nav-logo" onclick="nav('home')">
-    <svg width="42" height="42" viewBox="0 0 42 42" xmlns="http://www.w3.org/2000/svg">
-      <polygon points="21,2 38,11.5 38,30.5 21,40 4,30.5 4,11.5" fill="none" stroke="#00d4ff" stroke-width="1.3" stroke-linejoin="round"/>
-      <polygon points="21,9 31,14.5 31,25.5 21,31 11,25.5 11,14.5" fill="none" stroke="#00d4ff" stroke-width="0.55" opacity="0.38"/>
-      <polyline points="13,29 21,13 29,21" fill="none" stroke="#00d4ff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-      <circle cx="29" cy="21" r="2.4" fill="#ff3d3d"/>
-      <circle cx="29" cy="21" r="4" fill="none" stroke="#ff3d3d" stroke-width="0.6" opacity="0.5"/>
-      <line x1="21" y1="2" x2="21" y2="6.5" stroke="#00d4ff" stroke-width="0.8" opacity="0.4"/>
-      <line x1="21" y1="37" x2="21" y2="40" stroke="#00d4ff" stroke-width="0.8" opacity="0.4"/>
-      <line x1="4" y1="21" x2="7" y2="21" stroke="#00d4ff" stroke-width="0.8" opacity="0.4"/>
-      <line x1="35" y1="21" x2="38" y2="21" stroke="#00d4ff" stroke-width="0.8" opacity="0.4"/>
-    </svg>
-    <div class="nav-brand">THREATVECTOR<small>INTELLIGENCE</small></div>
-  </div>
-  <ul class="nav-menu">
-    <li><a onclick="nav('home')"      data-p="home"      class="active">HOME</a></li>
-    <li><a onclick="nav('services')"  data-p="services">SERVICES</a></li>
-    <li><a onclick="nav('standards')" data-p="standards">STANDARDS</a></li>
-    <li><a onclick="nav('tools')"     data-p="tools">TOOLS</a></li>
-    <li><a onclick="nav('cases')"     data-p="cases">CASE STUDIES</a></li>
-    <li><a onclick="nav('about')"     data-p="about">ABOUT</a></li>
-    <li class="nav-cta"><a onclick="nav('report')" data-p="report">SUBMIT REPORT</a></li>
-  </ul>
-</nav>
-
-<!-- HOME -->
-<div class="page active" id="home">
-  <div class="hero-bg"></div>
-  <div class="hero-orb hero-orb-1"></div>
-  <div class="hero-orb hero-orb-2"></div>
-  <div class="hero-inner">
-    <div class="hero-label">// DNS Abuse Intelligence Platform</div>
-    <h1 class="hero-h1"><span class="ca">THREAT</span>VECTOR<span class="cd">INTELLIGENCE</span></h1>
-    <p class="hero-sub">Evidence-driven DNS abuse detection &amp; malicious infrastructure tracking.</p>
-    <p class="hero-desc">We investigate malware C2 domains, botnet infrastructure, phishing campaigns, pharming operations, and DNS abuse at scale. Every report is backed by verifiable technical evidence — sandbox artifacts, passive DNS telemetry, network indicators, and correlated threat intelligence.</p>
-    <div class="hero-actions">
-      <button class="btn btn-p" onclick="nav('tools')">&#9656;&nbsp; RUN URL CHECK</button>
-      <button class="btn btn-d" onclick="nav('report')">&#9656;&nbsp; SUBMIT ABUSE REPORT</button>
-      <button class="btn btn-g" onclick="nav('standards')">&#9656;&nbsp; OUR METHODOLOGY</button>
-    </div>
-  </div>
-  <div class="stats-bar">
-    <div class="stat"><span class="stat-n" id="s1">0</span><div class="stat-l">Domains Investigated</div></div>
-    <div class="stat"><span class="stat-n" id="s2">0</span><div class="stat-l">C2 Networks Tracked</div></div>
-    <div class="stat"><span class="stat-n" id="s3">0</span><div class="stat-l">Reports Submitted</div></div>
-    <div class="stat"><span class="stat-n" id="s4">0</span><div class="stat-l">Abuse Types Covered</div></div>
-  </div>
-  <div class="ticker-wrap">
-    <div class="ticker-track">
-      <span class="tick">MONITORING ACTIVE <span class="sep">|</span></span>
-      <span class="tick">DNS ABUSE: MALWARE · BOTNET · PHISHING · PHARMING · SPAM <span class="sep">|</span></span>
-      <span class="tick">EVIDENCE-BASED REPORTING ONLY <span class="sep">|</span></span>
-      <span class="tick">RESPONSIBLE DISCLOSURE ACTIVE <span class="sep">|</span></span>
-      <span class="tick">ICANN COMPLIANT METHODOLOGY <span class="sep">|</span></span>
-      <span class="tick">PASSIVE DNS TELEMETRY ENABLED <span class="sep">|</span></span>
-      <span class="tick">MONITORING ACTIVE <span class="sep">|</span></span>
-      <span class="tick">DNS ABUSE: MALWARE · BOTNET · PHISHING · PHARMING · SPAM <span class="sep">|</span></span>
-      <span class="tick">EVIDENCE-BASED REPORTING ONLY <span class="sep">|</span></span>
-      <span class="tick">RESPONSIBLE DISCLOSURE ACTIVE <span class="sep">|</span></span>
-      <span class="tick">ICANN COMPLIANT METHODOLOGY <span class="sep">|</span></span>
-      <span class="tick">PASSIVE DNS TELEMETRY ENABLED <span class="sep">|</span></span>
-    </div>
-  </div>
-</div>
-
-<!-- SERVICES -->
-<div class="page" id="services">
-  <div class="wrap">
-    <div class="sec-head"><div class="sec-tag">// What We Do</div><h2 class="sec-title">INTELLIGENCE SERVICES</h2><div class="sec-rule"></div></div>
-    <div class="svc-grid">
-      <div class="svc-card"><div class="svc-num">01</div><svg class="svc-icon" viewBox="0 0 44 44"><circle cx="22" cy="22" r="18" fill="none" stroke="#00d4ff" stroke-width="1"/><circle cx="22" cy="22" r="3" fill="#00d4ff"/><circle cx="22" cy="22" r="9" fill="none" stroke="#00d4ff" stroke-width="0.5" stroke-dasharray="2 3"/><line x1="22" y1="4" x2="22" y2="13" stroke="#00d4ff" stroke-width="1.5"/><line x1="22" y1="31" x2="22" y2="40" stroke="#00d4ff" stroke-width="1.5"/><line x1="4" y1="22" x2="13" y2="22" stroke="#00d4ff" stroke-width="1.5"/><line x1="31" y1="22" x2="40" y2="22" stroke="#00d4ff" stroke-width="1.5"/></svg><div class="svc-title">DNS ABUSE INVESTIGATION</div><p class="svc-desc">In-depth analysis of domain registration patterns, DNS record anomalies, fast-flux behavior, DGA activity, and abusive domain lifecycles across registries and registrars.</p></div>
-      <div class="svc-card"><div class="svc-num">02</div><svg class="svc-icon" viewBox="0 0 44 44"><rect x="5" y="5" width="34" height="34" fill="none" stroke="#ff3d3d" stroke-width="1" rx="2"/><polyline points="12,30 18,19 26,25 32,14" fill="none" stroke="#ff3d3d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="32" cy="14" r="2.8" fill="#ff3d3d"/></svg><div class="svc-title">MALWARE C2 TRACKING</div><p class="svc-desc">Continuous monitoring and correlation of command-and-control infrastructure. Map domain-to-IP relationships, hosting patterns, ASN data, and active C2 beacon endpoints.</p></div>
-      <div class="svc-card"><div class="svc-num">03</div><svg class="svc-icon" viewBox="0 0 44 44"><polygon points="22,4 40,34 4,34" fill="none" stroke="#00ff88" stroke-width="1.2"/><line x1="22" y1="14" x2="22" y2="26" stroke="#00ff88" stroke-width="2" stroke-linecap="round"/><circle cx="22" cy="30" r="1.8" fill="#00ff88"/></svg><div class="svc-title">ABUSE EVIDENCE COLLECTION</div><p class="svc-desc">Structured collection of abuse indicators into defensible evidence packages for registrar and registry submission.</p></div>
-      <div class="svc-card"><div class="svc-num">04</div><svg class="svc-icon" viewBox="0 0 44 44"><rect x="7" y="18" width="30" height="20" fill="none" stroke="#00d4ff" stroke-width="1" rx="1"/><path d="M15 18 L15 12 Q15 6 22 6 Q29 6 29 12 L29 18" fill="none" stroke="#00d4ff" stroke-width="1.5"/><circle cx="22" cy="28" r="3" fill="none" stroke="#00d4ff" stroke-width="1.5"/><line x1="22" y1="31" x2="22" y2="35" stroke="#00d4ff" stroke-width="1.5"/></svg><div class="svc-title">REGISTRAR REPORTING SUPPORT</div><p class="svc-desc">We prepare and submit evidence packages to registrars, registries, and abuse desks aligned with ICANN abuse handling requirements.</p></div>
-      <div class="svc-card"><div class="svc-num">05</div><svg class="svc-icon" viewBox="0 0 44 44"><circle cx="10" cy="10" r="4" fill="none" stroke="#00d4ff" stroke-width="1.2"/><circle cx="34" cy="10" r="4" fill="none" stroke="#ff3d3d" stroke-width="1.2"/><circle cx="10" cy="34" r="4" fill="none" stroke="#00ff88" stroke-width="1.2"/><circle cx="34" cy="34" r="4" fill="none" stroke="#00d4ff" stroke-width="1.2"/><circle cx="22" cy="22" r="4" fill="none" stroke="#ffaa00" stroke-width="1.2"/><line x1="14" y1="22" x2="18" y2="22" stroke="#00d4ff" stroke-width="0.8"/><line x1="26" y1="22" x2="30" y2="22" stroke="#00d4ff" stroke-width="0.8"/><line x1="22" y1="18" x2="22" y2="26" stroke="#00d4ff" stroke-width="0.8"/></svg><div class="svc-title">INFRASTRUCTURE CORRELATION</div><p class="svc-desc">Cross-referencing domains, IPs, ASNs, nameservers, and SSL fingerprints to map attacker infrastructure clusters and identify related malicious assets across campaigns.</p></div>
-      <div class="svc-card"><div class="svc-num">06</div><svg class="svc-icon" viewBox="0 0 44 44"><rect x="7" y="7" width="30" height="8" fill="none" stroke="#00ff88" stroke-width="1" rx="1"/><rect x="7" y="18" width="30" height="8" fill="none" stroke="#00ff88" stroke-width="1" rx="1"/><rect x="7" y="29" width="30" height="8" fill="none" stroke="#00ff88" stroke-width="0.5" rx="1" opacity="0.35"/><line x1="12" y1="11" x2="20" y2="11" stroke="#00ff88" stroke-width="1.5" stroke-linecap="round"/><line x1="12" y1="22" x2="24" y2="22" stroke="#00ff88" stroke-width="1.5" stroke-linecap="round"/><circle cx="33" cy="11" r="2.2" fill="#00ff88"/><circle cx="33" cy="22" r="2.2" fill="#ff3d3d"/></svg><div class="svc-title">TRIAGE &amp; VALIDATION</div><p class="svc-desc">Systematic triage of submitted abuse reports, false-positive filtering, multi-source validation, and quality control before escalation to registrar or registry abuse teams.</p></div>
-    </div>
-  </div>
-</div>
-
-<!-- STANDARDS -->
-<div class="page" id="standards">
-  <div class="wrap">
-    <div class="sec-head"><div class="sec-tag">// Methodology</div><h2 class="sec-title">REPORTING STANDARDS</h2><div class="sec-rule"></div></div>
-    <div class="std-list">
-      <div class="std-row" onclick="flash(this)"><div class="std-id">STD-001</div><div><div class="std-title">EVIDENCE-FIRST REPORTING</div><div class="std-desc">All domain abuse reports must be accompanied by verifiable, timestamped technical evidence. Assertions without supporting artifacts are rejected at triage.</div></div><div class="badge badge-r">REQUIRED</div></div>
-      <div class="std-row" onclick="flash(this)"><div class="std-id">STD-002</div><div><div class="std-title">DNS ABUSE SCOPE DEFINITION</div><div class="std-desc">We operate within ICANN's five DNS abuse categories: malware, botnets, phishing, pharming, and spam enabling the above. Content disputes are not processed.</div></div><div class="badge badge-r">REQUIRED</div></div>
-      <div class="std-row" onclick="flash(this)"><div class="std-id">STD-003</div><div><div class="std-title">MULTI-SOURCE CORROBORATION</div><div class="std-desc">High-confidence reports require corroboration from at least two independent sources: sandbox analysis, passive DNS records, malware artifacts, OSINT, or network telemetry.</div></div><div class="badge badge-r">REQUIRED</div></div>
-      <div class="std-row" onclick="flash(this)"><div class="std-id">STD-004</div><div><div class="std-title">FALSE POSITIVE MANAGEMENT</div><div class="std-desc">All indicators are validated against known-good databases and threat intel feeds. Suspected false positives trigger secondary review before any escalation.</div></div><div class="badge badge-r">REQUIRED</div></div>
-      <div class="std-row" onclick="flash(this)"><div class="std-id">STD-005</div><div><div class="std-title">RESPONSIBLE DISCLOSURE</div><div class="std-desc">We follow responsible disclosure norms. Where operational security permits, affected parties are notified before public disclosure.</div></div><div class="badge badge-r">REQUIRED</div></div>
-      <div class="std-row" onclick="flash(this)"><div class="std-id">STD-006</div><div><div class="std-title">STRUCTURED EVIDENCE PACKAGING</div><div class="std-desc">Reports follow a standardized format: domain, abuse type, observed behavior, IOCs, evidence links, timestamps, and requested action for direct abuse desk intake.</div></div><div class="badge badge-r">REQUIRED</div></div>
-      <div class="std-row" onclick="flash(this)"><div class="std-id">STD-007</div><div><div class="std-title">PASSIVE DNS INTEGRATION</div><div class="std-desc">Historical DNS resolution data is incorporated to establish domain-IP relationships over time and detect fast-flux or bulletproof hosting patterns.</div></div><div class="badge badge-e">ENHANCED</div></div>
-      <div class="std-row" onclick="flash(this)"><div class="std-id">STD-008</div><div><div class="std-title">THREAT INTEL CORRELATION</div><div class="std-desc">Indicators are cross-referenced against public and commercial threat intelligence sources to identify campaign attribution and actor TTPs.</div></div><div class="badge badge-e">ENHANCED</div></div>
-    </div>
-  </div>
-</div>
-
-<!-- TOOLS -->
-<div class="page" id="tools">
-  <div class="wrap">
-    <div class="sec-head"><div class="sec-tag">// Threat Analysis</div><h2 class="sec-title">LOOKUP TOOLS</h2><div class="sec-rule"></div></div>
-
-    <!-- Tab buttons -->
-    <div class="tool-tabs">
-      <button class="tool-tab active" onclick="switchTab('url', this)">
-        <svg width="14" height="14" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="1.5"/><ellipse cx="10" cy="10" rx="4" ry="8" fill="none" stroke="currentColor" stroke-width="1" opacity="0.6"/><line x1="2" y1="10" x2="18" y2="10" stroke="currentColor" stroke-width="1" opacity="0.6"/></svg>
-        URL CHECK
-      </button>
-      <button class="tool-tab" onclick="switchTab('hash', this)">
-        <svg width="14" height="14" viewBox="0 0 20 20"><rect x="3" y="2" width="11" height="14" fill="none" stroke="currentColor" stroke-width="1.5" rx="1"/><line x1="6" y1="6.5" x2="11" y2="6.5" stroke="currentColor" stroke-width="1"/><line x1="6" y1="9" x2="11" y2="9" stroke="currentColor" stroke-width="1"/><circle cx="15" cy="15" r="4" fill="#040a0f" stroke="currentColor" stroke-width="1.5"/><line x1="13.5" y1="15" x2="16.5" y2="15" stroke="currentColor" stroke-width="1.5"/><line x1="15" y1="13.5" x2="15" y2="16.5" stroke="currentColor" stroke-width="1.5"/></svg>
-        HASH LOOKUP
-      </button>
-      <button class="tool-tab" onclick="switchTab('whois', this)">
-        <svg width="14" height="14" viewBox="0 0 20 20"><rect x="2" y="3" width="16" height="14" fill="none" stroke="currentColor" stroke-width="1.5" rx="1"/><line x1="2" y1="7" x2="18" y2="7" stroke="currentColor" stroke-width="1"/><line x1="5" y1="11" x2="10" y2="11" stroke="currentColor" stroke-width="1.2"/><line x1="5" y1="14" x2="13" y2="14" stroke="currentColor" stroke-width="1.2"/></svg>
-        WHOIS LOOKUP
-      </button>
-    </div>
-
-    <!-- Tab: URL CHECK -->
-    <div class="tool-panel active" id="tab-url">
-      <div class="tool-box">
-        <div class="tool-head">
-          <div class="tool-icon-sq"><svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="none" stroke="#00d4ff" stroke-width="1.2"/><ellipse cx="10" cy="10" rx="4" ry="8" fill="none" stroke="#00d4ff" stroke-width="0.7" opacity="0.5"/><line x1="2" y1="10" x2="18" y2="10" stroke="#00d4ff" stroke-width="0.7" opacity="0.5"/></svg></div>
-          <div><div class="tool-name">URL REPUTATION CHECK</div><div class="tool-sub">// VirusTotal — 4-step full scan + engine list</div></div>
-        </div>
-        <div class="input-group">
-          <input type="text" class="t-input" id="urlInput" placeholder="https://example.com or domain.com" onkeydown="if(event.key==='Enter')checkURL()">
-          <button class="t-btn" id="urlBtn" onclick="checkURL()">SCAN</button>
-        </div>
-        <div class="result-panel" id="urlResult">
-          <div class="r-empty">// Enter a URL or domain to check against VirusTotal's 70+ security vendors. New URLs are automatically submitted and analyzed.</div>
-        </div>
-        <div class="tool-note">⚠ New URLs are submitted to VirusTotal and polled until analysis completes (~10–30s). Results include engine list, verdict, and website screenshot.</div>
-      </div>
-    </div>
-
-    <!-- Tab: HASH LOOKUP -->
-    <div class="tool-panel" id="tab-hash">
-      <div class="tool-box">
-        <div class="tool-head">
-          <div class="tool-icon-sq"><svg width="20" height="20" viewBox="0 0 20 20"><rect x="3" y="2" width="11" height="14" fill="none" stroke="#ff3d3d" stroke-width="1.2" rx="1"/><line x1="6" y1="6.5" x2="11" y2="6.5" stroke="#ff3d3d" stroke-width="1"/><line x1="6" y1="9" x2="11" y2="9" stroke="#ff3d3d" stroke-width="1"/><line x1="6" y1="11.5" x2="9" y2="11.5" stroke="#ff3d3d" stroke-width="1"/><circle cx="15" cy="15" r="4" fill="#040a0f" stroke="#ff3d3d" stroke-width="1.2"/><line x1="13.5" y1="15" x2="16.5" y2="15" stroke="#ff3d3d" stroke-width="1.3"/><line x1="15" y1="13.5" x2="15" y2="16.5" stroke="#ff3d3d" stroke-width="1.3"/></svg></div>
-          <div><div class="tool-name">MALWARE HASH LOOKUP</div><div class="tool-sub">// MD5 / SHA-1 / SHA-256</div></div>
-        </div>
-        <div class="input-group">
-          <input type="text" class="t-input" id="hashInput" placeholder="Paste file hash (MD5, SHA-1, or SHA-256)" onkeydown="if(event.key==='Enter')checkHash()">
-          <button class="t-btn" id="hashBtn" onclick="checkHash()">LOOKUP</button>
-        </div>
-        <div class="result-panel" id="hashResult">
-          <div class="r-empty">// Submit a file hash to retrieve VirusTotal analysis: detection ratio, malware family, and first/last seen timestamps.</div>
-        </div>
-        <div class="tool-note">⚠ Hash lookups retrieve existing VirusTotal reports only. Unknown files return no results.</div>
-      </div>
-    </div>
-
-    <!-- Tab: WHOIS -->
-    <div class="tool-panel" id="tab-whois">
-      <div class="tool-box">
-        <div class="tool-head">
-          <div class="tool-icon-sq"><svg width="20" height="20" viewBox="0 0 20 20"><rect x="2" y="3" width="16" height="14" fill="none" stroke="#00ff88" stroke-width="1.2" rx="1"/><line x1="2" y1="7" x2="18" y2="7" stroke="#00ff88" stroke-width="1"/><line x1="5" y1="11" x2="10" y2="11" stroke="#00ff88" stroke-width="1.2"/><line x1="5" y1="14" x2="13" y2="14" stroke="#00ff88" stroke-width="1.2"/></svg></div>
-          <div>
-            <div class="tool-name">WHOIS / RDAP LOOKUP</div>
-            <div class="tool-sub">// Registration data lookup</div>
-          </div>
-        </div>
-        <div class="input-group">
-          <input type="text" class="t-input" id="whoisInput" placeholder="domain.com — strips https:// and www. automatically" onkeydown="if(event.key==='Enter')checkWhois()">
-          <button class="t-btn" id="whoisBtn" onclick="checkWhois()">LOOKUP</button>
-        </div>
-        <div class="result-panel" id="whoisResult">
-          <div class="r-empty">// Enter a domain to retrieve registrar, creation/expiry dates, nameservers, abuse contacts, and DNSSEC status.</div>
-        </div>
-        <div class="tool-note">⚠ Registration data may be limited for some country-code TLDs (.vn, .uk, etc.).</div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<!-- CASES -->
-<div class="page" id="cases">
-  <div class="wrap">
-    <div class="sec-head"><div class="sec-tag">// Recent Activity</div><h2 class="sec-title">CASE STUDIES</h2><div class="sec-rule"></div></div>
-    <div class="cases-grid">
-      <div class="case-card"><div class="case-type">⬤ BOTNET C2</div><div class="case-title">EMOTET RESURRECTION — MULTI-STAGE C2 INFRASTRUCTURE MAPPED</div><p class="case-desc">Identified a cluster of 47 domains operating as second-stage C2 nodes. Fast-flux DNS, bulletproof hosting across 3 ASNs confirmed via passive DNS correlation.</p><div class="case-meta"><div>DOMAINS: <span>47</span></div><div>ASNs: <span>3</span></div><div>REPORTED: <span>6 REGISTRARS</span></div></div></div>
-      <div class="case-card"><div class="case-type">⬤ PHISHING</div><div class="case-title">CREDENTIAL HARVESTING — FINANCIAL SECTOR IMPERSONATION</div><p class="case-desc">Traced a phishing operation targeting 12 major financial institutions. Attacker rotated domains every 48–72 hours; shared hosting fingerprints linked 200+ domains to a single actor.</p><div class="case-meta"><div>DOMAINS: <span>200+</span></div><div>TARGETS: <span>12 BANKS</span></div><div>DURATION: <span>6 WEEKS</span></div></div></div>
-      <div class="case-card"><div class="case-type">⬤ MALWARE</div><div class="case-title">INFOSTEALER DELIVERY VIA COMPROMISED LEGITIMATE DOMAINS</div><p class="case-desc">Uncovered malicious JavaScript injection into compromised WordPress sites. SSL certificate reuse patterns exposed 80+ compromised domains in a single analysis session.</p><div class="case-meta"><div>COMPROMISED: <span>80+</span></div><div>VECTOR: <span>JS INJECT</span></div><div>MALWARE: <span>INFOSTEALER</span></div></div></div>
-      <div class="case-card"><div class="case-type">⬤ PHARMING</div><div class="case-title">DNS HIJACKING CAMPAIGN TARGETING RESIDENTIAL ISP CUSTOMERS</div><p class="case-desc">Investigated DNS hijacking affecting router configs across multiple ISPs, redirecting banking traffic to pharming pages. Identified 15 attacker-controlled domains.</p><div class="case-meta"><div>ISPs: <span>4</span></div><div>ACTOR DOMAINS: <span>15</span></div><div>TYPE: <span>DNS HIJACK</span></div></div></div>
-      <div class="case-card"><div class="case-type">⬤ SPAM</div><div class="case-title">SNOWSHOE SPAM NETWORK — DISTRIBUTED LOW-VOLUME ABUSE</div><p class="case-desc">Identified a snowshoe spam operation distributing malware droppers. 300+ domains across 800+ IPs, all tied to a single registrant via WHOIS history correlation.</p><div class="case-meta"><div>DOMAINS: <span>300+</span></div><div>IPs: <span>800+</span></div><div>ACTOR: <span>SINGLE</span></div></div></div>
-      <div class="case-card"><div class="case-type">⬤ DGA</div><div class="case-title">DGA CLUSTER — RANSOMWARE C2 BEACON IDENTIFICATION</div><p class="case-desc">Reverse-engineered a DGA embedded in ransomware. Predicted 2,000+ future C2 domains and sinkholed 34 active beaconing domains in coordination with security researchers.</p><div class="case-meta"><div>DGA DOMAINS: <span>2000+</span></div><div>SINKHOLED: <span>34</span></div><div>FAMILY: <span>RANSOMWARE</span></div></div></div>
-    </div>
-  </div>
-</div>
-
-<!-- ABOUT -->
-<div class="page" id="about">
-  <div class="wrap">
-    <div class="sec-head"><div class="sec-tag">// Who We Are</div><h2 class="sec-title">ABOUT</h2><div class="sec-rule"></div></div>
-    <div class="about-grid">
-      <div class="about-body">
-        <p class="about-hl">ThreatVector Intelligence is a specialist DNS abuse investigation and reporting organization focused on evidence-based identification of malicious internet infrastructure.</p>
-        <p>We operate at the intersection of DNS abuse analysis, malware infrastructure research, and responsible disclosure — bridging the gap between threat identification and effective registrar and registry mitigation.</p>
-        <p>Our methodology is built on a single principle: every report must be defensible. We investigate, validate, correlate, and document — then report with complete evidence packages that abuse desks can act on immediately.</p>
-        <p>We work within the five DNS abuse categories as defined by ICANN: malware distribution, botnet C2 infrastructure, phishing, pharming, and spam used to propagate the above.</p>
-        <p>All work is conducted under responsible disclosure principles. We coordinate disclosures with affected registrars, registries, CERTs, and law enforcement before any public release.</p>
-        <p style="margin-bottom:0">
-          <strong style="color:var(--bright)">General:</strong>&nbsp;<br>
-          <strong style="color:var(--bright)">Abuse reports:</strong>&nbsp;<a class="a2" href="/cdn-cgi/l/email-protection#fc9d9e898f99bc88948e999d888a999f88938e959288999090959b99929f99d29f9391"><span class="__cf_email__" data-cfemail="e28380979187a2968a90878396948781968d908b8c96878e8e8b85878c8187cc818d8f">[email&#160;protected]</span></a>
-        </p>
-      </div>
-      <div class="info-cards">
-        <div class="info-card"><div class="ic-lbl">Domain</div><div class="ic-val">threatvectorintelligence.com</div></div>
-        <div class="info-card"><div class="ic-lbl">Focus Areas</div><div class="ic-list">Malware C2 · Botnet Infra · Phishing<br>Pharming · DGA · Fast-Flux · Snowshoe</div></div>
-        <div class="info-card"><div class="ic-lbl">Evidence Sources</div><div class="ic-list">Sandbox Analysis · Passive DNS<br>Malware Samples · Network Artifacts<br>Threat Intel Correlation</div></div>
-        <div class="info-card"><div class="ic-lbl">Reporting Targets</div><div class="ic-list">ICANN Registrars · DNS Registries<br>Abuse Desks · CERT / CSIRT · Law Enforcement</div></div>
-        <div class="info-card"><div class="ic-lbl">Policy</div><div class="ic-list">Responsible Disclosure<br>Good-Faith Reporting · No False Positives</div></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- REPORT -->
-<div class="page" id="report">
-  <div class="wrap">
-    <div class="sec-head"><div class="sec-tag">// Submit Intelligence</div><h2 class="sec-title">ABUSE REPORT</h2><div class="sec-rule"></div></div>
-    <div class="report-alert"><strong>⚠ IMPORTANT:</strong> DNS abuse reports only — malware C2, botnet, phishing, pharming, spam. Content disputes are outside our scope. All reports require verifiable evidence.</div>
-    <div class="report-grid">
-      <div class="fg"><label>REPORTER / ORGANIZATION</label><input type="text" class="f-in" id="rName" placeholder="Optional — may remain anonymous"></div>
-      <div class="fg"><label>CONTACT EMAIL</label><input type="email" class="f-in" id="rEmail" placeholder="For follow-up only"></div>
-      <div class="fg"><label>ABUSIVE DOMAIN / URL *</label><input type="text" class="f-in" id="rDomain" placeholder="e.g. malicious-domain.com" required></div>
-      <div class="fg"><label>ABUSE TYPE *</label>
-        <select class="f-sel" id="rType">
-          <option value="">— SELECT ABUSE CATEGORY —</option>
-          <option value="malware">Malware Distribution / C2</option>
-          <option value="botnet">Botnet Infrastructure</option>
-          <option value="phishing">Phishing</option>
-          <option value="pharming">Pharming / DNS Hijacking</option>
-          <option value="spam">Spam (enabling DNS abuse)</option>
-          <option value="dga">DGA / Fast-Flux Domain</option>
-          <option value="other">Other DNS Abuse</option>
-        </select>
-      </div>
-      <div class="fg"><label>ASSOCIATED IPs / PORTS</label><input type="text" class="f-in" id="rIPs" placeholder="e.g. 192.168.1.1:4444"></div>
-      <div class="fg"><label>FIRST OBSERVED DATE</label><input type="date" class="f-in" id="rDate"></div>
-      <div class="fg full"><label>OBSERVED BEHAVIOR *</label><textarea class="f-ta" id="rBehavior" placeholder="Network connections, DNS resolutions, payload delivery, redirect chains, etc."></textarea></div>
-      <div class="fg full"><label>EVIDENCE URLS / REFERENCES</label><textarea class="f-ta" style="min-height:80px" id="rEvidence" placeholder="Sandbox reports, VirusTotal, URLScan.io, passive DNS, threat intel, PCAP, etc."></textarea></div>
-      <div class="fg full"><label>INDICATORS OF COMPROMISE</label><textarea class="f-ta" style="min-height:80px" id="rIOCs" placeholder="File hashes, registry keys, mutex names, network signatures, YARA rules, etc."></textarea></div>
-      <div class="fg full"><label>ADDITIONAL NOTES</label><textarea class="f-ta" style="min-height:80px" id="rNotes" placeholder="Campaign attribution, related domains, urgency, special handling instructions."></textarea></div>
-    </div>
-    <div class="report-footer">
-      <button class="btn btn-d" onclick="submitReport()">&#9656;&nbsp; SUBMIT ABUSE REPORT</button>
-      <small>Sent to <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="19787b6c6a7c596d716b7c786d6f7c7a6d766b70776d7c7575707e7c777a7c377a7674">[email&#160;protected]</a></small>
-    </div>
-  </div>
-</div>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-top">
-    <div class="f-brand">
-      <div class="nav-logo" onclick="nav('home')">
-        <svg width="38" height="38" viewBox="0 0 42 42"><polygon points="21,2 38,11.5 38,30.5 21,40 4,30.5 4,11.5" fill="none" stroke="#00d4ff" stroke-width="1.3"/><polyline points="13,29 21,13 29,21" fill="none" stroke="#00d4ff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="29" cy="21" r="2.4" fill="#ff3d3d"/></svg>
-        <div class="nav-brand" style="margin-left:10px">THREATVECTOR<small>INTELLIGENCE</small></div>
-      </div>
-      <p>Evidence-driven DNS abuse intelligence. Malware C2 tracking, botnet infrastructure analysis, and responsible disclosure worldwide.</p>
-    </div>
-    <div>
-      <div class="f-col-ttl">NAVIGATION</div>
-      <ul class="f-links">
-        <li><a onclick="nav('home')">Home</a></li>
-        <li><a onclick="nav('services')">Services</a></li>
-        <li><a onclick="nav('standards')">Reporting Standards</a></li>
-        <li><a onclick="nav('tools')">Lookup Tools</a></li>
-        <li><a onclick="nav('cases')">Case Studies</a></li>
-        <li><a onclick="nav('about')">About</a></li>
-        <li><a onclick="nav('report')">Submit Report</a></li>
-      </ul>
-    </div>
-    <div>
-      <div class="f-col-ttl">DNS ABUSE TYPES</div>
-      <ul class="f-links">
-        <li><a href="dns-abuse/malware-c2.html">Malware / C2</a></li>
-        <li><a href="dns-abuse/botnet.html">Botnet Infrastructure</a></li>
-        <li><a href="dns-abuse/phishing.html">Phishing Domains</a></li>
-        <li><a href="dns-abuse/pharming.html">Pharming / DNS Hijack</a></li>
-        <li><a href="dns-abuse/snowshoe-spam.html">Snowshoe Spam</a></li>
-        <li><a href="dns-abuse/dga-fast-flux.html">DGA / Fast-Flux</a></li>
-      </ul>
-    </div>
-    <div>
-      <div class="f-col-ttl">CONTACT</div>
-      <div class="f-contact">
-        <a href="mailto:&#105;&#110;&#102;&#111;&#64;&#116;&#104;&#114;&#101;&#97;&#116;&#118;&#101;&#99;&#116;&#111;&#114;&#105;&#110;&#116;&#101;&#108;&#108;&#105;&#103;&#101;&#110;&#99;&#101;&#46;&#99;&#111;&#109;">info&#64;threatvectorintelligence&#46;com</a>
-        <a class="ab" href="mailto:&#97;&#98;&#117;&#115;&#101;&#64;&#116;&#104;&#114;&#101;&#97;&#116;&#118;&#101;&#99;&#116;&#111;&#114;&#105;&#110;&#116;&#101;&#108;&#108;&#105;&#103;&#101;&#110;&#99;&#101;&#46;&#99;&#111;&#109;">abuse&#64;threatvectorintelligence&#46;com</a>
-        <div style="margin-top:14px;font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:.15em;opacity:.6">threatvectorintelligence.com</div>
-      </div>
-    </div>
-  </div>
-  <div class="footer-bot">
-    <div class="footer-copy">© 2024 ThreatVector Intelligence. All rights reserved.</div>
-    <div class="footer-legal"><a href="privacy-policy.html">Privacy Policy</a><a href="responsible-use.html">Responsible Use</a><a href="disclaimer.html">Disclaimer</a></div>
-  </div>
-</footer>
-
-<div class="toast" id="toast"></div>
-
-<script src="js/nav.js"></script>
-<script src="js/vt-url.js"></script>
-<script src="js/vt-hash.js"></script>
-<script src="js/report.js"></script>
-<script src="js/whois.js"></script>
-</body>
-</html>
+</urlset>
