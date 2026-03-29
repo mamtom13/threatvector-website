@@ -45,9 +45,9 @@ footer { border-top: 1px solid var(--border); background: var(--panel); }
   border-top: 1px solid var(--border); max-width: 1100px; margin: 0 auto;
   padding: 18px 40px; display: flex; justify-content: space-between; align-items: center;
 }
-.footer-copy { font-family: var(--mono); font-size: 9.5px; color: var(--dim); opacity: .55; }
+.footer-copy { font-family: var(--mono); font-size: 9.5px; color: var(--dim); }
 .footer-legal { display: flex; gap: 22px; }
-.footer-legal a { font-family: var(--mono); font-size: 9.5px; color: var(--dim); text-decoration: none; opacity: .55; cursor: pointer; transition: opacity .2s; }
+.footer-legal a { font-family: var(--mono); font-size: 9.5px; color: var(--dim); text-decoration: none; cursor: pointer; transition: opacity .2s; }
 .footer-legal a:hover { opacity: 1; color: var(--accent); }
 
 @media(max-width:960px) { .footer-top { grid-template-columns: 1fr 1fr; } }
