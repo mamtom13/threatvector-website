@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reporting Standards & Methodology — ThreatVector</title>
+
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" href="favicon.png">
+
+
+<!-- SEO -->
+<meta name="description" content="ICANN-aligned DNS abuse reporting standards: evidence-first methodology, multi-source corroboration, false-positive management, and structured evidence packaging.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://threatvectorintelligence.com/standards.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://threatvectorintelligence.com/standards.html">
+<meta property="og:title" content="Reporting Standards & Methodology — ThreatVector">
+<meta property="og:description" content="ICANN-aligned DNS abuse reporting standards: evidence-first methodology, multi-source corroboration, false-positive management, and structured evidence packaging.">
+<meta property="og:image" content="https://threatvectorintelligence.com/og-image.png">
+<meta property="og:site_name" content="ThreatVector Intelligence">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Reporting Standards & Methodology — ThreatVector">
+<meta name="twitter:description" content="ICANN-aligned DNS abuse reporting standards: evidence-first methodology, multi-source corroboration, false-positive management, and structured evidence packaging.">
+<meta name="twitter:image" content="https://threatvectorintelligence.com/og-image.png">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "name": "Reporting Standards & Methodology — ThreatVector",
+  "url": "https://threatvectorintelligence.com/standards.html",
+  "description": "ICANN-aligned DNS abuse reporting standards: evidence-first methodology, multi-source corroboration, false-positive management, and structured evidence packaging.",
+  "publisher": {
+    "@type": "Organization",
+    "name": "ThreatVector Intelligence",
+    "url": "https://threatvectorintelligence.com"
+  }
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/nav.css">
+<link rel="stylesheet" href="css/home.css">
+<link rel="stylesheet" href="css/tools.css">
+<link rel="stylesheet" href="css/pages.css">
+
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <a href="index.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;">
+    <svg width="42" height="42" viewBox="0 0 42 42" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="21,2 38,11.5 38,30.5 21,40 4,30.5 4,11.5" fill="none" stroke="#00d4ff" stroke-width="1.3" stroke-linejoin="round"/>
+      <polygon points="21,9 31,14.5 31,25.5 21,31 11,25.5 11,14.5" fill="none" stroke="#00d4ff" stroke-width="0.55" opacity="0.38"/>
+      <polyline points="13,29 21,13 29,21" fill="none" stroke="#00d4ff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="29" cy="21" r="2.4" fill="#ff3d3d"/>
+      <circle cx="29" cy="21" r="4" fill="none" stroke="#ff3d3d" stroke-width="0.6" opacity="0.5"/>
+      <line x1="21" y1="2" x2="21" y2="6.5" stroke="#00d4ff" stroke-width="0.8" opacity="0.4"/>
+      <line x1="21" y1="37" x2="21" y2="40" stroke="#00d4ff" stroke-width="0.8" opacity="0.4"/>
+      <line x1="4" y1="21" x2="7" y2="21" stroke="#00d4ff" stroke-width="0.8" opacity="0.4"/>
+      <line x1="35" y1="21" x2="38" y2="21" stroke="#00d4ff" stroke-width="0.8" opacity="0.4"/>
+    </svg>
+    <div class="nav-brand">THREATVECTOR<small>INTELLIGENCE</small></div>
+    </a>
+  </div>
+  <ul class="nav-menu">
+    <li><a href="index.html">HOME</a></li>
+    <li><a href="services.html">SERVICES</a></li>
+    <li><a href="standards.html" class="active">STANDARDS</a></li>
+    <li><a href="tools.html">TOOLS</a></li>
+    <li><a href="cases.html">CASE STUDIES</a></li>
+    <li><a href="about.html">ABOUT</a></li>
+    <li class="nav-cta"><a href="report.html">SUBMIT REPORT</a></li>
+  </ul>
+</nav>
+
+<!-- STANDARDS -->
+<div class="page active" id="content">
+  <div class="wrap">
+    <div class="sec-head"><div class="sec-tag">// Methodology</div><h2 class="sec-title">REPORTING STANDARDS</h2><div class="sec-rule"></div></div>
+    <div class="std-list">
+      <div class="std-row" onclick="flash(this)"><div class="std-id">STD-001</div><div><div class="std-title">EVIDENCE-FIRST REPORTING</div><div class="std-desc">All domain abuse reports must be accompanied by verifiable, timestamped technical evidence. Assertions without supporting artifacts are rejected at triage.</div></div><div class="badge badge-r">REQUIRED</div></div>
+      <div class="std-row" onclick="flash(this)"><div class="std-id">STD-002</div><div><div class="std-title">DNS ABUSE SCOPE DEFINITION</div><div class="std-desc">We operate within ICANN's five DNS abuse categories: malware, botnets, phishing, pharming, and spam enabling the above. Content disputes are not processed.</div></div><div class="badge badge-r">REQUIRED</div></div>
+      <div class="std-row" onclick="flash(this)"><div class="std-id">STD-003</div><div><div class="std-title">MULTI-SOURCE CORROBORATION</div><div class="std-desc">High-confidence reports require corroboration from at least two independent sources: sandbox analysis, passive DNS records, malware artifacts, OSINT, or network telemetry.</div></div><div class="badge badge-r">REQUIRED</div></div>
+      <div class="std-row" onclick="flash(this)"><div class="std-id">STD-004</div><div><div class="std-title">FALSE POSITIVE MANAGEMENT</div><div class="std-desc">All indicators are validated against known-good databases and threat intel feeds. Suspected false positives trigger secondary review before any escalation.</div></div><div class="badge badge-r">REQUIRED</div></div>
+      <div class="std-row" onclick="flash(this)"><div class="std-id">STD-005</div><div><div class="std-title">RESPONSIBLE DISCLOSURE</div><div class="std-desc">We follow responsible disclosure norms. Where operational security permits, affected parties are notified before public disclosure.</div></div><div class="badge badge-r">REQUIRED</div></div>
+      <div class="std-row" onclick="flash(this)"><div class="std-id">STD-006</div><div><div class="std-title">STRUCTURED EVIDENCE PACKAGING</div><div class="std-desc">Reports follow a standardized format: domain, abuse type, observed behavior, IOCs, evidence links, timestamps, and requested action for direct abuse desk intake.</div></div><div class="badge badge-r">REQUIRED</div></div>
+      <div class="std-row" onclick="flash(this)"><div class="std-id">STD-007</div><div><div class="std-title">PASSIVE DNS INTEGRATION</div><div class="std-desc">Historical DNS resolution data is incorporated to establish domain-IP relationships over time and detect fast-flux or bulletproof hosting patterns.</div></div><div class="badge badge-e">ENHANCED</div></div>
+      <div class="std-row" onclick="flash(this)"><div class="std-id">STD-008</div><div><div class="std-title">THREAT INTEL CORRELATION</div><div class="std-desc">Indicators are cross-referenced against public and commercial threat intelligence sources to identify campaign attribution and actor TTPs.</div></div><div class="badge badge-e">ENHANCED</div></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-top">
+    <div class="f-brand">
+      <div class="nav-logo" href="index.html">
+        <svg width="38" height="38" viewBox="0 0 42 42"><polygon points="21,2 38,11.5 38,30.5 21,40 4,30.5 4,11.5" fill="none" stroke="#00d4ff" stroke-width="1.3"/><polyline points="13,29 21,13 29,21" fill="none" stroke="#00d4ff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="29" cy="21" r="2.4" fill="#ff3d3d"/></svg>
+        <div class="nav-brand" style="margin-left:10px">THREATVECTOR<small>INTELLIGENCE</small></div>
+      </div>
+      <p>Evidence-driven DNS abuse intelligence. Malware C2 tracking, botnet infrastructure analysis, and responsible disclosure worldwide.</p>
+    </div>
+    <div>
+      <div class="f-col-ttl">NAVIGATION</div>
+      <ul class="f-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="standards.html">Reporting Standards</a></li>
+        <li><a href="tools.html">Lookup Tools</a></li>
+        <li><a href="cases.html">Case Studies</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="report.html">Submit Report</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="f-col-ttl">DNS ABUSE TYPES</div>
+      <ul class="f-links">
+        <li><a href="dns-abuse/malware-c2.html">Malware / C2</a></li>
+        <li><a href="dns-abuse/botnet.html">Botnet Infrastructure</a></li>
+        <li><a href="dns-abuse/phishing.html">Phishing Domains</a></li>
+        <li><a href="dns-abuse/pharming.html">Pharming / DNS Hijack</a></li>
+        <li><a href="dns-abuse/snowshoe-spam.html">Snowshoe Spam</a></li>
+        <li><a href="dns-abuse/dga-fast-flux.html">DGA / Fast-Flux</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="f-col-ttl">CONTACT</div>
+      <div class="f-contact">
+        <a href="mailto:&#105;&#110;&#102;&#111;&#64;&#116;&#104;&#114;&#101;&#97;&#116;&#118;&#101;&#99;&#116;&#111;&#114;&#105;&#110;&#116;&#101;&#108;&#108;&#105;&#103;&#101;&#110;&#99;&#101;&#46;&#99;&#111;&#109;">info&#64;threatvectorintelligence&#46;com</a>
+        <a class="ab" href="mailto:&#97;&#98;&#117;&#115;&#101;&#64;&#116;&#104;&#114;&#101;&#97;&#116;&#118;&#101;&#99;&#116;&#111;&#114;&#105;&#110;&#116;&#101;&#108;&#108;&#105;&#103;&#101;&#110;&#99;&#101;&#46;&#99;&#111;&#109;">abuse&#64;threatvectorintelligence&#46;com</a>
+        <div style="margin-top:14px;font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:.15em;opacity:.6">threatvectorintelligence.com</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bot">
+    <div class="footer-copy">© 2024 ThreatVector Intelligence. All rights reserved.</div>
+    <div class="footer-legal"><a href="privacy-policy.html">Privacy Policy</a><a href="responsible-use.html">Responsible Use</a><a href="disclaimer.html">Disclaimer</a></div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/nav.js"></script>
+
+</body>
+</html>

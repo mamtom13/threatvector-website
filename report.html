@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Submit DNS Abuse Report — ThreatVector</title>
+
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" href="favicon.png">
+
+
+<!-- SEO -->
+<meta name="description" content="Submit a DNS abuse report with technical evidence. We process malware C2, phishing, botnet, pharming, and snowshoe spam reports aligned with ICANN abuse handling requirements.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://threatvectorintelligence.com/report.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://threatvectorintelligence.com/report.html">
+<meta property="og:title" content="Submit DNS Abuse Report — ThreatVector">
+<meta property="og:description" content="Submit a DNS abuse report with technical evidence. We process malware C2, phishing, botnet, pharming, and snowshoe spam reports aligned with ICANN abuse handling requirements.">
+<meta property="og:image" content="https://threatvectorintelligence.com/og-image.png">
+<meta property="og:site_name" content="ThreatVector Intelligence">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Submit DNS Abuse Report — ThreatVector">
+<meta name="twitter:description" content="Submit a DNS abuse report with technical evidence. We process malware C2, phishing, botnet, pharming, and snowshoe spam reports aligned with ICANN abuse handling requirements.">
+<meta name="twitter:image" content="https://threatvectorintelligence.com/og-image.png">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  "name": "Submit DNS Abuse Report — ThreatVector",
+  "url": "https://threatvectorintelligence.com/report.html",
+  "description": "Submit a DNS abuse report with technical evidence. We process malware C2, phishing, botnet, pharming, and snowshoe spam reports aligned with ICANN abuse handling requirements.",
+  "publisher": {
+    "@type": "Organization",
+    "name": "ThreatVector Intelligence",
+    "url": "https://threatvectorintelligence.com"
+  }
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/nav.css">
+<link rel="stylesheet" href="css/home.css">
+<link rel="stylesheet" href="css/tools.css">
+<link rel="stylesheet" href="css/pages.css">
+
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <a href="index.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;">
+    <svg width="42" height="42" viewBox="0 0 42 42" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="21,2 38,11.5 38,30.5 21,40 4,30.5 4,11.5" fill="none" stroke="#00d4ff" stroke-width="1.3" stroke-linejoin="round"/>
+      <polygon points="21,9 31,14.5 31,25.5 21,31 11,25.5 11,14.5" fill="none" stroke="#00d4ff" stroke-width="0.55" opacity="0.38"/>
+      <polyline points="13,29 21,13 29,21" fill="none" stroke="#00d4ff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="29" cy="21" r="2.4" fill="#ff3d3d"/>
+      <circle cx="29" cy="21" r="4" fill="none" stroke="#ff3d3d" stroke-width="0.6" opacity="0.5"/>
+      <line x1="21" y1="2" x2="21" y2="6.5" stroke="#00d4ff" stroke-width="0.8" opacity="0.4"/>
+      <line x1="21" y1="37" x2="21" y2="40" stroke="#00d4ff" stroke-width="0.8" opacity="0.4"/>
+      <line x1="4" y1="21" x2="7" y2="21" stroke="#00d4ff" stroke-width="0.8" opacity="0.4"/>
+      <line x1="35" y1="21" x2="38" y2="21" stroke="#00d4ff" stroke-width="0.8" opacity="0.4"/>
+    </svg>
+    <div class="nav-brand">THREATVECTOR<small>INTELLIGENCE</small></div>
+    </a>
+  </div>
+  <ul class="nav-menu">
+    <li><a href="index.html">HOME</a></li>
+    <li><a href="services.html">SERVICES</a></li>
+    <li><a href="standards.html">STANDARDS</a></li>
+    <li><a href="tools.html">TOOLS</a></li>
+    <li><a href="cases.html">CASE STUDIES</a></li>
+    <li><a href="about.html">ABOUT</a></li>
+    <li class="nav-cta"><a href="report.html" class="active">SUBMIT REPORT</a></li>
+  </ul>
+</nav>
+
+<!-- REPORT -->
+<div class="page active" id="content">
+  <div class="wrap">
+    <div class="sec-head"><div class="sec-tag">// Submit Intelligence</div><h2 class="sec-title">ABUSE REPORT</h2><div class="sec-rule"></div></div>
+    <div class="report-alert"><strong>⚠ IMPORTANT:</strong> DNS abuse reports only — malware C2, botnet, phishing, pharming, spam. Content disputes are outside our scope. All reports require verifiable evidence.</div>
+    <div class="report-grid">
+      <div class="fg"><label>REPORTER / ORGANIZATION</label><input type="text" class="f-in" id="rName" placeholder="Optional — may remain anonymous"></div>
+      <div class="fg"><label>CONTACT EMAIL</label><input type="email" class="f-in" id="rEmail" placeholder="For follow-up only"></div>
+      <div class="fg"><label>ABUSIVE DOMAIN / URL *</label><input type="text" class="f-in" id="rDomain" placeholder="e.g. malicious-domain.com" required></div>
+      <div class="fg"><label>ABUSE TYPE *</label>
+        <select class="f-sel" id="rType">
+          <option value="">— SELECT ABUSE CATEGORY —</option>
+          <option value="malware">Malware Distribution / C2</option>
+          <option value="botnet">Botnet Infrastructure</option>
+          <option value="phishing">Phishing</option>
+          <option value="pharming">Pharming / DNS Hijacking</option>
+          <option value="spam">Spam (enabling DNS abuse)</option>
+          <option value="dga">DGA / Fast-Flux Domain</option>
+          <option value="other">Other DNS Abuse</option>
+        </select>
+      </div>
+      <div class="fg"><label>ASSOCIATED IPs / PORTS</label><input type="text" class="f-in" id="rIPs" placeholder="e.g. 192.168.1.1:4444"></div>
+      <div class="fg"><label>FIRST OBSERVED DATE</label><input type="date" class="f-in" id="rDate"></div>
+      <div class="fg full"><label>OBSERVED BEHAVIOR *</label><textarea class="f-ta" id="rBehavior" placeholder="Network connections, DNS resolutions, payload delivery, redirect chains, etc."></textarea></div>
+      <div class="fg full"><label>EVIDENCE URLS / REFERENCES</label><textarea class="f-ta" style="min-height:80px" id="rEvidence" placeholder="Sandbox reports, VirusTotal, URLScan.io, passive DNS, threat intel, PCAP, etc."></textarea></div>
+      <div class="fg full"><label>INDICATORS OF COMPROMISE</label><textarea class="f-ta" style="min-height:80px" id="rIOCs" placeholder="File hashes, registry keys, mutex names, network signatures, YARA rules, etc."></textarea></div>
+      <div class="fg full"><label>ADDITIONAL NOTES</label><textarea class="f-ta" style="min-height:80px" id="rNotes" placeholder="Campaign attribution, related domains, urgency, special handling instructions."></textarea></div>
+    </div>
+    <div class="report-footer">
+      <button class="btn btn-d" onclick="submitReport()">&#9656;&nbsp; SUBMIT ABUSE REPORT</button>
+      <small>Sent to <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="19787b6c6a7c596d716b7c786d6f7c7a6d766b70776d7c7575707e7c777a7c377a7674">[email&#160;protected]</a></small>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-top">
+    <div class="f-brand">
+      <div class="nav-logo" href="index.html">
+        <svg width="38" height="38" viewBox="0 0 42 42"><polygon points="21,2 38,11.5 38,30.5 21,40 4,30.5 4,11.5" fill="none" stroke="#00d4ff" stroke-width="1.3"/><polyline points="13,29 21,13 29,21" fill="none" stroke="#00d4ff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="29" cy="21" r="2.4" fill="#ff3d3d"/></svg>
+        <div class="nav-brand" style="margin-left:10px">THREATVECTOR<small>INTELLIGENCE</small></div>
+      </div>
+      <p>Evidence-driven DNS abuse intelligence. Malware C2 tracking, botnet infrastructure analysis, and responsible disclosure worldwide.</p>
+    </div>
+    <div>
+      <div class="f-col-ttl">NAVIGATION</div>
+      <ul class="f-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="standards.html">Reporting Standards</a></li>
+        <li><a href="tools.html">Lookup Tools</a></li>
+        <li><a href="cases.html">Case Studies</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="report.html">Submit Report</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="f-col-ttl">DNS ABUSE TYPES</div>
+      <ul class="f-links">
+        <li><a href="dns-abuse/malware-c2.html">Malware / C2</a></li>
+        <li><a href="dns-abuse/botnet.html">Botnet Infrastructure</a></li>
+        <li><a href="dns-abuse/phishing.html">Phishing Domains</a></li>
+        <li><a href="dns-abuse/pharming.html">Pharming / DNS Hijack</a></li>
+        <li><a href="dns-abuse/snowshoe-spam.html">Snowshoe Spam</a></li>
+        <li><a href="dns-abuse/dga-fast-flux.html">DGA / Fast-Flux</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="f-col-ttl">CONTACT</div>
+      <div class="f-contact">
+        <a href="mailto:&#105;&#110;&#102;&#111;&#64;&#116;&#104;&#114;&#101;&#97;&#116;&#118;&#101;&#99;&#116;&#111;&#114;&#105;&#110;&#116;&#101;&#108;&#108;&#105;&#103;&#101;&#110;&#99;&#101;&#46;&#99;&#111;&#109;">info&#64;threatvectorintelligence&#46;com</a>
+        <a class="ab" href="mailto:&#97;&#98;&#117;&#115;&#101;&#64;&#116;&#104;&#114;&#101;&#97;&#116;&#118;&#101;&#99;&#116;&#111;&#114;&#105;&#110;&#116;&#101;&#108;&#108;&#105;&#103;&#101;&#110;&#99;&#101;&#46;&#99;&#111;&#109;">abuse&#64;threatvectorintelligence&#46;com</a>
+        <div style="margin-top:14px;font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:.15em;opacity:.6">threatvectorintelligence.com</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bot">
+    <div class="footer-copy">© 2024 ThreatVector Intelligence. All rights reserved.</div>
+    <div class="footer-legal"><a href="privacy-policy.html">Privacy Policy</a><a href="responsible-use.html">Responsible Use</a><a href="disclaimer.html">Disclaimer</a></div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/nav.js"></script>
+<script src="js/report.js"></script>
+
+</body>
+</html>
